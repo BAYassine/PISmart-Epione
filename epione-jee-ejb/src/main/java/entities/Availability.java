@@ -8,15 +8,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 @Entity
 public class Availability implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
 	private Date start_Date;
+	
 	private Date end_Date;
+	
 	@ManyToOne
 	private Doctor doctor;
 	
@@ -28,6 +35,7 @@ public class Availability implements Serializable {
 		this.start_Date = start_Date;
 		this.end_Date = end_Date;
 	}
+	
 	public int getId() {
 		return id;
 	}

@@ -11,24 +11,36 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class Consultation implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
 	private Date date_cons;
+	
 	private String remarks;
+	
 	private int rating;
-	private float price;
+	
+	private double price;
+	
 	@OneToOne
 	private Report report;
+	
 	@OneToOne(mappedBy="consultation")
-	private Appointments appointment;
+	private Appointment appointment;
 	
 	public Consultation(){
 		
 	}
 
-	public Consultation(int id, Date date_cons, String remarks, int rating, float price, Report report,
-			Appointments appointment) {
+	public Consultation(int id, Date date_cons, String remarks, int rating, double price, Report report,
+			Appointment appointment) {
 		this.id = id;
 		this.date_cons = date_cons;
 		this.remarks = remarks;
@@ -61,16 +73,16 @@ public class Consultation implements Serializable {
 	public void setRating(int rating) {
 		this.rating = rating;
 	}
-	public float getPrice() {
+	public double getPrice() {
 		return price;
 	}
-	public void setPrice(float price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
-	public Appointments getAppointment() {
+	public Appointment getAppointment() {
 		return appointment;
 	}
-	public void setAppointment(Appointments appointment) {
+	public void setAppointment(Appointment appointment) {
 		this.appointment = appointment;
 	}
 	public Report getReport() {

@@ -28,11 +28,17 @@ public class Profile implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
+	
 	private String firstname;
+	
 	private String lastname;
+	
 	private Date birthDate;
+	
 	private Gender gender;
+	
 	private String address;
+	
 	private String telephone;
 	
 	@OneToOne(mappedBy="profile")

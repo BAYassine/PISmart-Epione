@@ -11,16 +11,24 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class Message implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
 	private String content;
+	
 	private Date date_msg;
+	
 	@ManyToOne
 	private Patient patient;
 
 	@ManyToOne
 	private Doctor doctor;
+	
 	public Message() {
 		
 	}

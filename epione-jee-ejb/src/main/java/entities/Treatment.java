@@ -9,20 +9,30 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 @Entity
-public class Treatments implements Serializable {
+public class Treatment implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
 	private String description;
+	
 	private String recomended_doc;
+	
 	@OneToOne
-	private Appointments appointment;
+	private Appointment appointment;
+	
 	@ManyToOne
 	private Path path;
-	public Treatments() {
+	
+	public Treatment() {
 
 	}
-	public Treatments(int id, String description, String recomended_doc, Appointments appointment) {
+	public Treatment(int id, String description, String recomended_doc, Appointment appointment) {
 		this.id = id;
 		this.description = description;
 		this.recomended_doc = recomended_doc;
@@ -46,10 +56,10 @@ public class Treatments implements Serializable {
 	public void setRecomended_doc(String recomended_doc) {
 		this.recomended_doc = recomended_doc;
 	}
-	public Appointments getAppointment() {
+	public Appointment getAppointment() {
 		return appointment;
 	}
-	public void setAppointment(Appointments appointment) {
+	public void setAppointment(Appointment appointment) {
 		this.appointment = appointment;
 	}
 	public Path getPath() {

@@ -4,19 +4,24 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
 @Entity
-public class Patient extends User implements Serializable{
+@PrimaryKeyJoinColumn(name="id")
+public class Patient extends User  implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	private int social_number;
+	
 	@OneToMany(mappedBy="patient")
 	private List<Path> paths;
 	
 	@OneToMany(mappedBy="patient")
-	private List<Appointments> appointments;
+	private List<Appointment> appointments;
 	
 	@OneToMany(mappedBy="patient")
 	private List<Message> messages;
@@ -31,7 +36,7 @@ public class Patient extends User implements Serializable{
 	}
 	
 
-	public Patient(int social_number, List<Path> paths, List<Appointments> appointments, List<Message> messages) {
+	public Patient(int social_number, List<Path> paths, List<Appointment> appointments, List<Message> messages) {
 		super();
 		this.social_number = social_number;
 		this.paths = paths;
@@ -56,11 +61,11 @@ public class Patient extends User implements Serializable{
 		this.paths = paths;
 	}
 
-	public List<Appointments> getAppointments() {
+	public List<Appointment> getAppointments() {
 		return appointments;
 	}
 
-	public void setAppointments(List<Appointments> appointments) {
+	public void setAppointments(List<Appointment> appointments) {
 		this.appointments = appointments;
 	}
 

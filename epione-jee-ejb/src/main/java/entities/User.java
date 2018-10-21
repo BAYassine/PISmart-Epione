@@ -11,7 +11,7 @@ import javax.persistence.*;
  *
  */
 @Entity
-
+@Inheritance(strategy=InheritanceType.JOINED)
 public class User implements Serializable {
 	
 	public enum Roles { ROLE_ADMIN, ROLE_DOCTOR, ROLE_PATIENT }

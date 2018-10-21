@@ -10,13 +10,22 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 @Entity
 public class Report  implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
 	private Date date_rep;
+	
 	private String content;
+	
 	@OneToOne(mappedBy="report")
 	private Consultation consultation;
+	
 	public Report(){
 		
 	}

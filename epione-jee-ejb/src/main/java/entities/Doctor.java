@@ -2,19 +2,26 @@ package entities;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
 @Entity
+@PrimaryKeyJoinColumn(name="id")
 public class Doctor extends User implements Serializable{
-	private int id;
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String speciality;
 	
 	@OneToMany(mappedBy="doctor")
-	private List<Availability> availability;
+	private List<Availability> availabilities;
 	
 	@OneToMany(mappedBy="doctor")
-	private List<Appointments> appointments;
+	private List<Appointment> appointments;
 	
 	@OneToMany(mappedBy="doctor")
 	private List<Path> paths;
@@ -27,31 +34,25 @@ public class Doctor extends User implements Serializable{
 	}
 	public Doctor(int id, String speciality) {
 		super();
-		this.id = id;
 		this.speciality = speciality;
 	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+	
 	public String getSpeciality() {
 		return speciality;
 	}
 	public void setSpeciality(String speciality) {
 		this.speciality = speciality;
 	}
-	public List<Availability> getAvailability() {
-		return availability;
+	public List<Availability> getAvailabilities() {
+		return availabilities;
 	}
-	public void setAvailability(List<Availability> availability) {
-		this.availability = availability;
+	public void setAvailability(List<Availability> availabilities) {
+		this.availabilities = availabilities;
 	}
-	public List<Appointments> getAppointments() {
+	public List<Appointment> getAppointments() {
 		return appointments;
 	}
-	public void setAppointments(List<Appointments> appointments) {
+	public void setAppointments(List<Appointment> appointments) {
 		this.appointments = appointments;
 	}
 	public List<Path> getPaths() {

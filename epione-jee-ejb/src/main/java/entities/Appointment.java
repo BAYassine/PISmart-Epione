@@ -11,12 +11,21 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Appointments implements Serializable {
+public class Appointment implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
 	private Date date_app;
+	
 	private String reason;
+	
 	@ManyToOne
 	private Patient patient;
 	
@@ -27,12 +36,12 @@ public class Appointments implements Serializable {
 	private Consultation consultation;
 	
 	@OneToOne(mappedBy="appointment")
-	private Treatments treatment;
+	private Treatment treatment;
 	
-	public Appointments(){
+	public Appointment(){
 		
 	}
-	public Appointments(int id, Date date_app, String reason) {
+	public Appointment(int id, Date date_app, String reason) {
 		super();
 		this.id = id;
 		this.date_app = date_app;
@@ -64,10 +73,10 @@ public class Appointments implements Serializable {
 	public void setConsultation(Consultation consultation) {
 		this.consultation = consultation;
 	}
-	public Treatments getTreatment() {
+	public Treatment getTreatment() {
 		return treatment;
 	}
-	public void setTreatment(Treatments treatment) {
+	public void setTreatment(Treatment treatment) {
 		this.treatment = treatment;
 	}
 
