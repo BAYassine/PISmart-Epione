@@ -4,6 +4,9 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import interfaces.DoctorServiceLocal;
+import interfaces.DoctorServiceRemote;
+
 @Stateless
 public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 	@PersistenceContext(unitName="epione-jee-ejb")
