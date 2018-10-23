@@ -4,6 +4,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import interfaces.PathServiceRemote;
 import interfaces.ProfileServiceLocal;
 
 @Stateless

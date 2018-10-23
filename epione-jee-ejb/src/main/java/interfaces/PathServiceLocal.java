@@ -1,8 +1,9 @@
-package services;
+package interfaces;
 
 import javax.ejb.Local;
 
 @Local
 public interface PathServiceLocal {
+	
 
 }
