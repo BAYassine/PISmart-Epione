@@ -21,16 +21,25 @@ public class Appointment implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	public enum Concern{me,relative,children};
+	public enum Gender{male,female};
 	
 	private Date date_app;
 	
 	private String reason;
-	
+	private String message;	
+	private boolean canceled=false;
+	private Concern concerned;
+	private Gender gender;
+	private String name;
+	private Date date_birth;
+	private String address;
 	@ManyToOne
 	private Patient patient;
 	
 	@ManyToOne
 	private Doctor doctor;
+	
 	
 	@OneToOne
 	private Consultation consultation;
@@ -41,12 +50,24 @@ public class Appointment implements Serializable {
 	public Appointment(){
 		
 	}
-	public Appointment(int id, Date date_app, String reason) {
-		super();
-		this.id = id;
+	public Appointment( Date date_app, String reason,String msg,Concern concerned,Gender gender,String name,Date dateb,String address) {
 		this.date_app = date_app;
 		this.reason = reason;
+		this.message=msg;
+		this.concerned=concerned;
+		this.gender=gender;
+		this.name=name;
+		this.date_birth=dateb;
+		this.address=address;
 	}
+	public Appointment( Date date_app, String reason,String msg ,Doctor doctor,Patient patient) {
+		this.date_app = date_app;
+		this.reason = reason;
+		this.message=msg;
+		this.doctor=doctor;
+		this.patient=patient;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -67,6 +88,12 @@ public class Appointment implements Serializable {
 	}
 	
 	
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
 	public Consultation getConsultation() {
 		return consultation;
 	}
@@ -92,5 +119,14 @@ public class Appointment implements Serializable {
 	public void setDoctor(Doctor doctor) {
 		this.doctor = doctor;
 	}
+	public boolean isCanceled() {
+		return canceled;
+	}
+	public void setCanceled(boolean canceled) {
+		this.canceled = canceled;
+	}
+
+
+	
 	
 }
