@@ -1,8 +1,7 @@
 package entities;
 
 import java.io.Serializable;
-
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.*;
 
@@ -14,7 +13,7 @@ import javax.persistence.*;
 @Inheritance(strategy=InheritanceType.JOINED)
 public class User implements Serializable {
 	
-	public enum Roles { ROLE_ADMIN, ROLE_DOCTOR, ROLE_PATIENT }
+	public enum Roles { ROLE_ADMIN, ROLE_DOCTOR, ROLE_PATIENT}
 
 	
 	private static final long serialVersionUID = 1L;
@@ -25,8 +24,19 @@ public class User implements Serializable {
 	private String password;
 	private String email;
 	private Date registred_at;
+	@Enumerated(EnumType.STRING)
 	private Roles role;
-	
+
+	public User(){}
+
+	public User(String username, String password, String email, Date registred_at, Roles role) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.registred_at = new Date();
+		this.role = role;
+	}
+
 	@OneToOne
 	private Profile profile;
 	
@@ -60,8 +70,8 @@ public class User implements Serializable {
 	public void setRegistred_at(Date registred_at) {
 		this.registred_at = registred_at;
 	}
-	public Roles getRole() {
-		return role;
+	public String getRole() {
+		return role.toString();
 	}
 	public void setRole(Roles role) {
 		this.role = role;
@@ -72,7 +82,16 @@ public class User implements Serializable {
 	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
-	
-	
-   
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", email='" + email + '\'' +
+				", registred_at=" + registred_at +
+				", role=" + role.toString() +
+				", profile=" + profile;
+	}
 }
