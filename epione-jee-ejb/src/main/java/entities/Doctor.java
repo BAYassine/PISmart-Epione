@@ -1,12 +1,24 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
+@XmlRootElement
 @PrimaryKeyJoinColumn(name="id")
 public class Doctor extends User implements Serializable{
 	
@@ -14,27 +26,27 @@ public class Doctor extends User implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
 	private String speciality;
+	private double location;
+	@OneToMany(mappedBy="doctor")
+	private Set<Availability> availabilities= new HashSet<>();
+	@JsonManagedReference
+	@OneToMany(mappedBy="doctor")
+	private Set<Appointment> appointments =new HashSet<>();
 	
 	@OneToMany(mappedBy="doctor")
-	private List<Availability> availabilities;
+	private Set<Path> paths=new HashSet<>();
 	
 	@OneToMany(mappedBy="doctor")
-	private List<Appointment> appointments;
-	
-	@OneToMany(mappedBy="doctor")
-	private List<Path> paths;
-	
-	@OneToMany(mappedBy="doctor")
-	private List<Message> messages;
+	private Set<Message> messages=new HashSet<>();
 	
 	public Doctor() {
 		super();
 	}
-	public Doctor(int id, String speciality) {
-		super();
+	public Doctor(String speciality, double location) {
 		this.speciality = speciality;
+		this.location=location;
 	}
 	
 	public String getSpeciality() {
@@ -43,31 +55,40 @@ public class Doctor extends User implements Serializable{
 	public void setSpeciality(String speciality) {
 		this.speciality = speciality;
 	}
-	public List<Availability> getAvailabilities() {
+	public double getLocation() {
+		return location;
+	}
+	public void setLocation(double location) {
+		this.location = location;
+	}
+	@XmlTransient
+	public Set<Availability> getAvailabilities() {
 		return availabilities;
 	}
-	public void setAvailability(List<Availability> availabilities) {
+	public void setAvailabilities(Set<Availability> availabilities) {
 		this.availabilities = availabilities;
 	}
-	public List<Appointment> getAppointments() {
+	@XmlTransient
+	public Set<Appointment> getAppointments() {
 		return appointments;
 	}
-	public void setAppointments(List<Appointment> appointments) {
+	
+	public void setAppointments(Set<Appointment> appointments) {
 		this.appointments = appointments;
 	}
-	public List<Path> getPaths() {
+	@XmlTransient
+	public Set<Path> getPaths() {
 		return paths;
 	}
-	public void setPaths(List<Path> paths) {
+	public void setPaths(Set<Path> paths) {
 		this.paths = paths;
 	}
-	public List<Message> getMessages() {
+	@XmlTransient
+	public Set<Message> getMessages() {
 		return messages;
 	}
-	public void setMessages(List<Message> messages) {
+	public void setMessages(Set<Message> messages) {
 		this.messages = messages;
 	}
-	
-	
 
 }

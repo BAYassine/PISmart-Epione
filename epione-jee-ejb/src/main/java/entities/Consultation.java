@@ -1,9 +1,10 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,25 +30,30 @@ public class Consultation implements Serializable {
 	
 	private double price;
 	
-	@OneToOne
+	@OneToOne(mappedBy="consultation", fetch = FetchType.LAZY)
 	private Report report;
 	
-	@OneToOne(mappedBy="consultation")
+	@OneToOne(mappedBy="consultation", fetch = FetchType.LAZY)
 	private Appointment appointment;
 	
 	public Consultation(){
 		
 	}
 
-	public Consultation(int id, Date date_cons, String remarks, int rating, double price, Report report,
-			Appointment appointment) {
+	public Consultation(int id, Date date_cons, String remarks, int rating, double price) {
+		super();
 		this.id = id;
 		this.date_cons = date_cons;
 		this.remarks = remarks;
 		this.rating = rating;
 		this.price = price;
-		this.report = report;
-		this.appointment = appointment;
+	}
+
+	public Consultation( Date date_cons, String remarks, int rating, double price) {
+		this.date_cons = date_cons;
+		this.remarks = remarks;
+		this.rating = rating;
+		this.price = price;
 	}
 	public int getId() {
 		return id;
