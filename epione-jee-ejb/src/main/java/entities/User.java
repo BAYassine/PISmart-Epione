@@ -2,15 +2,19 @@ package entities;
 
 import java.io.Serializable;
 
+
 import java.sql.Date;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Entity implementation class for Entity: User
  *
  */
 @Entity
+@XmlRootElement
 @Inheritance(strategy=InheritanceType.JOINED)
 public class User implements Serializable {
 	
@@ -29,7 +33,7 @@ public class User implements Serializable {
 	
 	@OneToOne
 	private Profile profile;
-	
+	@XmlAttribute
 	public int getId() {
 		return id;
 	}

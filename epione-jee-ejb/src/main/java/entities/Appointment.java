@@ -1,16 +1,24 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
+@XmlRootElement
 public class Appointment implements Serializable {
 	
 	/**
@@ -21,23 +29,20 @@ public class Appointment implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	public enum Concern{me,relative,children};
-	public enum Gender{male,female};
+	
 	
 	private Date date_app;
 	
 	private String reason;
 	private String message;	
 	private boolean canceled=false;
-	private Concern concerned;
-	private Gender gender;
-	private String name;
-	private Date date_birth;
-	private String address;
+	
 	@ManyToOne
+
 	private Patient patient;
 	
 	@ManyToOne
+
 	private Doctor doctor;
 	
 	
@@ -50,15 +55,11 @@ public class Appointment implements Serializable {
 	public Appointment(){
 		
 	}
-	public Appointment( Date date_app, String reason,String msg,Concern concerned,Gender gender,String name,Date dateb,String address) {
+	public Appointment( Date date_app, String reason,String msg) {
 		this.date_app = date_app;
 		this.reason = reason;
 		this.message=msg;
-		this.concerned=concerned;
-		this.gender=gender;
-		this.name=name;
-		this.date_birth=dateb;
-		this.address=address;
+		
 	}
 	public Appointment( Date date_app, String reason,String msg ,Doctor doctor,Patient patient) {
 		this.date_app = date_app;
@@ -67,7 +68,7 @@ public class Appointment implements Serializable {
 		this.doctor=doctor;
 		this.patient=patient;
 	}
-	
+	@XmlAttribute
 	public int getId() {
 		return id;
 	}
@@ -94,19 +95,21 @@ public class Appointment implements Serializable {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	@XmlTransient
 	public Consultation getConsultation() {
 		return consultation;
 	}
 	public void setConsultation(Consultation consultation) {
 		this.consultation = consultation;
 	}
+	
 	public Treatment getTreatment() {
 		return treatment;
 	}
 	public void setTreatment(Treatment treatment) {
 		this.treatment = treatment;
 	}
-
+	
 	public Patient getPatient() {
 		return patient;
 	}

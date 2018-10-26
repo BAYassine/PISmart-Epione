@@ -1,7 +1,7 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +23,7 @@ public class Report  implements Serializable{
 	
 	private String content;
 	
-	@OneToOne(mappedBy="report")
+	@OneToOne
 	private Consultation consultation;
 	
 	public Report(){
