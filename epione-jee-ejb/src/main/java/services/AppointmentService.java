@@ -17,9 +17,11 @@ import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
 import entities.Appointment;
+import entities.Appointment.states;
 import entities.Consultation;
 import entities.Doctor;
 import entities.Patient;
+import entities.Reason;
 import interfaces.AppointmentServiceLocal;
 import interfaces.AppointmentServiceRemote;
 
@@ -30,24 +32,34 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 	EntityManager em;
 
 	@Override
-	public int addAppointment(Appointment app, int idDoctor, int idPatient) {
+	public int addAppointment(Appointment app, int idDoctor, int idPatient, int idReason) {
 			Doctor doc=em.find(Doctor.class,idDoctor);
 			app.setDoctor(doc);
 			Patient pat=em.find(Patient.class,idPatient);
 			app.setPatient(pat);
+			Reason r=em.find(Reason.class, idReason);
+			app.setReason(r);
 			em.persist(app);
 			return app.getId();
 		}
 
 	@Override
-	public void cancelAppointment(int appId) {
+	public boolean cancelAppointment(int appId) {
+		
 		Appointment app=em.find(Appointment.class, appId);
-		app.setCanceled(true);
+		if(app!=null){
+			app.setState(states.CANCELED);
+			return true;	
+		}
+		return false;
+		
 		
 	}
 
 	@Override
-	public int updateAppointment(Appointment app) {
+	public int updateAppointment(Appointment app, int idR) {
+		Reason r=em.find(Reason.class, idR);
+		app.setReason(r);
 		em.merge(app);
 		return app.getId();
 	}
@@ -58,23 +70,18 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 	
 	}
 	@Override
-	public List<Appointment> getAppointmentByDate(String dateapp) {
+	public List<Appointment> getAppointmentByDate(String dateapp) throws ParseException {
 		java.util.Date d1=null;
-		try {
+
 			d1=new SimpleDateFormat("yyyy-MM-dd").parse(dateapp);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		java.sql.Date d=new java.sql.Date(d1.getTime());
-		return em.createQuery("SELECT a FROM Appointment a WHERE a.date_app = :dateapp",Appointment.class).setParameter("dateapp",d).getResultList();
+	
+		return em.createQuery("SELECT a FROM Appointment a WHERE a.date_start = :dateapp",Appointment.class).setParameter("dateapp",d1).getResultList();
 	}
 	
 	@Override
 	public List<Appointment> getAllAppointments() {
 		 TypedQuery< Appointment> query=em.createQuery("SELECT a FROM Appointment a",Appointment.class);
-		 List<Appointment> list=new ArrayList<>();
-		 list=  query.getResultList();
-		return list;
+		return query.getResultList();
 	}
 
 	@Override
@@ -87,14 +94,16 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 
 	@Override
 	public List<Appointment> getAppointmentsByPatient(int idPatient) {
-		// TODO Auto-generated method stub
-		return null;
+		TypedQuery< Appointment> query=em.createQuery("SELECT a FROM Appointment a where a.patient.id= :idPatient",Appointment.class);
+		query.setParameter("idPatient", idPatient);
+		return query.getResultList();
 	}
 
 	@Override
 	public List<Appointment> getAppointmentsByDoctor(int idDoctor) {
-		// TODO Auto-generated method stub
-		return null;
+		TypedQuery< Appointment> query=em.createQuery("SELECT a FROM Appointment a where a.doctor.id= :idDoctor",Appointment.class);
+		query.setParameter("idDoctor", idDoctor);
+		return query.getResultList();
 	}
 	
 
