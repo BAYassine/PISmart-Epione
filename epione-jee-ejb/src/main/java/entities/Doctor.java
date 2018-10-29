@@ -1,58 +1,59 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @XmlRootElement
 @PrimaryKeyJoinColumn(name="id")
 public class Doctor extends User implements Serializable{
+
+	private static final long serialVersionUID = 1L;	
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	private String speciality;
 	private double location;
-	@OneToMany(mappedBy="doctor")
+	private String presentation;
+	
+	@OneToMany(mappedBy="doctor",fetch = FetchType.EAGER)
 	private Set<Availability> availabilities= new HashSet<>();
-	@JsonManagedReference
-	@OneToMany(mappedBy="doctor")
-	private Set<Appointment> appointments =new HashSet<>();
+
+	@OneToMany(mappedBy="doctor",fetch = FetchType.EAGER)
+	@JsonIgnore
+	private Set<Appointment> appointments = new HashSet<>();
 	
-	@OneToMany(mappedBy="doctor")
-	private Set<Path> paths=new HashSet<>();
+	@OneToMany(mappedBy="doctor",fetch = FetchType.EAGER)
+	private Set<Path> paths= new HashSet<>();
 	
-	@OneToMany(mappedBy="doctor")
-	private Set<Message> messages=new HashSet<>();
+	@OneToMany(mappedBy="doctor",fetch = FetchType.EAGER)
+	private Set<Message> messages= new HashSet<>();
+	
+	@ManyToOne
+	private Speciality speciality;
 	
 	public Doctor() {
 		super();
 	}
-	public Doctor(String speciality, double location) {
+	public Doctor(Speciality speciality, double location) {
 		this.speciality = speciality;
 		this.location=location;
 	}
-	
-	public String getSpeciality() {
+
+	@XmlTransient
+	public Speciality getSpeciality() {
 		return speciality;
 	}
-	public void setSpeciality(String speciality) {
+	public void setSpeciality(Speciality speciality) {
 		this.speciality = speciality;
 	}
 	public double getLocation() {
@@ -61,14 +62,14 @@ public class Doctor extends User implements Serializable{
 	public void setLocation(double location) {
 		this.location = location;
 	}
-	@XmlTransient
+	
 	public Set<Availability> getAvailabilities() {
 		return availabilities;
 	}
 	public void setAvailabilities(Set<Availability> availabilities) {
 		this.availabilities = availabilities;
 	}
-	@XmlTransient
+
 	public Set<Appointment> getAppointments() {
 		return appointments;
 	}
@@ -76,19 +77,24 @@ public class Doctor extends User implements Serializable{
 	public void setAppointments(Set<Appointment> appointments) {
 		this.appointments = appointments;
 	}
-	@XmlTransient
+	
 	public Set<Path> getPaths() {
 		return paths;
 	}
 	public void setPaths(Set<Path> paths) {
 		this.paths = paths;
 	}
-	@XmlTransient
 	public Set<Message> getMessages() {
 		return messages;
 	}
 	public void setMessages(Set<Message> messages) {
 		this.messages = messages;
+	}
+	public String getPresentation() {
+		return presentation;
+	}
+	public void setPresentation(String presentation) {
+		this.presentation = presentation;
 	}
 
 }

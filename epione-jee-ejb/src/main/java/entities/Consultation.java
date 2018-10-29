@@ -1,7 +1,7 @@
 package entities;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Consultation implements Serializable {
@@ -21,7 +24,7 @@ public class Consultation implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+	 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
 	private Date date_cons;
 	
 	private String remarks;
@@ -33,8 +36,10 @@ public class Consultation implements Serializable {
 	@OneToOne(mappedBy="consultation", fetch = FetchType.LAZY)
 	private Report report;
 	
-	@OneToOne(mappedBy="consultation", fetch = FetchType.LAZY)
+	@OneToOne
 	private Appointment appointment;
+	
+	
 	
 	public Consultation(){
 		
@@ -85,6 +90,7 @@ public class Consultation implements Serializable {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+	 @XmlTransient
 	public Appointment getAppointment() {
 		return appointment;
 	}
@@ -97,6 +103,6 @@ public class Consultation implements Serializable {
 	public void setReport(Report report) {
 		this.report = report;
 	}
-	
+
 	
 }

@@ -26,15 +26,15 @@ public class Patient extends User  implements Serializable{
 	
 	private int social_number;
 	
-	@OneToMany(mappedBy="patient")
-	private List<Path> paths;
-	@JsonManagedReference
-	@OneToMany(mappedBy="patient")
-
+	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
+	private Set<Path> paths=new HashSet<>();
+	
+	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
+    @JsonIgnore
 	private Set<Appointment> appointments = new HashSet<>();
 	
-	@OneToMany(mappedBy="patient")
-	private List<Message> messages;
+	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
+	private Set<Message> messages=new HashSet<>();
 
 	public Patient() {
 		super();
@@ -46,7 +46,7 @@ public class Patient extends User  implements Serializable{
 	}
 	
 
-	public Patient(int social_number, List<Path> paths, Set<Appointment> appointments, List<Message> messages) {
+	public Patient(int social_number, Set<Path> paths, Set<Appointment> appointments, Set<Message> messages) {
 		super();
 		this.social_number = social_number;
 		this.paths = paths;
@@ -61,16 +61,15 @@ public class Patient extends User  implements Serializable{
 	public void setSocial_number(int social_number) {
 		this.social_number = social_number;
 	}
-	
-	@XmlTransient
-	public List<Path> getPaths() {
+
+	public Set<Path> getPaths() {
 		return paths;
 	}
 
-	public void setPaths(List<Path> paths) {
+	public void setPaths(Set<Path> paths) {
 		this.paths = paths;
 	}
-	@XmlTransient
+
 	public Set<Appointment> getAppointments() {
 		return appointments;
 	}
@@ -79,12 +78,11 @@ public class Patient extends User  implements Serializable{
 		this.appointments = appointments;
 	}
 
-	@XmlTransient
-	public List<Message> getMessages() {
+	public Set<Message> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(List<Message> messages) {
+	public void setMessages(Set<Message> messages) {
 		this.messages = messages;
 	}
 

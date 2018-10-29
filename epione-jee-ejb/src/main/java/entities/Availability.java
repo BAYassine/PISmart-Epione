@@ -8,8 +8,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
+@XmlRootElement
 public class Availability implements Serializable {
 	/**
 	 * 
@@ -19,10 +24,11 @@ public class Availability implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+	 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
 	private Date start_Date;
-	
+	 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
 	private Date end_Date;
+	private String description;
 	
 	@ManyToOne
 	private Doctor doctor;
@@ -54,11 +60,18 @@ public class Availability implements Serializable {
 	public void setEnd_Date(Date end_Date) {
 		this.end_Date = end_Date;
 	}
+	@XmlTransient
 	public Doctor getDoctor() {
 		return doctor;
 	}
 	public void setDoctor(Doctor doctor) {
 		this.doctor = doctor;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

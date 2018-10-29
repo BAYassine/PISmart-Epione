@@ -6,6 +6,9 @@ import java.util.Date;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * Entity implementation class for Entity: User
@@ -26,6 +29,7 @@ public class User implements Serializable {
 	private String username;
 	private String password;
 	private String email;
+	 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
 	private Date registred_at;
 	@Enumerated(EnumType.STRING)
 	private Roles role;
@@ -79,6 +83,7 @@ public class User implements Serializable {
 	public void setRole(Roles role) {
 		this.role = role;
 	}
+	@XmlTransient
 	public Profile getProfile() {
 		return profile;
 	}

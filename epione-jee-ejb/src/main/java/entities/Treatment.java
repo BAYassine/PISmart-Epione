@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @XmlRootElement
 public class Treatment implements Serializable {
@@ -61,12 +62,14 @@ public class Treatment implements Serializable {
 	public void setRecomended_doc(String recomended_doc) {
 		this.recomended_doc = recomended_doc;
 	}
+	@XmlTransient
 	public Appointment getAppointment() {
 		return appointment;
 	}
 	public void setAppointment(Appointment appointment) {
 		this.appointment = appointment;
 	}
+	@XmlTransient
 	public Path getPath() {
 		return path;
 	}
