@@ -7,9 +7,7 @@ import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
-
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -17,7 +15,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -74,9 +71,10 @@ public class AppointmentResource {
 
 
 	@POST
+	@Path("{idD}/{idP}/{idR}")
 	@RolesAllowed("ROLE_PATIENT")
 	@Consumes(MediaType.APPLICATION_XML)
-	public Response addAppointment(@Context SecurityContext securityContext,Appointment app) throws ParseException {
+	public Response addAppointment(Appointment app,@PathParam(value = "idD") int idD,@PathParam(value = "idP") int idP,@PathParam(value = "idR") int idR) {
 		if (app != null) {
 			User u=userServ.findUser(securityContext.getUserPrincipal().getName());
 			System.out.println("id patient: "+u.getId());
@@ -84,21 +82,23 @@ public class AppointmentResource {
 			id=appointmentServ.addAppointment(app, u.getId());
 			System.out.println("id App: "+id);
 			if(id!=0)
-				return Response.status(Status.CREATED).entity("Appointment added").build();	
-		 
-				return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();	
+				return Response.status(Status.CREATED).entity("Appointment added").build();
+
+				return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();
 		} 
 		else
 			return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();
 	}
+
 	@PUT
 	@RolesAllowed("ROLE_PATIENT")
 	@Consumes(MediaType.APPLICATION_XML)
-	public Response updateAppointment(@Context SecurityContext securityContext,Appointment app,@QueryParam(value="idA")int idApp){
-		
+
+	public Response updateAppointment(@Context SecurityContext securityContext,Appointment app,@QueryParam(value="idR") int idR,@QueryParam(value="idA")int idApp){
+		User u = userServ.findUser(securityContext.getUserPrincipal().getName());
 		if(idApp==0){
 			if(app!=null)
-				{appointmentServ.updateAppointment(app);
+				{appointmentServ.updateAppointment(app,idR);
 					return Response.status(Status.OK).entity("Updated").build();
 				} 
 				else
@@ -106,14 +106,13 @@ public class AppointmentResource {
 				}
 		else
 			{
-			User u=userServ.findUser(securityContext.getUserPrincipal().getName());
-			
 				if (appointmentServ.cancelAppointment(idApp,u.getId())){
+					System.out.println("Hey hey"+idApp+" aeza"+u.getId());
 					return Response.status(Status.OK).entity("Canceled").build();}
 
 				return Response.status(Status.NOT_FOUND).entity("can't canceled").build();
 			}
-	
+
 }
 	@DELETE
 	@RolesAllowed("ROLE_PATIENT")
@@ -122,7 +121,7 @@ public class AppointmentResource {
 		if (idA !=0) {
 		appointmentServ.deleteAppointment(idA);
 			return Response.status(Status.OK).entity("Appointment deleted").build();
-		} 
+		}
 		else
 			return Response.status(Status.NOT_ACCEPTABLE).entity("Appontment not deleted").build();
 	}

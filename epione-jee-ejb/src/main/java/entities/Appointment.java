@@ -2,7 +2,6 @@ package entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -30,18 +29,17 @@ public class Appointment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+03")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
     private Date date_start;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+03")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
     private Date date_end;
     private String message;
     private states state;
 
     @OneToOne
 	private Reason reason;
-    
-    @ManyToOne
 
+    @ManyToOne
     @JoinColumn(updatable=false)
     private Patient patient;
 
@@ -83,8 +81,6 @@ public class Appointment implements Serializable {
         this.id = id;
     }
 
-  
-
     public String getMessage() {
         return message;
     }
@@ -92,8 +88,8 @@ public class Appointment implements Serializable {
     public void setMessage(String message) {
         this.message = message;
     }
-
-   
+  
+    @XmlTransient
     public Consultation getConsultation() {
         return consultation;
     }
@@ -149,7 +145,6 @@ public class Appointment implements Serializable {
     public void setState(states state) {
         this.state = state;
     }
-
 	public Reason getReason() {
 		return reason;
 	}
@@ -157,5 +152,5 @@ public class Appointment implements Serializable {
 	public void setReason(Reason reason) {
 		this.reason = reason;
 	}
-	
+
 }
