@@ -27,6 +27,7 @@ public class AvailabilityService implements AvailabilityServiceLocal , Availabil
 		
 		 TypedQuery< Availability> query=em.createQuery("SELECT a FROM Availability a where a.doctor.id= :idDoctor and :startDate"
 		 		+ " BETWEEN start_date and end_date",Availability.class);
+		 System.out.println("requete : "+query.toString());
 		query.setParameter("idDoctor", idDoctor);
 		query.setParameter("startDate", d1);
 	

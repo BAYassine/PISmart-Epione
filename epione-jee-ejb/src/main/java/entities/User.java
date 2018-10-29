@@ -46,7 +46,7 @@ public class User implements Serializable {
 
 	@OneToOne
 	private Profile profile;
-	@XmlAttribute
+
 	public int getId() {
 		return id;
 	}
