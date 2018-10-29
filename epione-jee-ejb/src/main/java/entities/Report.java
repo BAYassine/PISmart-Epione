@@ -8,6 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 public class Report  implements Serializable{
 	/**
@@ -19,11 +23,13 @@ public class Report  implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@Temporal(TemporalType.DATE)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date date_rep;
 	
 	private String content;
 	
-	@OneToOne(mappedBy="report")
+	@OneToOne( mappedBy="report")
 	private Consultation consultation;
 	
 	public Report(){
@@ -59,6 +65,10 @@ public class Report  implements Serializable{
 	public void setConsultation(Consultation consultation) {
 		this.consultation = consultation;
 	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 	
 	
 

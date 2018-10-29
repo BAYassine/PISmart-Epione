@@ -1,5 +1,6 @@
 package services;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -7,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import entities.Doctor;
 import entities.Path;
 import interfaces.PathServiceLocal;
 import interfaces.PathServiceRemote;
@@ -24,7 +26,7 @@ public class PathService implements PathServiceLocal, PathServiceRemote {
 
 	@Override
 	public int updatePath(Path path) {
-		Path t	= em.find(Path.class, path);
+		Path t	= em.find(Path.class, path.getId());
 		t.setDescription(path.getDescription());
 		t.setDate_path(path.getDate_path());
 		t.setList_treat(path.getList_treat());
@@ -33,20 +35,71 @@ public class PathService implements PathServiceLocal, PathServiceRemote {
 
 	@Override
 	public void deletePath(Path path) {
-		em.remove(path);
+		Path t = em.find(Path.class, path.getId());
+		em.remove(t);
 	}
+
 
 	@Override
 	public List<Path> getAllPaths() {
-		System.out.println("test");
+		 System.out.println("req num 1) SELECT p FROM Path p");
+
 		 TypedQuery<Path> query = em.createQuery("SELECT p FROM Path p", Path.class);
-		 System.out.println("SELECT p FROM Path p");
 		 return (List<Path>) query.getResultList();
+	}
+	@Override
+	public List<Path> getPathsByDesc(String desc) {
+		 System.out.println("req num 2) SELECT p FROM Path p where p.description like :desc");
+		 TypedQuery<Path> query = em.createQuery("SELECT p FROM Path p where p.description like :desc", Path.class);
+		 return (List<Path>) query.setParameter("desc", "%"+desc+"%").getResultList();
+	}
+	@Override
+	public List<Path> getPathsByDate(Date date) {
+		 System.out.println("req num 3) SELECT p FROM Path p where p.date_path = :date");
+
+		 TypedQuery<Path> query = em.createQuery("SELECT p FROM Path p where p.date_path = :date", Path.class);
+		 return (List<Path>) query.setParameter("date", date).getResultList();
+	}
+	@Override
+	public List<Path> getPathsDateGreaterThen(Date date) {
+		System.out.println("req num 4) SELECT p FROM Path p where p.date_path > :date");
+		 TypedQuery<Path> query = em.createQuery("SELECT p FROM Path p where p.date_path > :date", Path.class);
+		 return (List<Path>) query.setParameter("date", date).getResultList();
+
+	}
+	@Override
+	public List<Path> getPathsDateLessThen(Date date) {
+		System.out.println("req num 5) SELECT p FROM Path p where p.date_path < :date");
+		 TypedQuery<Path> query = em.createQuery("SELECT p FROM Path p where p.date_path < :date", Path.class);
+		 return (List<Path>) query.setParameter("date", date).getResultList();
+
+	}
+	
+	@Override
+	public List<Path> getPathsByDate(Date date, String desc) {
+		 System.out.println("req num 6) SELECT p FROM Path p where p.date_path = :date and p.description like :desc");
+
+		 TypedQuery<Path> query = em.createQuery("SELECT p FROM Path p where p.date_path = :date", Path.class);
+		 return (List<Path>) query.setParameter("date", date).setParameter("desc", "%"+desc+"%").getResultList();
 	}
 
 	@Override
 	public Path getPathById(int id) {
 		System.out.println("test");
-		return em.find(Path.class, id);
+		Path t = em.find(Path.class, id);
+		System.out.println("*****************test");
+		t.getList_treat().iterator();
+		return t;
 	}
+	
+	
+	@Override
+	public Doctor getPathDoctor(int id) {
+			System.out.println("req num 6) SELECT p.doctor FROM Path p WHERE p.id = :id");
+		 TypedQuery<Doctor> query = em.createQuery("SELECT p.doctor FROM Path p WHERE p.id = :id", Doctor.class);
+		 return  query.setParameter("id", id).getSingleResult();
+
+	}
+	
+	
 }

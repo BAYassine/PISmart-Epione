@@ -36,13 +36,14 @@ public class TreatmentService implements TreatmentServiceLocal, TreatmentService
 	@Override
 	public void deleteTreatment(Treatment treatment) {
 
-		em.remove(treatment);
+		Treatment t = em.find(Treatment.class, treatment.getId());
+		em.remove(t);
 	}
 
 	@Override
 	public List<Treatment> getAllTreatments() {
-		TypedQuery<Treatment> query = em.createQuery("SELECT p FROM Path p", Treatment.class);
-		 System.out.println("SELECT t FROM Treatment t");
+		TypedQuery<Treatment> query = em.createQuery("SELECT p FROM Treatment p", Treatment.class);
+		 System.out.println("reqNumb 1) SELECT t FROM Treatment t");
 		 return (List<Treatment>) query.getResultList();
 	}
 
@@ -50,6 +51,28 @@ public class TreatmentService implements TreatmentServiceLocal, TreatmentService
 	public Treatment getTreatmentById(int id) {
 		return 		em.find(Treatment.class, id);
 	}
+	
+	@Override
+	public List<Treatment> getTreatmentsByRecomDoc(String treat) {
+		 System.out.println("reqNumb 2) SELECT t FROM Treatment t where t.recomended_doc like :treat");
+		TypedQuery<Treatment> query = em.createQuery("SELECT t FROM Treatment t where t.recomended_doc like :treat", Treatment.class);
+		 return (List<Treatment>) query.setParameter("treat", "%"+treat+"%").getResultList();
+	}
+	
+	@Override
+	public List<Treatment> getTreatmentsByDesc(String desc) {
+		 System.out.println("reqNumb 3) SELECT t FROM Treatment t where t.description like :desc");
+		TypedQuery<Treatment> query = em.createQuery("SELECT t FROM Treatment t where t.description like :desc", Treatment.class);
+		 return (List<Treatment>) query.setParameter("desc", "%"+desc+"%").getResultList();
+	}
+	
+	@Override
+	public List<Treatment> getTreatmentsByRecomDocAndDesc(String recDoc , String desc) {
+		 System.out.println("reqNumb 4) SELECT t FROM Treatment t where t.recomended_doc like :treat and  t.description like :desc ");
+		TypedQuery<Treatment> query = em.createQuery("SELECT t FROM Treatment t where t.recomended_doc like :treat and  t.description like :desc ", Treatment.class);
+		 return (List<Treatment>) query.setParameter("treat", "%"+recDoc+"%").setParameter("desc", "%"+desc+"%").getResultList();
+	}
+	
 
 	
 }
