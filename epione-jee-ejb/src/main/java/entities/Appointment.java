@@ -2,12 +2,10 @@ package entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,20 +32,18 @@ public class Appointment implements Serializable {
     private Date date_start;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
     private Date date_end;
+    private String reason;
     private String message;
     private states state;
 
-    @OneToOne
-	private Reason reason;
-    
     @ManyToOne
-
     @JoinColumn(updatable=false)
     private Patient patient;
 
-    @ManyToOne
+    @ManyToOnee
     @JoinColumn(updatable=false)
     private Doctor doctor;
+
 
     @OneToOne(mappedBy="appointment", fetch = FetchType.LAZY)
     private Consultation consultation;
@@ -58,14 +54,12 @@ public class Appointment implements Serializable {
     public Appointment() {
 
     }
-
     public Appointment(Date date_start, Reason reason, String msg) {
         this.date_start = date_start;
         this.reason = reason;
         this.message = msg;
 
     }
-
     public Appointment(Date date_start, Reason reason, String msg, Doctor doctor, Patient patient) {
         this.date_start = date_start;
         this.reason = reason;
@@ -83,8 +77,6 @@ public class Appointment implements Serializable {
         this.id = id;
     }
 
-  
-
     public String getMessage() {
         return message;
     }
@@ -92,8 +84,8 @@ public class Appointment implements Serializable {
     public void setMessage(String message) {
         this.message = message;
     }
-
-   
+  
+    @XmlTransient
     public Consultation getConsultation() {
         return consultation;
     }
@@ -149,7 +141,6 @@ public class Appointment implements Serializable {
     public void setState(states state) {
         this.state = state;
     }
-
 	public Reason getReason() {
 		return reason;
 	}
@@ -157,5 +148,4 @@ public class Appointment implements Serializable {
 	public void setReason(Reason reason) {
 		this.reason = reason;
 	}
-	
 }
