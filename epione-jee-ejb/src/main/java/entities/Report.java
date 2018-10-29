@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Report  implements Serializable{
 	/**
@@ -27,6 +28,7 @@ public class Report  implements Serializable{
 	private String content;
 	
 	@OneToOne
+	@JsonIgnore
 	private Consultation consultation;
 	
 	public Report(){

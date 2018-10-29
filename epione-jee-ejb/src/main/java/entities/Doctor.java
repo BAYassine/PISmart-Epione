@@ -20,8 +20,9 @@ public class Doctor extends User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String presentation;
-    private String location;
+    private double location;
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Availability> availabilities = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
@@ -29,9 +30,11 @@ public class Doctor extends User implements Serializable {
     private Set<Appointment> appointments = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Path> paths = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Message> messages = new HashSet<>();
 
     @ManyToOne
@@ -41,7 +44,7 @@ public class Doctor extends User implements Serializable {
         super();
     }
 
-    public Doctor(Speciality speciality, String location) {
+    public Doctor(Speciality speciality, double location) {
         this.speciality = speciality;
         this.location = location;
     }
@@ -55,11 +58,11 @@ public class Doctor extends User implements Serializable {
         this.speciality = speciality;
     }
 
-    public String getLocation() {
+    public double getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(double location) {
         this.location = location;
     }
 
@@ -103,11 +106,5 @@ public class Doctor extends User implements Serializable {
         this.presentation = presentation;
     }
 
-    public void copy(Doctor d) {
-        super.copy(d);
-        if (this.speciality == null && d.speciality != null)
-            this.speciality = d.speciality;
-        if (this.location == null && d.location != null)
-            this.location = d.location;
-    }
+// s
 }

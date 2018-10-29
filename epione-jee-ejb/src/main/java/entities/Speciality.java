@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @XmlRootElement
 public class Speciality implements Serializable{
@@ -26,9 +28,11 @@ public class Speciality implements Serializable{
 	private String name;
 	
 	@OneToMany(mappedBy="speciality", fetch = FetchType.EAGER)
+	@JsonIgnore
 	private Set<Reason> reasons=new HashSet<>();
 	
 	@OneToMany(mappedBy="speciality", fetch = FetchType.EAGER)
+	@JsonIgnore
 	private Set<Doctor> doctors=new HashSet<>();
 	
 	

@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Path implements Serializable{
 	
@@ -39,6 +40,7 @@ public class Path implements Serializable{
 	private Patient patient;
 	
 	@OneToMany(mappedBy="path", fetch = FetchType.EAGER)
+	@JsonIgnore
 	private Set<Treatment> list_treat= new HashSet<>();
 	
 	public Path() {
@@ -75,14 +77,14 @@ public class Path implements Serializable{
 	public void setList_treat(Set<Treatment> list_treat) {
 		this.list_treat = list_treat;
 	}
-	@XmlTransient
+
 	public Doctor getDoctor() {
 		return doctor;
 	}
 	public void setDoctor(Doctor doctor) {
 		this.doctor = doctor;
 	}
-	@XmlTransient
+
 	public Patient getPatient() {
 		return patient;
 	}

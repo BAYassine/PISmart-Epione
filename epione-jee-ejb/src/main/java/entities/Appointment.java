@@ -38,10 +38,10 @@ public class Appointment implements Serializable {
     private states state;
 
     @OneToOne
+
 	private Reason reason;
     
     @ManyToOne
-
     @JoinColumn(updatable=false)
     private Patient patient;
 
