@@ -3,11 +3,16 @@ package entities;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Consultation implements Serializable {
@@ -20,7 +25,7 @@ public class Consultation implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+	 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
 	private Date date_cons;
 	
 	private String remarks;
@@ -29,25 +34,32 @@ public class Consultation implements Serializable {
 	
 	private double price;
 	
-	@OneToOne
+	@OneToOne(mappedBy="consultation", fetch = FetchType.LAZY)
 	private Report report;
 	
-	@OneToOne(mappedBy="consultation")
+	@OneToOne
 	private Appointment appointment;
+	
+	
 	
 	public Consultation(){
 		
 	}
 
-	public Consultation(int id, Date date_cons, String remarks, int rating, double price, Report report,
-			Appointment appointment) {
+	public Consultation(int id, Date date_cons, String remarks, int rating, double price) {
+		super();
 		this.id = id;
 		this.date_cons = date_cons;
 		this.remarks = remarks;
 		this.rating = rating;
 		this.price = price;
-		this.report = report;
-		this.appointment = appointment;
+	}
+
+	public Consultation( Date date_cons, String remarks, int rating, double price) {
+		this.date_cons = date_cons;
+		this.remarks = remarks;
+		this.rating = rating;
+		this.price = price;
 	}
 	public int getId() {
 		return id;
@@ -79,6 +91,7 @@ public class Consultation implements Serializable {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+	 @XmlTransient
 	public Appointment getAppointment() {
 		return appointment;
 	}
@@ -91,6 +104,6 @@ public class Consultation implements Serializable {
 	public void setReport(Report report) {
 		this.report = report;
 	}
-	
+
 	
 }

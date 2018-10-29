@@ -7,7 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 public class Report  implements Serializable{
 	/**
@@ -18,12 +23,14 @@ public class Report  implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	private Date date_rep;
+
+	@Temporal(TemporalType.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
+    private Date date_rep;
 	
 	private String content;
 	
-	@OneToOne(mappedBy="report")
+	@OneToOne
 	private Consultation consultation;
 	
 	public Report(){
@@ -53,6 +60,7 @@ public class Report  implements Serializable{
 	public void setContent(String content) {
 		this.content = content;
 	}
+	@XmlTransient
 	public Consultation getConsultation() {
 		return consultation;
 	}

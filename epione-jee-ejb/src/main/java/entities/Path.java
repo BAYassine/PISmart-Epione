@@ -10,6 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 public class Path implements Serializable{
 	
@@ -22,6 +26,8 @@ public class Path implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@Temporal(TemporalType.DATE)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date date_path;
 	
 	private String description;
@@ -32,7 +38,8 @@ public class Path implements Serializable{
 	@ManyToOne
 	private Patient patient;
 	
-	@OneToMany(mappedBy="path")
+	
+	@OneToMany(/*fetch = FetchType.EAGER ,*/mappedBy="path")
 	private List<Treatment> list_treat;
 	
 	public Path() {
@@ -63,6 +70,7 @@ public class Path implements Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	//@JsonIgnore
 	public List<Treatment> getList_treat() {
 		return list_treat;
 	}

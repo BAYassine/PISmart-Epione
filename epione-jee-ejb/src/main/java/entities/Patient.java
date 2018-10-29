@@ -1,12 +1,17 @@
 package entities;
 
-import java.io.Serializable;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 @Entity
+@XmlRootElement
 @PrimaryKeyJoinColumn(name="id")
 public class Patient extends User  implements Serializable{
 	
@@ -17,14 +22,15 @@ public class Patient extends User  implements Serializable{
 	
 	private int social_number;
 	
-	@OneToMany(mappedBy="patient")
-	private List<Path> paths;
+	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
+	private Set<Path> paths=new HashSet<>();
+
+	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
+    @JsonIgnore
+	private Set<Appointment> appointments = new HashSet<>();
 	
-	@OneToMany(mappedBy="patient")
-	private List<Appointment> appointments;
-	
-	@OneToMany(mappedBy="patient")
-	private List<Message> messages;
+	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
+	private Set<Message> messages=new HashSet<>();
 
 	public Patient() {
 		super();
@@ -36,7 +42,7 @@ public class Patient extends User  implements Serializable{
 	}
 	
 
-	public Patient(int social_number, List<Path> paths, List<Appointment> appointments, List<Message> messages) {
+	public Patient(int social_number, Set<Path> paths, Set<Appointment> appointments, Set<Message> messages) {
 		super();
 		this.social_number = social_number;
 		this.paths = paths;
@@ -51,29 +57,28 @@ public class Patient extends User  implements Serializable{
 	public void setSocial_number(int social_number) {
 		this.social_number = social_number;
 	}
-	
 
-	public List<Path> getPaths() {
+	public Set<Path> getPaths() {
 		return paths;
 	}
 
-	public void setPaths(List<Path> paths) {
+	public void setPaths(Set<Path> paths) {
 		this.paths = paths;
 	}
 
-	public List<Appointment> getAppointments() {
+	public Set<Appointment> getAppointments() {
 		return appointments;
 	}
 
-	public void setAppointments(List<Appointment> appointments) {
+	public void setAppointments(Set<Appointment> appointments) {
 		this.appointments = appointments;
 	}
 
-	public List<Message> getMessages() {
+	public Set<Message> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(List<Message> messages) {
+	public void setMessages(Set<Message> messages) {
 		this.messages = messages;
 	}
 
