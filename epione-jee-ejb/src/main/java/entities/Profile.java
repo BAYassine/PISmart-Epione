@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * Entity implementation class for Entity: Profile
  *
@@ -32,7 +34,7 @@ public class Profile implements Serializable {
 	private String firstname;
 	
 	private String lastname;
-	
+	 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
 	private Date birthDate;
 	
 	private Gender gender;
@@ -41,7 +43,7 @@ public class Profile implements Serializable {
 	
 	private String telephone;
 	
-	@OneToOne(mappedBy="profile")
+	@OneToOne(mappedBy="profile", fetch = FetchType.LAZY)
 	private User user;
 	
 	

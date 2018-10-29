@@ -8,6 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Message implements Serializable {
@@ -20,7 +23,7 @@ public class Message implements Serializable {
 	private int id;
 	
 	private String content;
-	
+	 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
 	private Date date_msg;
 	
 	@ManyToOne
@@ -58,6 +61,7 @@ public class Message implements Serializable {
 	public void setDate_msg(Date date_msg) {
 		this.date_msg = date_msg;
 	}
+	@XmlTransient
 	public Patient getPatient() {
 		return patient;
 	}
@@ -65,6 +69,7 @@ public class Message implements Serializable {
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
+	@XmlTransient
 	public Doctor getDoctor() {
 		return doctor;
 	}
