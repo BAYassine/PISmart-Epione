@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.New;
@@ -24,6 +25,7 @@ import entities.Patient;
 import entities.Reason;
 import interfaces.AppointmentServiceLocal;
 import interfaces.AppointmentServiceRemote;
+import interfaces.NotificationAppServiceLocal;
 
 
 @Stateless
@@ -31,6 +33,8 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 	@PersistenceContext(unitName="epione-jee-ejb")
 	EntityManager em;
 
+	@EJB
+	NotificationAppServiceLocal notificationManager;
 	@Override
 	public int addAppointment(Appointment app, int idDoctor, int idPatient, int idReason) {
 			Doctor doc=em.find(Doctor.class,idDoctor);
@@ -44,13 +48,14 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 		}
 
 	@Override
-	public boolean cancelAppointment(int appId) {
-		
+	public boolean cancelAppointment(int appId, int idP) {
 		Appointment app=em.find(Appointment.class, appId);
-		if(app!=null){
+		if(app!=null && app.getPatient().getId()==idP){
 			app.setState(states.CANCELED);
+			notificationManager.addNotification(app);
 			return true;	
 		}
+		System.out.println("qqqq");
 		return false;
 		
 		

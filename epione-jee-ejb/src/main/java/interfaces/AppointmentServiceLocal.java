@@ -12,7 +12,7 @@ import entities.Appointment;
 @Local
 public interface AppointmentServiceLocal {
 	public int addAppointment(Appointment app,int  idDoctor,int idPatient,int idReason);
-	public boolean cancelAppointment(int appId);
+	public boolean cancelAppointment(int appId,int idP);
 	public int updateAppointment(Appointment app, int idR);
 	public Appointment getAppointmentById(int appointmentId);
 	public List<Appointment> getAppointmentByDate(String dateapp) throws ParseException;
