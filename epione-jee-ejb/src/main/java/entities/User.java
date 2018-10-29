@@ -54,7 +54,7 @@ public class User implements Serializable {
 		this.registered_at = new Date();
 		this.role = role;
 	}
-	@XmlAttribute
+
 	public int getId() {
 		return id;
 	}
