@@ -1,5 +1,7 @@
 package services;
 
+
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,7 +13,9 @@ import java.util.Locale;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.resource.spi.work.SecurityContext;
 
@@ -22,10 +26,10 @@ import entities.Consultation;
 import entities.Doctor;
 import entities.Patient;
 import entities.Reason;
+
 import interfaces.AppointmentServiceLocal;
 import interfaces.AppointmentServiceRemote;
 import interfaces.AvailabilityServiceLocal;
-
 
 @Stateless
 public class AppointmentService implements AppointmentServiceLocal, AppointmentServiceRemote {
@@ -103,25 +107,18 @@ System.out.println("1/ SELECT a FROM Appointment a WHERE a.date_start = :dateapp
 		return query.getResultList();
 	}
 
-	@Override
-	public void affectConsultation(int idAppointment, int idConsultaion) {
-		Appointment app=em.find(Appointment.class, idAppointment);
-		Consultation cons=em.find(Consultation.class, idConsultaion);
-		app.setConsultation(cons);
-		
-	}
+    @Override
+    public void affectConsultation(int idAppointment, int idConsultaion) {
+        Appointment app = em.find(Appointment.class, idAppointment);
+        Consultation cons = em.find(Consultation.class, idConsultaion);
+        app.setConsultation(cons);
+
+    }
 
 	@Override
 	public List<Appointment> getAppointmentsByPatient(int idPatient) {
 		TypedQuery< Appointment> query=em.createQuery("SELECT a FROM Appointment a where a.patient.id= :idPatient",Appointment.class);
 		query.setParameter("idPatient", idPatient);
-		return query.getResultList();
-	}
-
-	@Override
-	public List<Appointment> getAppointmentsByDoctor(int idDoctor) {
-		TypedQuery< Appointment> query=em.createQuery("SELECT a FROM Appointment a where a.doctor.id= :idDoctor",Appointment.class);
-		query.setParameter("idDoctor", idDoctor);
 		return query.getResultList();
 	}
 	
@@ -136,9 +133,80 @@ System.out.println("1/ SELECT a FROM Appointment a WHERE a.date_start = :dateapp
 			return null;
 		}
 	}
+	
+    @Override
+    public List<Appointment> getAppointmentsByDoctor(int idDoctor) {
+        TypedQuery<Appointment> query = em.createQuery("SELECT a FROM Appointment a where a.doctor.id= :idDoctor", Appointment.class);
+        query.setParameter("idDoctor", idDoctor);
+        return query.getResultList();
+    }
+    /**
+     * Author : Yassine
+     */
+    public List<Appointment> upcoming(Doctor doctor) {
+        String sql = "SELECT a,d from Appointment a JOIN a.doctor d WHERE d.id = :id_doctor "
+                + "AND a.date_start > CURRENT_DATE ";
+        Query query = em.createQuery(sql).setParameter("id_doctor", doctor.getId());
+        return query.getResultList();
+    }
 
+    /**
+     * Author : Yassine
+     */
+    public Appointment ongoing(Doctor doctor) {
+        String sql = "SELECT a from Appointment a where a.state = :state "
+                + "order by a.date_start ASC ";
+        TypedQuery<Appointment> query = em.createQuery(sql, Appointment.class).setParameter("state", Appointment.states.ONGOING);
+        Appointment a;
+        try {
+            a = query.setMaxResults(1).getSingleResult();
+        } catch (NoResultException e) {
+            a = null;
+        }
+        return a;
+    }
 
-	}
+    /**
+     * Author : Yassine
+     */
+    public double averageAppointements(Doctor doctor) {
+        String sql = "SELECT count(a) from Appointment a where a.doctor = :doctor group by cast(a.date_start as date)";
+        Query query = em.createQuery(sql).setParameter("doctor", doctor);
+        List<Long> appCnt = query.getResultList();
+        double sum = appCnt.stream().mapToLong(i -> i).sum();
+        return sum / appCnt.size();
+    }
+
+    /**
+     * Author : Yassine
+     */
+    public long totalAppointements(Doctor doctor, String from) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        Date date = null;
+        try {
+            date = formatter.parse(from);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String sql = "SELECT count(a) from Appointment a where a.date_start > :from and a.date_start < current_date and a.doctor = :doctor";
+        Query query = em.createQuery(sql).setParameter("from", date).setParameter("doctor", doctor);
+        return (long) query.getSingleResult();
+    }
+
+    /**
+     * Author : Yassine
+     */
+    public Date averageDuration(Doctor doctor) {
+        String sql = "SELECT SUM(duration)/ COUNT(*) as average FROM ( " +
+                "SELECT TIME_TO_SEC(TIMEDIFF(date_end, date_start)) as duration, TIME(date_start), TIME(date_end) FROM appointment " +
+                "WHERE doctor_id = :doctor AND state = :state " +
+                ") AS durations";
+        Query query = em.createNativeQuery(sql).setParameter("doctor", doctor.getId()).setParameter("state", Appointment.states.DONE.ordinal());
+        BigDecimal avg = (BigDecimal) query.getSingleResult();
+        return new Date(avg.longValue() * 1000);
+    }
+
+}
 
 
 

@@ -13,6 +13,6 @@ public interface PathServiceLocal {
 	public void deletePath(Path path);
 	public List<Path> getAllPaths();
 	public Path getPathById(int id);
-	
+
 
 }
