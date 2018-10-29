@@ -14,6 +14,8 @@ import entities.Doctor;
 import interfaces.DoctorServiceLocal;
 import interfaces.DoctorServiceRemote;
 
+import java.util.Date;
+
 @Stateless
 public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 	@PersistenceContext(unitName="epione-jee-ejb")
@@ -54,4 +56,21 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 		 TypedQuery< Doctor> query=em.createQuery("SELECT d FROM Doctor d",Doctor.class);
 		return query.getResultList();
 	}
+
+    public int create(Doctor doctor){
+        doctor.setRegistred_at(new Date());
+        em.persist(doctor);
+        return doctor.getId();
+    }
+
+    public Doctor findDoctor(String username){
+        TypedQuery<Doctor> query = em.createQuery("SELECT d FROM Doctor d WHERE d.username = :username", Doctor.class)
+                .setParameter("username", username);
+        return query.getSingleResult();
+    }
+
+    public void update(Doctor doctor){
+		em.merge(doctor);
+	}
+
 }

@@ -1,19 +1,15 @@
 package entities;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 @Entity
 @XmlRootElement
 @PrimaryKeyJoinColumn(name="id")
@@ -28,7 +24,7 @@ public class Patient extends User  implements Serializable{
 	
 	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
 	private Set<Path> paths=new HashSet<>();
-	
+
 	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
     @JsonIgnore
 	private Set<Appointment> appointments = new HashSet<>();

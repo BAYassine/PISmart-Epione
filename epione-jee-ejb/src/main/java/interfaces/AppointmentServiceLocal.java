@@ -1,13 +1,16 @@
 package interfaces;
 
 import java.text.ParseException;
+import entities.Appointment;
+import entities.Doctor;
+import entities.Message;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Local;
 
-import entities.Appointment;
 
 @Local
 public interface AppointmentServiceLocal {
@@ -21,4 +24,13 @@ public interface AppointmentServiceLocal {
 	public List<Appointment> getAllAppointments();
 	public void affectConsultation(int idAppointment,int idConsultaion);
 
+
+    /**
+     * Author : Yassine
+     */
+    Date averageDuration(Doctor doctor);
+	List<Appointment> upcoming(Doctor doctor);
+	double averageAppointements(Doctor doctor);
+	Appointment ongoing(Doctor doctor);
+	long totalAppointements(Doctor doctor, String from);
 }

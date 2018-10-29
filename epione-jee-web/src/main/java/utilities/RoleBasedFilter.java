@@ -22,6 +22,7 @@ import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -84,11 +85,15 @@ public class RoleBasedFilter implements ContainerRequestFilter
             final String password = tokenizer.nextToken();
 
             //Verifying Username and password
-
             User user = userService.findUser(username);
-            System.out.println(user.getRole());
-            if (!password.equals(user.getPassword()))
+            if(user == null || !password.equals(user.getPassword())){
                 requestContext.abortWith(ACCESS_FORBIDDEN);
+                return;
+            }
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+            String lastLogin = formatter.format(user.getLast_login());
+            if(!formatter.format(new Date()).equals(lastLogin))
+                userService.updateLoginDate(user);
             //Verify user access
             if(method.isAnnotationPresent(RolesAllowed.class))
             {

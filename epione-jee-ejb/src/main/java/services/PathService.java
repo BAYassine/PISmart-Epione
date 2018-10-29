@@ -5,9 +5,11 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import entities.Path;
+import entities.Patient;
 import interfaces.PathServiceLocal;
 import interfaces.PathServiceRemote;
 
