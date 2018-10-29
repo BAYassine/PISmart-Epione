@@ -3,7 +3,6 @@ package entities;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -70,6 +69,7 @@ public class Treatment implements Serializable {
 		this.appointment = appointment;
 	}
 	@XmlTransient
+    @JsonIgnore
 	public Path getPath() {
 		return path;
 	}
