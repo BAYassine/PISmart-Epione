@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,7 +40,7 @@ public class Path implements Serializable{
 	private Patient patient;
 	
 	
-	@OneToMany(/*fetch = FetchType.EAGER ,*/mappedBy="path")
+	@OneToMany(/*fetch = FetchType.EAGER ,*/mappedBy="path", cascade = CascadeType.ALL)
 	private List<Treatment> list_treat;
 	
 	public Path() {
@@ -70,7 +71,6 @@ public class Path implements Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	//@JsonIgnore
 	public List<Treatment> getList_treat() {
 		return list_treat;
 	}

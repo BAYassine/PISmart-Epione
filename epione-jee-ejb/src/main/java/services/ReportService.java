@@ -30,6 +30,7 @@ public class ReportService implements ReportServiceLocal, ReportServiceRemote{
 		t.setConsultation(report.getConsultation());
 		t.setContent(report.getContent());
 		t.setDate_rep(report.getDate_rep());
+		t.setPathFile(report.getPathFile());
 		return report.getId();
 	}
 

@@ -12,6 +12,7 @@ import javax.persistence.TypedQuery;
 import entities.Doctor;
 import entities.Path;
 import entities.Patient;
+import entities.Treatment;
 import interfaces.PathServiceLocal;
 import interfaces.PathServiceRemote;
 
@@ -97,10 +98,26 @@ public class PathService implements PathServiceLocal, PathServiceRemote {
 	
 	@Override
 	public Doctor getPathDoctor(int id) {
-			System.out.println("req num 6) SELECT p.doctor FROM Path p WHERE p.id = :id");
+			System.out.println("req num 7) SELECT p.doctor FROM Path p WHERE p.id = :id");
 		 TypedQuery<Doctor> query = em.createQuery("SELECT p.doctor FROM Path p WHERE p.id = :id", Doctor.class);
-		 return  query.setParameter("id", id).getSingleResult();
+		 return (Doctor) query.setParameter("id", id).getSingleResult();
 
+	}
+	@Override
+	public Patient getPathPatient(int id) {
+			System.out.println("req num 8) SELECT p.patient FROM Path p WHERE p.id = :id");
+		 TypedQuery<Patient> query = em.createQuery("SELECT p.patient FROM Path p WHERE p.id = :id", Patient.class);
+		 return (Patient) query.setParameter("id", id).getSingleResult();
+
+	}
+	
+	@Override
+	public Path addTreatToPath(int id ,Treatment treat) {
+		Path path = em.find(Path.class, id);
+		List<Treatment> treats = path.getList_treat();
+		treats.add(treat);
+		path.setList_treat(treats);
+		return path;
 	}
 	
 	

@@ -14,14 +14,19 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import entities.Treatment;
+import interfaces.ReportServiceLocal;
 import interfaces.TreatmentServiceLocal;
+import interfaces.UserServiceLocal;
 
 @Path("/treatments")
 public class TreatmentResource {
 	
 	@EJB
 	TreatmentServiceLocal ts ;
-	
+	@EJB
+	UserServiceLocal userServ;
+	@EJB
+	ReportServiceLocal rs ;
 	
 	//à tester
 	@POST
@@ -51,7 +56,8 @@ public class TreatmentResource {
 		return Response.status(Status.ACCEPTED).entity(treat).build();
 	}
 	
-
+	
+	
 	// GETALL | SEARCH by id | by recom doctor | by desc | by  recom doctor && desc
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -81,7 +87,18 @@ public class TreatmentResource {
 		}
 		
 	}
+
 	
+	/* à tester (roles)*/
+	@POST
+	@PermitAll
+	@Path("/test")
+	@Produces(MediaType.APPLICATION_JSON)
+		public Response getPathsConnectedUser(/*@Context SecurityContext securityContext*/) {
+		/*User u=userServ.findUser(securityContext.getUserPrincipal().getName());*/
+		/*System.out.println("id patient: "+u.getId());*/
+		return Response.status(Status.FOUND).entity("test khraaaaa").build();
+	}
 	
 	
 
