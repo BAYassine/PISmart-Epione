@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Path implements Serializable{
 	

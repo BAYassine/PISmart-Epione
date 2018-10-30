@@ -23,7 +23,8 @@ public interface AppointmentServiceRemote {
 	public List<Appointment> getPatientsAppointmentByDate(String date,int idP) throws ParseException;
 	public List<Appointment> getAllAppointments();
 	public void affectConsultation(int idAppointment,int idConsultaion);
-	
+    List<Appointment> getAppointmentByDate(String dateapp) throws ParseException;
+
     /**
      * Author : Yassine
      */
@@ -32,4 +33,5 @@ public interface AppointmentServiceRemote {
     double averageAppointements(Doctor doctor);
     Appointment ongoing(Doctor doctor);
     long totalAppointements(Doctor doctor, String from);
+
 }
