@@ -44,7 +44,6 @@ public class Profile implements Serializable {
     private String telephone;
 
     @OneToOne(mappedBy="profile")
-    @JsonManagedReference
 	private User user;
 	
 	

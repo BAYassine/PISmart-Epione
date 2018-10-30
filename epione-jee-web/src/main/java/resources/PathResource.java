@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -15,12 +16,15 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
 import entities.Path;
 import entities.Treatment;
+import entities.User;
 import interfaces.PathServiceLocal;
 import interfaces.TreatmentServiceLocal;
 import interfaces.UserServiceLocal;
@@ -105,6 +109,14 @@ public class PathResource {
 	}
 	
 
+	@GET
+	@RolesAllowed("ROLE_ADMIN")
+	@Produces("text/plain")
+	@javax.ws.rs.Path("/test")
+	public Response test(@Context SecurityContext securityContext) {
+		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+		return  Response.status(Status.ACCEPTED).entity(u.getId()).build();
+	}
 	
 	
 	// GETALL | SEARCH by id | by date | by >date | by  <date | by date && desc

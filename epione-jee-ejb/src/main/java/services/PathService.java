@@ -82,7 +82,7 @@ public class PathService implements PathServiceLocal, PathServiceRemote {
 	public List<Path> getPathsByDate(Date date, String desc) {
 		 System.out.println("req num 6) SELECT p FROM Path p where p.date_path = :date and p.description like :desc");
 
-		 TypedQuery<Path> query = em.createQuery("SELECT p FROM Path p where p.date_path = :date", Path.class);
+		 TypedQuery<Path> query = em.createQuery("SELECT p FROM Path p where p.date_path = :date and p.description like :desc", Path.class);
 		 return (List<Path>) query.setParameter("date", date).setParameter("desc", "%"+desc+"%").getResultList();
 	}
 

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +16,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 public class Path implements Serializable{
 	
@@ -40,7 +43,8 @@ public class Path implements Serializable{
 	private Patient patient;
 	
 	
-	@OneToMany(/*fetch = FetchType.EAGER ,*/mappedBy="path", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER ,mappedBy="path", cascade = CascadeType.ALL)
+	@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 	private List<Treatment> list_treat;
 	
 	public Path() {
@@ -71,6 +75,7 @@ public class Path implements Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
 	public List<Treatment> getList_treat() {
 		return list_treat;
 	}
