@@ -25,12 +25,14 @@ import entities.Appointment.states;
 import entities.Availability;
 import entities.Consultation;
 import entities.Doctor;
+import entities.NotificationApp;
 import entities.Patient;
 import entities.Reason;
 
 import interfaces.AppointmentServiceLocal;
 import interfaces.AppointmentServiceRemote;
 import interfaces.AvailabilityServiceLocal;
+import interfaces.NotificationAppServiceLocal;
 
 @Stateless
 public class AppointmentService implements AppointmentServiceLocal, AppointmentServiceRemote {
@@ -39,6 +41,8 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 	
 	@EJB
 	private AvailabilityServiceLocal availServ;
+	@EJB
+	private NotificationAppServiceLocal notifServ;
 
 	 /**
      * Author : Oumayma
@@ -57,6 +61,8 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 				subject="Medical Appointment confirmation";
 				content="Your appointment on : "+app.getDate_start()+" has been confirmed. ";
 				email.sendEmail(subject,content,emailPatient);
+				NotificationApp n=new NotificationApp(new Date(), pat, "Your appointment has been confirmed.");
+				notifServ.sendNotifToPatient(idPatient, n);
 				return app.getId();
 			}
 			return 0;
