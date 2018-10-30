@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.DefaultValue;
@@ -30,6 +31,7 @@ public class DoctolibResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+	@PermitAll
 	public Response getDoctors(@QueryParam(value="path")String path,@QueryParam(value="speciality")String speciality,@DefaultValue("france") @QueryParam(value="location")String location,@DefaultValue("-1") @QueryParam(value="page") String page){
 		
 		if(path != null){
