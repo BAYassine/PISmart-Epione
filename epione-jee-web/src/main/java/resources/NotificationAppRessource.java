@@ -69,4 +69,16 @@ public class NotificationAppRessource {
 		User u = usersManager.findUser(securityContext.getUserPrincipal().getName());
 		return Response.status(Status.OK).entity(notifManager.Confirmation(u.getId())).build();
 	}
+	/** Author: oumayma
+	 * **/
+	@GET
+	@Path("show")
+	@RolesAllowed({ "ROLE_PATIENT"})
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response showMyNotif(@Context SecurityContext securityContext){
+		User u = usersManager.findUser(securityContext.getUserPrincipal().getName());
+		return Response.status(Status.OK).entity(notifManager.getNotficationByPatient(u.getId())).build();
+	}
+}
+
 }

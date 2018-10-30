@@ -15,5 +15,9 @@ public interface NotificationAppServiceRemote {
 	public List<NotificationApp> getNotificationByDate(String date);
 	public List<NotificationApp> getAllNotification();
 	public JsonObject Confirmation(int idP);
+	public int sendNotifToPatient(int idP,NotificationApp n);
+	public List<NotificationApp>  getNotficationByPatient(int idP);
+
+	
 
 }

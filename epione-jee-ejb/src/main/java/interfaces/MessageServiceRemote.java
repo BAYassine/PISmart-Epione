@@ -8,6 +8,11 @@ import java.util.List;
 
 @Remote
 public interface MessageServiceRemote {
+	 /**
+     * Author : Oumayma
+     */
+	  public int sendMessagePatient(int idP,int idD,Message msg);
+	  public List<Message> PatientMessages(int idP, int nbMsg);
 
     /**
      * Author : Yassine

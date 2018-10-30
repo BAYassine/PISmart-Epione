@@ -28,9 +28,9 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 	}
 
 	//By Oumayma
-	public List<Doctor>  getDoctorByLocation(double location) {
-		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d WHERE d.location= :location",Doctor.class);
-		return query.setParameter("location",location).getResultList();
+	public List<Doctor>  getDoctorByLocation(double latitude,double longitude) {
+		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d WHERE d.latitude= :latitude AND d.longitude= :longitude",Doctor.class);
+		return query.setParameter("latidue",latitude).setParameter("longitude",longitude).getResultList();
 	}
 
 	//By Oumayma 
@@ -44,9 +44,10 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 	}
 
 	//By Oumayma
-	public List<Doctor>  getDoctorBySpecialitAndLocation(int specialityID, double location) {
-		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d WHERE d.location= :location AND d.speciality.id= :specialityID",Doctor.class);
-		query.setParameter("location",location);
+	public List<Doctor>  getDoctorBySpecialitAndLocation(int specialityID, double latitude,double longitude) {
+		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d WHERE d.latitude= :latitude AND d.longitude= :longitude AND d.speciality.id= :specialityID",Doctor.class);
+		query.setParameter("latitude",latitude);
+		query.setParameter("longitude", longitude);
 		query.setParameter("specialityID", specialityID);
 		return query.getResultList();
 	}
@@ -57,6 +58,32 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 		return query.getResultList();
 	}
 
+	@Override
+	public List<Doctor> getDoctorByCity(String city) {
+	    TypedQuery<Doctor> query = em.createQuery("SELECT d FROM Doctor d WHERE d.city = :city", Doctor.class)
+                .setParameter("city", city);
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Doctor> getDoctorBySpecialitAndCity(int specialityID, String city) {
+		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d WHERE d.speciality.id= :specialityID AND d.city= :city",Doctor.class);
+		return query.setParameter("specialityID",specialityID).setParameter("city", city).getResultList();
+	}
+
+	@Override
+	public List<Doctor> getDoctorByNameAndLocation(String name, double latitude, double longitude) {
+		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d , User u ,Profile p where u.role ='ROLE_DOCTOR' and p.firstname= :name and u.id=d.id and u.profile.id=p.id and d.latitude= :latitude and d.longitude= :longitude",Doctor.class);
+		return query.setParameter("name",name).setParameter("latitude", latitude).setParameter("longitude", longitude).getResultList();
+	}
+	@Override
+	public List<Doctor> getDoctorByNameAndCity(String name, String city) {
+		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d , User u ,Profile p where u.role ='ROLE_DOCTOR' and p.firstname= :name and u.id=d.id and u.profile.id=p.id and d.city= :city",Doctor.class);
+		return query.setParameter("name",name).setParameter("city", city).getResultList();
+	}
+   /** 
+    * YASSINE
+    * **/
     public int create(Doctor doctor){
         doctor.setRegistred_at(new Date());
         em.persist(doctor);
@@ -72,5 +99,10 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
     public void update(Doctor doctor){
 		em.merge(doctor);
 	}
+
+
+
+
+
 
 }

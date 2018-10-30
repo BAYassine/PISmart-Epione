@@ -34,91 +34,90 @@ public class AppointmentResource {
 	AppointmentServiceLocal appointmentServ;
 	@EJB
 	UserServiceLocal userServ;
-    /**
+	 /**
      * Author : Oumayma
      */
-    @GET
-    @RolesAllowed({ "ROLE_PATIENT", "ROLE_DOCTOR" })
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAppointment(@Context SecurityContext securityContext,@QueryParam(value = "id") int id,@QueryParam(value = "date") String date) throws ParseException {
-        User u=userServ.findUser(securityContext.getUserPrincipal().getName());
-        List<Appointment> appList=new ArrayList<>();
-        Appointment app;
-        System.out.println("****************************************"+u.getUsername());
-        // Search by Appointment ID
-        if(id!=0 && date==null){
-            System.out.println("*****************************************by id only");
-            app=appointmentServ.getAppointmentById(id);
-            if(app!=null)
-                return (Response.status(Response.Status.FOUND).entity(app).build());
-            return (Response.status(Response.Status.NOT_FOUND).entity("Appointment not founded").build());
-        }
-        // Search by Patient/Doctor Id and Date
-        else if(id==0 && date!=null){
-            System.out.println("**********************************by y");
-            if(u.getRole().equals("ROLE_PATIENT")){
-                appList=appointmentServ.getPatientsAppointmentByDate(date,u.getId());
-                if(!appList.isEmpty())
-                { System.out.println("**********************************appppp");
-                    return (Response.status(Response.Status.FOUND).entity(appList).build());}
-                return (Response.status(Response.Status.NOT_FOUND).entity("No appointment").build());
+	@GET
+	@RolesAllowed({ "ROLE_PATIENT", "ROLE_DOCTOR" })
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAppointment(@Context SecurityContext securityContext,@QueryParam(value = "id") int id,@QueryParam(value = "date") String date) throws ParseException {
+		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+		List<Appointment> appList=new ArrayList<>();
+		Appointment app;
+		System.out.println("****************************************"+u.getUsername());
+		// Search by Appointment ID
+		if(id!=0 && date==null){
+			System.out.println("*****************************************by id only");
+		        app=appointmentServ.getAppointmentById(id);
+				if(app!=null)
+					return (Response.status(Response.Status.FOUND).entity(app).build());
+			    return (Response.status(Response.Status.NOT_FOUND).entity("Appointment not founded").build());
+         }
+	// Search by Patient/Doctor Id and Date
+      else if(id==0 && date!=null){
+    	  System.out.println("**********************************by y");
+    	        if(u.getRole().equals("ROLE_PATIENT")){
+  			       appList=appointmentServ.getPatientsAppointmentByDate(date,u.getId());
+  			       if(!appList.isEmpty())
+  			       { System.out.println("**********************************appppp");
+  			    	   return (Response.status(Response.Status.FOUND).entity(appList).build());}
+  	  			    return (Response.status(Response.Status.NOT_FOUND).entity("No appointment").build());
 
-            }
-            else if(u.getRole().equals("ROLE_DOCTOR")){
-                appList=appointmentServ.getDoctorsAppointmentByDate(date,u.getId());
-                if(!appList.isEmpty())
-                    return (Response.status(Response.Status.FOUND).entity(appList).build());
-                return (Response.status(Response.Status.NOT_FOUND).entity("No appointment").build());
-            }
-            else
-                return (Response.status(Response.Status.BAD_REQUEST).entity("No appointment").build());
-        }
-        // Search by all appointment of a doctor or a patient
-        else if(id==0&&date==null){
-            System.out.println("**********************************nothing");
-            if(u.getRole().equals("ROLE_PATIENT")){
-                appList=appointmentServ.getAppointmentsByPatient(u.getId());
-                if(!appList.isEmpty())
-                    return (Response.status(Response.Status.FOUND).entity(appList).build());
-                return (Response.status(Response.Status.NOT_FOUND).entity("No appointment").build());
+    	        }
+    	        else if(u.getRole().equals("ROLE_DOCTOR")){
+   			       appList=appointmentServ.getDoctorsAppointmentByDate(date,u.getId());
+   			       if(!appList.isEmpty())
+   			    	   return (Response.status(Response.Status.FOUND).entity(appList).build());
+   	  			    return (Response.status(Response.Status.NOT_FOUND).entity("No appointment").build());
+     	        }
+    	        else
+ 	        	   return (Response.status(Response.Status.BAD_REQUEST).entity("No appointment").build());
+      }
+	// Search by all appointment of a doctor or a patient
+      else if(id==0&&date==null){
+    	  System.out.println("**********************************nothing");
+    	  if(u.getRole().equals("ROLE_PATIENT")){
+			       appList=appointmentServ.getAppointmentsByPatient(u.getId());
+			       if(!appList.isEmpty())
+			    	   return (Response.status(Response.Status.FOUND).entity(appList).build());
+	  			    return (Response.status(Response.Status.NOT_FOUND).entity("No appointment").build());
 
-            }
-            else if(u.getRole().equals("ROLE_DOCTOR")){
-                appList=appointmentServ.getAppointmentsByDoctor(u.getId());
-                if(!appList.isEmpty())
-                    return (Response.status(Response.Status.FOUND).entity(appList).build());
-                return (Response.status(Response.Status.NOT_FOUND).entity("No appointment").build());
+	        }
+	        else if(u.getRole().equals("ROLE_DOCTOR")){
+			       appList=appointmentServ.getAppointmentsByDoctor(u.getId());
+			       if(!appList.isEmpty())
+			    	   return (Response.status(Response.Status.FOUND).entity(appList).build());
+	  			    return (Response.status(Response.Status.NOT_FOUND).entity("No appointment").build());
 
-            }
-            else
-                return (Response.status(Response.Status.BAD_REQUEST).entity("No appointment").build());
-        }
-        return (Response.status(Response.Status.BAD_REQUEST).entity("No appointment").build());
+	        }
+	        else
+	        	   return (Response.status(Response.Status.BAD_REQUEST).entity("No appointment").build());
+           }
+		    return (Response.status(Response.Status.BAD_REQUEST).entity("No appointment").build());
 
 
-    }
+	}
 
-    /**
+	 /**
      * Author : Oumayma
      */
-    @POST
-    @RolesAllowed("ROLE_PATIENT")
-    @Consumes(MediaType.APPLICATION_XML)
-    public Response addAppointment(@Context SecurityContext securityContext,Appointment app) throws ParseException {
-        if (app != null) {
-            User u=userServ.findUser(securityContext.getUserPrincipal().getName());
-            int id;
-            id=appointmentServ.addAppointment(app, u.getId(),u.getEmail());
-            if(id!=0)
-                return Response.status(Status.CREATED).entity("Appointment added").build();
-            return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();
-        }
-        else
-            return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();
-    }
-
-
-    /**
+	@POST
+	@RolesAllowed("ROLE_PATIENT")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addAppointment(@Context SecurityContext securityContext,Appointment app) throws ParseException {
+		if (app != null) {
+			User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+			int id;
+			id=appointmentServ.addAppointment(app, u.getId(),u.getEmail());
+			if(id!=0) 
+				return Response.status(Status.CREATED).entity("Appointment added").build();	
+			return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();	
+		} 
+		else
+			return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();
+	}
+	
+	 /**
      * Author : Oumayma
      */
     @PUT
@@ -159,5 +158,4 @@ public class AppointmentResource {
 		else
 			return Response.status(Status.NOT_ACCEPTABLE).entity("Appontment not deleted").build();
 	}
-
 }

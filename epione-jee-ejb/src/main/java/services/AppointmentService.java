@@ -30,105 +30,89 @@ import entities.Reason;
 import interfaces.AppointmentServiceLocal;
 import interfaces.AppointmentServiceRemote;
 import interfaces.AvailabilityServiceLocal;
-import interfaces.NotificationAppServiceLocal;
 
 @Stateless
 public class AppointmentService implements AppointmentServiceLocal, AppointmentServiceRemote {
-    @PersistenceContext(unitName = "epione-jee-ejb")
-    EntityManager em;
+	@PersistenceContext(unitName="epione-jee-ejb")
+	EntityManager em;
+	
+	@EJB
+	private AvailabilityServiceLocal availServ;
+	@EJB
+	private NotificationAppServiceLocal notifServ;
 
-    @EJB
-    private AvailabilityServiceLocal availServ;
-
-    @EJB
-    private NotificationAppServiceLocal notificationManager;
-
-    /**
+	 /**
      * Author : Oumayma
      */
-    public int addAppointment(Appointment app, int idPatient, String emailPatient) throws ParseException {
-        List<Availability> list = new ArrayList<>();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateS = format.format(app.getDate_start());
-        System.out.println("dateee: " + dateS);
-        list = availServ.checkAvailability(app.getDoctor().getId(), dateS);
+	public int addAppointment(Appointment app, int idPatient,String emailPatient) throws ParseException {
+			List<Availability> list=new ArrayList<>();
+			SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String dateS=format.format(app.getDate_start());
+			list=availServ.checkAvailability(app.getDoctor().getId(), dateS);
+			Patient pat=em.find(Patient.class, idPatient);
+			if(list.isEmpty()){
+				app.setPatient(pat);
+				em.persist(app);
+				EmailService email=new EmailService();
+				String subject,content;
+				subject="Medical Appointment confirmation";
+				content="Your appointment on : "+app.getDate_start()+" has been confirmed. ";
+				email.sendEmail(subject,content,emailPatient);
+				NotificationApp n=new NotificationApp(new Date(), pat, "Your appointment has been confirmed.");
+				notifServ.sendNotifToPatient(idPatient, n);
+				return app.getId();
+			}
+			return 0;
+			
+		}
 
-        Patient pat = em.find(Patient.class, idPatient);
-        if (list.isEmpty()) {
-            app.setPatient(pat);
-            em.persist(app);
-            EmailService email = new EmailService();
-            String subject, content;
-            subject = "Medical Appointment confirmation";
-            content = "Your appointment on : " + app.getDate_start() + " has been confirmed. ";
-            email.sendEmail(subject, content, emailPatient);
-            return app.getId();
-        }
-        return 0;
-
-    }
-
-    /**
+	 /**
      * Author : Oumayma
      */
-    public boolean cancelAppointment(int appId, int idP) {
+	public boolean cancelAppointment(int appId,int idP) {
+		Appointment app=em.find(Appointment.class, appId);
+		if(app!=null && app.getPatient().getId()==idP){
+			app.setState(states.CANCELED);
+			return true;	
+		}
+		return false;
+		
+	}
+	public void deleteAppointment(int idA,int idP){
+		Appointment app=em.find(Appointment.class, idA);
+		if(app.getPatient().getId()==idP)
+			em.remove(app);
+		
+	}
 
-        Appointment app = em.find(Appointment.class, appId);
-        if (app != null && app.getPatient().getId() == idP) {
-            app.setState(states.CANCELED);
-            notificationManager.addNotification(app);
-            return true;
-        }
-        return false;
-
-    }
-
-    public void deleteAppointment(int idA, int idP) {
-        Appointment app = em.find(Appointment.class, idA);
-        if (app.getPatient().getId() == idP)
-            em.remove(app);
-
-    }
-
-    /**
+	 /**
      * Author : Oumayma
      */
-    public int updateAppointment(Appointment app, int idP) {
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!! " + app.getPatient().getId());
-        if (app.getPatient().getId() == idP) {
-            em.merge(app);
-            return app.getId();
-        }
-        return 0;
-    }
+	public int updateAppointment(Appointment app,int idP) {
+		if(app.getPatient().getId()==idP){
+			em.merge(app);
+			return app.getId();
+		}
+		return 0;
+	}
 
-    /**
+	 /**
      * Author : Oumayma
      */
-    public Appointment getAppointmentById(int appointmentId) {
-        return (em.find(Appointment.class, appointmentId));
-
-    }
-
-    @Override
-    public List<Appointment> getAppointmentByDate(String dateapp) throws ParseException {
-        java.util.Date d1 = null;
-        System.out.println("1/ SELECT a FROM Appointment a WHERE a.date_start = :dateapp");
-        d1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateapp);
-        java.sql.Date d = new java.sql.Date(d1.getTime());
-        System.out.println(d1);
-        return em.createQuery("SELECT a FROM Appointment a WHERE a.date_start = :dateapp", Appointment.class).setParameter("dateapp", d1).getResultList();
-    }
-
-    /**
+	public Appointment getAppointmentById(int appointmentId) {
+		return (em.find(Appointment.class, appointmentId));
+	
+	}
+	
+	 /**
      * Author : Oumayma
      */
-    public List<Appointment> getAllAppointments() {
-        TypedQuery<Appointment> query = em.createQuery("SELECT a FROM Appointment a", Appointment.class);
-        return query.getResultList();
-    }
+	public List<Appointment> getAllAppointments() {
+		 TypedQuery< Appointment> query=em.createQuery("SELECT a FROM Appointment a",Appointment.class);
+		return query.getResultList();
+	}
 
-    /**
+	 /**
      * Author : Oumayma
      */
     public void affectConsultation(int idAppointment, int idConsultaion) {
@@ -141,14 +125,14 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
     /**
      * Author : Oumayma
      */
-    public List<Appointment> getAppointmentsByPatient(int idPatient) {
-        TypedQuery<Appointment> query = em.createQuery("SELECT a FROM Appointment a where a.patient.id= :idPatient", Appointment.class);
-        query.setParameter("idPatient", idPatient);
-        return query.getResultList();
-    }
+	public List<Appointment> getAppointmentsByPatient(int idPatient) {
+		TypedQuery< Appointment> query=em.createQuery("SELECT a FROM Appointment a where a.patient.id= :idPatient",Appointment.class);
+		query.setParameter("idPatient", idPatient);
+		return query.getResultList();
+	}
 
-
-    /**
+	
+	 /**
      * Author : Oumayma
      */
     public List<Appointment> getAppointmentsByDoctor(int idDoctor) {
@@ -156,7 +140,6 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         query.setParameter("idDoctor", idDoctor);
         return query.getResultList();
     }
-
     /**
      * Author : Oumayma
      */
@@ -172,7 +155,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         return query.getResultList();
     }
 
-    /**
+	 /**
      * Author : Oumayma
      */
     public List<Appointment> getPatientsAppointmentByDate(String date, int idP) throws ParseException {

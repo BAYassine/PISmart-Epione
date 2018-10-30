@@ -6,9 +6,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,7 +18,6 @@ public class Doctor extends User implements Serializable {
      *
      */
     private static final long serialVersionUID = 1L;
-
     private String presentation;
     private String name;
     private String image;
@@ -39,8 +36,9 @@ public class Doctor extends User implements Serializable {
     @ElementCollection
     @CollectionTable(name ="skills")
     private List<String> skills = new ArrayList<String>();
-    
+
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Availability> availabilities = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
@@ -48,9 +46,11 @@ public class Doctor extends User implements Serializable {
     private Set<Appointment> appointments = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Path> paths = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Message> messages = new HashSet<>();
 
     @ManyToOne
@@ -112,8 +112,8 @@ public class Doctor extends User implements Serializable {
     public void setPresentation(String presentation) {
         this.presentation = presentation;
     }
-    
-    
+
+
 
     public double getLatitude() {
 		return latitude;

@@ -8,7 +8,11 @@ import java.util.List;
 
 @Local
 public interface MessageServiceLocal {
-
+	/**
+     * Author : Oumayma
+     */
+	 public int sendMessagePatient(int idP,int idD,Message msg);
+     public List<Message> PatientMessages(int idP, int nbMsg);
     /**
      * Author : Yassine
      */

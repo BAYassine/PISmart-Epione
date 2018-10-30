@@ -33,6 +33,8 @@ public class NotificationApp implements Serializable{
     @ManyToOne
     private Patient patientnotif;
 
+    private String content;
+
     public NotificationApp() {
 		// TODO Auto-generated constructor stub
 	}
@@ -46,6 +48,24 @@ public class NotificationApp implements Serializable{
 		this.new_Appointement_Date = new_Appointement_Date;
 		this.patientnotif = patientnotif;
 	}
+
+	public NotificationApp(Date notified_at, Patient patientnotif, String content) {
+		super();
+		this.notified_at = notified_at;
+		this.patientnotif = patientnotif;
+		this.content = content;
+	}
+
+
+	public String getContent() {
+		return content;
+	}
+
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
 
 	public Confiramtion getConfirmation() {
 		return confirmation;
@@ -66,6 +86,17 @@ public class NotificationApp implements Serializable{
 	public Date getNew_Appointement_Date() {
 		return new_Appointement_Date;
 	}
+
+
+	public int getId() {
+		return id;
+	}
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 
 	public void setNew_Appointement_Date(Date new_Appointement_Date) {
 		this.new_Appointement_Date = new_Appointement_Date;

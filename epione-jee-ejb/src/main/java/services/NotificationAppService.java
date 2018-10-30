@@ -77,4 +77,24 @@ public class NotificationAppService implements NotificationAppServiceLocal, Noti
 			return Json.createObjectBuilder().add("Ooups !", "Vous avez Déja Annulé le changement dhoraire").build();
 		
 	}
+
+	@Override
+	public int sendNotifToPatient(int idP, NotificationApp n) {
+		if(n!=null){
+			Patient p=em.find(Patient.class, idP);
+			n.setPatientnotif(p);
+			em.persist(n);
+			return n.getId();	
+		}
+		return 0;
+	}
+
+	@Override
+	public List<NotificationApp> getNotficationByPatient(int idP) {
+		TypedQuery< NotificationApp> query=em.createQuery( "SELECT n FROM NotificationAPP n where n.patient.id = :idP order by m.notified_at DESC ",NotificationApp.class);
+		query.setParameter("idPatient", idP);
+		return query.getResultList();
+	}
+}
+
 }
