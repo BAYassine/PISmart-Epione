@@ -19,8 +19,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.SecurityContext;
 
 import entities.Path;
 import entities.Treatment;
@@ -97,7 +97,6 @@ public class PathResource {
 	}
 	
 	
-	//à tester...
 	
 	@DELETE
 	@PermitAll
@@ -109,15 +108,7 @@ public class PathResource {
 	}
 	
 
-	@GET
-	@RolesAllowed("ROLE_ADMIN")
-	@Produces("text/plain")
-	@javax.ws.rs.Path("/test")
-	public Response test(@Context SecurityContext securityContext) {
-		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
-		return  Response.status(Status.ACCEPTED).entity(u.getId()).build();
-	}
-	
+
 	
 	// GETALL | SEARCH by id | by date | by >date | by  <date | by date && desc
 
@@ -158,6 +149,17 @@ public class PathResource {
 				
 				
 			}
+			
+			@GET
+			@RolesAllowed("ROLE_PATIENT")
+			@Produces(MediaType.APPLICATION_JSON)
+			@javax.ws.rs.Path("/getUserConnected")
+			public Response getPathsUserConnected(@Context SecurityContext securityContext) {
+				User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+				
+				return  Response.status(Status.ACCEPTED).entity(ps.getPatientsPath(u.getId())).build();
+			}
+			
 			
 
 			

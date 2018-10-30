@@ -55,6 +55,10 @@ public class Doctor extends User implements Serializable {
 
     @ManyToOne
     private Speciality speciality;
+    
+    /*Fares*/
+    @ManyToMany(fetch = FetchType.EAGER)
+	private Set<Reason> reasons=new HashSet<>();
 
     public Doctor() {
         super();
@@ -240,4 +244,13 @@ public class Doctor extends User implements Serializable {
         if (this.speciality == null && d.speciality != null)
             this.speciality = d.speciality;
     }
+
+	public Set<Reason> getReasons() {
+		return reasons;
+	}
+
+	public void setReasons(Set<Reason> reasons) {
+		this.reasons = reasons;
+	}
+	
 }
