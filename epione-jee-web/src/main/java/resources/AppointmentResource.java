@@ -121,25 +121,6 @@ public class AppointmentResource {
     /**
      * Author : Oumayma
      */
-    @POST
-    @RolesAllowed("ROLE_PATIENT")
-    @Consumes(MediaType.APPLICATION_XML)
-    public Response addAppointment(@Context SecurityContext securityContext,Appointment app) throws ParseException {
-        if (app != null) {
-            User u=userServ.findUser(securityContext.getUserPrincipal().getName());
-            int id;
-            id=appointmentServ.addAppointment(app, u.getId(),u.getEmail());
-            if(id!=0)
-                return Response.status(Status.CREATED).entity("Appointment added").build();
-            return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();
-        }
-        else
-            return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();
-    }
-
-    /**
-     * Author : Oumayma
-     */
     @PUT
     @RolesAllowed("ROLE_PATIENT")
     @Consumes(MediaType.APPLICATION_XML)

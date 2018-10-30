@@ -25,6 +25,7 @@ public interface AppointmentServiceLocal {
 	public List<Appointment> getPatientsAppointmentByDate(String date,int idP) throws ParseException;
 	public List<Appointment> getAllAppointments();
 	public void affectConsultation(int idAppointment,int idConsultaion);
+    List<Appointment> getAppointmentByDate(String dateapp) throws ParseException;
 
 
     /**
