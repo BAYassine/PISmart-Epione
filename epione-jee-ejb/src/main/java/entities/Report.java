@@ -37,6 +37,9 @@ public class Report  implements Serializable{
 	@JsonIgnore
 	private Consultation consultation;
 	
+	@OneToOne
+	private Patient patient ;
+	
 	
 	public Report(){
 		
@@ -83,6 +86,16 @@ public class Report  implements Serializable{
 	}
 	public void setConsultation(Consultation consultation) {
 		this.consultation = consultation;
+	}
+
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 	
 	

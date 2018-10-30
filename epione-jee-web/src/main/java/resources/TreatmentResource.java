@@ -1,6 +1,7 @@
 package resources;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -9,11 +10,14 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
 import entities.Treatment;
+import entities.User;
 import interfaces.ReportServiceLocal;
 import interfaces.TreatmentServiceLocal;
 import interfaces.UserServiceLocal;
@@ -28,10 +32,9 @@ public class TreatmentResource {
 	@EJB
 	ReportServiceLocal rs ;
 	
-	//à tester
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	public Response addTreatment(Treatment treat) {
 		ts.addTreatment(treat);
 		return Response.status(Status.CREATED).entity(treat).build();
@@ -41,7 +44,7 @@ public class TreatmentResource {
 	
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	public Response deleteTreatment(Treatment treat) {
 		ts.deleteTreatment(treat);
 		return Response.status(Status.ACCEPTED).entity("Treatment Removed").build();
@@ -50,7 +53,7 @@ public class TreatmentResource {
 	
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	public Response updateTreatment(Treatment treat) {
 		ts.updateTreatment(treat);
 		return Response.status(Status.ACCEPTED).entity(treat).build();
@@ -88,18 +91,29 @@ public class TreatmentResource {
 		
 	}
 
-	
-	/* à tester (roles)*/
-	@POST
-	@PermitAll
-	@Path("/test")
+	@GET
+	@RolesAllowed("ROLE_PATIENT")
 	@Produces(MediaType.APPLICATION_JSON)
-		public Response getPathsConnectedUser(/*@Context SecurityContext securityContext*/) {
-		/*User u=userServ.findUser(securityContext.getUserPrincipal().getName());*/
-		/*System.out.println("id patient: "+u.getId());*/
-		return Response.status(Status.FOUND).entity("test khraaaaa").build();
+	@Path("/getPatientConnected")
+	public Response getTreatmentsUserConnected(@Context SecurityContext securityContext) {
+		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+		
+		return  Response.status(Status.ACCEPTED).entity(ts.getPatientsTreatment(u.getId())).build();
 	}
 	
+	@GET
+	@RolesAllowed("ROLE_DOCTOR")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/getDoctorConnected")
+	public Response getTreatmentsDoctorConnected(@Context SecurityContext securityContext) {
+		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+		
+		return  Response.status(Status.ACCEPTED).entity(ts.getDoctorsTreatment(u.getId())).build();
+	}
+	
+	
+	
+
 	
 
 }

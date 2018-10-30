@@ -25,6 +25,7 @@ import javax.ws.rs.core.SecurityContext;
 import entities.Path;
 import entities.Treatment;
 import entities.User;
+import interfaces.DoctorServiceLocal;
 import interfaces.PathServiceLocal;
 import interfaces.TreatmentServiceLocal;
 import interfaces.UserServiceLocal;
@@ -42,12 +43,17 @@ public class PathResource {
 	@EJB
 	UserServiceLocal userServ;
 	
+	@EJB
+	DoctorServiceLocal doctorServ;
+	
 		
 	
 	@POST
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addPath(Path p) {
+	public Response addPath(Path p, @Context SecurityContext securityContext) {
+		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+		p.setDoctor(doctorServ.getDoctorById(u.getId()));
 		ps.addPath(p);
 		return Response.status(Status.CREATED).entity(p).build();
     }
@@ -56,7 +62,7 @@ public class PathResource {
 	
 	@POST
 	@javax.ws.rs.Path("/addTreatment")
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addTreatemntToPath(@QueryParam("idPath") int idPath , Treatment treat ) {
 		if((idPath != 0)&&(treat != null)) {
@@ -89,7 +95,7 @@ public class PathResource {
 	
 	
 	@PUT
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updatePath(Path p) {
 		ps.updatePath(p);
@@ -99,7 +105,7 @@ public class PathResource {
 	
 	
 	@DELETE
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deletePath(Path p) {
 		
@@ -153,11 +159,21 @@ public class PathResource {
 			@GET
 			@RolesAllowed("ROLE_PATIENT")
 			@Produces(MediaType.APPLICATION_JSON)
-			@javax.ws.rs.Path("/getUserConnected")
+			@javax.ws.rs.Path("/getPatientConnected")
 			public Response getPathsUserConnected(@Context SecurityContext securityContext) {
 				User u=userServ.findUser(securityContext.getUserPrincipal().getName());
 				
 				return  Response.status(Status.ACCEPTED).entity(ps.getPatientsPath(u.getId())).build();
+			}
+			
+			@GET
+			@RolesAllowed("ROLE_DOCTOR")
+			@Produces(MediaType.APPLICATION_JSON)
+			@javax.ws.rs.Path("/getDoctorConnected")
+			public Response getPathsDoctorConnected(@Context SecurityContext securityContext) {
+				User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+				
+				return  Response.status(Status.ACCEPTED).entity(ps.getDoctorsPath(u.getId())).build();
 			}
 			
 			

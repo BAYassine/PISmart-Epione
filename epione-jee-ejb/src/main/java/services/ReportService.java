@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import entities.Path;
 import entities.Report;
 import interfaces.ReportServiceLocal;
 import interfaces.ReportServiceRemote;
@@ -31,6 +32,7 @@ public class ReportService implements ReportServiceLocal, ReportServiceRemote{
 		t.setContent(report.getContent());
 		t.setDate_rep(report.getDate_rep());
 		t.setPathFile(report.getPathFile());
+		t.setPatient(t.getPatient());
 		return report.getId();
 	}
 
@@ -94,6 +96,14 @@ public class ReportService implements ReportServiceLocal, ReportServiceRemote{
 		 }else return null;
 
 		}
+	
+	@Override
+	public List<Report> getPatientsReport(int id) {
+			System.out.println("req num 7) SELECT p FROM Report p WHERE p.patient.id = :id");
+		 TypedQuery<Report> query = em.createQuery("SELECT p FROM Report p WHERE p.patient.id = :id", Report.class);
+		 return (List<Report>) query.setParameter("id", id).getResultList();
+
+	}
 
 	@Override
 	public Report getReportById(int id) {

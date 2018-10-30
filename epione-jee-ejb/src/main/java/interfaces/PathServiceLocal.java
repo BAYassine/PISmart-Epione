@@ -26,6 +26,7 @@ public interface PathServiceLocal {
 	public Patient getPathPatient(int id);
 	public Path addTreatToPath(int id ,Treatment treat);
 	List<Path> getPatientsPath(int id);
+	List<Path> getDoctorsPath(int id);
 
 
 }

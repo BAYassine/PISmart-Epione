@@ -17,4 +17,6 @@ public interface TreatmentServiceLocal {
 	public List<Treatment> getTreatmentsByRecomDoc(String treat);
 	public List<Treatment> getTreatmentsByDesc(String desc);
 	public List<Treatment> getTreatmentsByRecomDocAndDesc(String recDoc , String desc);
+	List<Treatment> getPatientsTreatment(int id);
+	List<Treatment> getDoctorsTreatment(int id);
 }

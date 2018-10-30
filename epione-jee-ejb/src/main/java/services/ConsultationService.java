@@ -49,4 +49,18 @@ public class ConsultationService implements ConsultationServiceLocal , Consultat
 		return list;
 	}
 	
+	@Override
+	public List<Consultation> getPricyConsultation(double price) {
+		 TypedQuery< Consultation> query=em.createQuery("SELECT c FROM Consultation c where c.price >=:price",Consultation.class);
+		return query.setParameter("price", price).getResultList();
+	}
+	
+	@Override
+	public List<Consultation> getBestConsultations() {
+		 TypedQuery< Consultation> query=em.createQuery("SELECT c FROM Consultation c where c.rating=5",Consultation.class);
+		 List<Consultation> list=new ArrayList<>();
+		 list=query.getResultList();
+		return list;
+	}
+	
 }
