@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -49,10 +50,10 @@ public class Appointment implements Serializable {
     @JoinColumn(updatable=false)
     private Doctor doctor;
 
-    @OneToOne(mappedBy="appointment", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy="appointment", fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
     private Consultation consultation;
 
-    @OneToOne(mappedBy = "appointment", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "appointment", fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
     private Treatment treatment;
 
     public Appointment() {

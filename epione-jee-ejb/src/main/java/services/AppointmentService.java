@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -141,13 +142,15 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
      * Author : Oumayma
      */
 	public List<Appointment> getDoctorsAppointmentByDate(String date,int idD) throws ParseException {
-		   		java.util.Date d1=null;
-				d1=new SimpleDateFormat("yyyy-MM-dd").parse(date);
-				java.sql.Date d=new java.sql.Date(d1.getTime());
-				Query query=em.createQuery("SELECT a FROM Appointment a WHERE a.date_start = :dateapp AND a.doctor.id= :idD",Appointment.class);
-				query.setParameter("dateapp",d);
-				query.setParameter("idD",idD);
-				return query.getResultList();
+		  java.util.Date d1=null;
+			d1=new SimpleDateFormat("yyyy-MM-dd").parse(date);
+			java.sql.Date d=new java.sql.Date(d1.getTime());
+			java.sql.Date tomorrow= new java.sql.Date( d.getTime() + 24*60*60*1000);
+			Query query=em.createQuery("SELECT a FROM Appointment a WHERE a.date_start BETWEEN :dateapp AND :tomorrow AND a.doctor.id = :idD",Appointment.class);
+			query.setParameter("dateapp",d);
+			query.setParameter("tomorrow", tomorrow);
+			query.setParameter("idD",idD);
+			return query.getResultList();
 			}
 
 	 /**
@@ -157,9 +160,11 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 				  java.util.Date d1=null;
 				d1=new SimpleDateFormat("yyyy-MM-dd").parse(date);
 				java.sql.Date d=new java.sql.Date(d1.getTime());
-				System.out.println("daaaaaate"+d.toString());
-				Query query=em.createQuery("SELECT a FROM Appointment a WHERE a.date_start = :dateapp AND a.patient.id = :idP",Appointment.class);
+				java.sql.Date tomorrow= new java.sql.Date( d.getTime() + 24*60*60*1000);
+				System.out.println("daaaaaate"+tomorrow.toString());
+				Query query=em.createQuery("SELECT a FROM Appointment a WHERE a.date_start BETWEEN :dateapp AND :tomorrow AND a.patient.id = :idP",Appointment.class);
 				query.setParameter("dateapp",d);
+				query.setParameter("tomorrow", tomorrow);
 				query.setParameter("idP",idP);
 				System.out.println(idP);
 				return query.getResultList();

@@ -3,6 +3,7 @@ package entities;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -34,7 +35,7 @@ public class Consultation implements Serializable {
 	
 	private double price;
 	
-	@OneToOne(mappedBy="consultation", fetch = FetchType.LAZY)
+	@OneToOne(mappedBy="consultation", fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
 	private Report report;
 	
 	@OneToOne
