@@ -31,18 +31,33 @@ public class Report  implements Serializable{
 	
 	private String content;
 	
+	private String pathFile;
+	
 	@OneToOne
 	@JsonIgnore
 	private Consultation consultation;
 	
+	
 	public Report(){
 		
 	}
-	public Report(int id, Date date_rep, String content) {
+	
+	
+	public Report(int id, Date date_rep, String content, String pathFile, Consultation consultation) {
 		super();
 		this.id = id;
 		this.date_rep = date_rep;
 		this.content = content;
+		this.pathFile = pathFile;
+		this.consultation = consultation;
+	}
+
+
+	public String getPathFile() {
+		return pathFile;
+	}
+	public void setPathFile(String pathFile) {
+		this.pathFile = pathFile;
 	}
 	public int getId() {
 		return id;

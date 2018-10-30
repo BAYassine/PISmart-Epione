@@ -7,6 +7,8 @@ import javax.ejb.Local;
 
 import entities.Doctor;
 import entities.Path;
+import entities.Patient;
+import entities.Treatment;
 
 @Local
 public interface PathServiceLocal {
@@ -21,6 +23,8 @@ public interface PathServiceLocal {
     public List<Path> getPathsDateLessThen(Date date);
     public List<Path> getPathsByDate(Date date, String desc);
 	public Doctor getPathDoctor(int id);
+	public Patient getPathPatient(int id);
+	public Path addTreatToPath(int id ,Treatment treat);
 
 
 }

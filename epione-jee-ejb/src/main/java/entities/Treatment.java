@@ -1,9 +1,13 @@
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,6 +40,8 @@ public class Treatment implements Serializable {
 	private Appointment appointment;
 	
 	@ManyToOne
+	@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+	
 	private Path path;
 	
 	public Treatment() {
@@ -47,7 +53,7 @@ public class Treatment implements Serializable {
 		this.recomended_doc = recomended_doc;
 		this.appointment = appointment;
 	}
-	@XmlAttribute
+
 	public int getId() {
 		return id;
 	}
@@ -73,8 +79,6 @@ public class Treatment implements Serializable {
 	public void setAppointment(Appointment appointment) {
 		this.appointment = appointment;
 	}
-	@XmlTransient
-    @JsonIgnore
 	public Path getPath() {
 		return path;
 	}

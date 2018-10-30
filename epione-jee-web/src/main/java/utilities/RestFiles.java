@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.security.PermitAll;
+import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -16,13 +17,21 @@ import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
-@Path("/Files")
+import entities.Report;
+import interfaces.ReportServiceLocal;
+
+@Path("/files")
 public class RestFiles {
+	
+	@EJB
+	ReportServiceLocal rs;
+	
 	   @POST
 	    @Path("/upload")
 	    @Consumes(MediaType.MULTIPART_FORM_DATA)
 	   @PermitAll
-	    public Response uploadFile(MultipartFormDataInput input) throws IOException {
+	    public Response uploadFile(MultipartFormDataInput input , @QueryParam("idReport") int idReport) throws IOException {
+		   Report r = rs.getReportById(idReport);
 	        Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
 	  
 	        // Get file data to save
@@ -33,7 +42,7 @@ public class RestFiles {
 	  
 	                MultivaluedMap<String, String> header = inputPart.getHeaders();
 	                String fileName = getFileName(header);
-	    
+	              
 	                // convert the uploaded file to inputstream
 	                InputStream inputStream = inputPart.getBody(InputStream.class,
 	                        null);
@@ -48,7 +57,9 @@ public class RestFiles {
 	            }
 	                fileName = customDir.getCanonicalPath()  + File.separator + fileName;
 	                writeFile(bytes, fileName);
-	  
+	                r.setPathFile(fileName);
+	                System.out.println("Report updated");
+	                rs.updateReport(r);
 	                   
 	                return Response.status(200).entity("Uploaded file name : " + fileName)
 	                        .build();
