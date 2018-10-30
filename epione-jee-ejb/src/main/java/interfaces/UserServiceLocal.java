@@ -3,8 +3,9 @@ package interfaces;
 import entities.User;
 
 import javax.ejb.Local;
-import javax.ejb.LocalBean;
 import javax.persistence.NoResultException;
+import java.util.List;
+import java.util.Map;
 
 @Local
 public interface UserServiceLocal {
@@ -22,4 +23,8 @@ public interface UserServiceLocal {
     long todayUsers();
 
     long registeredSince(String date);
+
+    Map<String, Long> subscrtionsPerMonth();
+
+    List<User> latestRegistrations(int limit);
 }

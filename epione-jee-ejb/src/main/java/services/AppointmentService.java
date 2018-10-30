@@ -1,14 +1,10 @@
 package services;
 
-
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -19,29 +15,29 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.resource.spi.work.SecurityContext;
 
-import entities.Appointment;
+import entities.*;
 import entities.Appointment.states;
-import entities.Availability;
-import entities.Consultation;
-import entities.Doctor;
-import entities.Patient;
-import entities.Reason;
 
 import interfaces.AppointmentServiceLocal;
 import interfaces.AppointmentServiceRemote;
 import interfaces.AvailabilityServiceLocal;
+import interfaces.NotificationAppServiceLocal;
 
 @Stateless
 public class AppointmentService implements AppointmentServiceLocal, AppointmentServiceRemote {
-	@PersistenceContext(unitName="epione-jee-ejb")
+
+    @PersistenceContext(unitName="epione-jee-ejb")
 	EntityManager em;
-	
+
 	@EJB
 	private AvailabilityServiceLocal availServ;
-	@EJB
-	private NotificationAppServiceLocal notifServ;
 
-	 /**
+	@EJB
+    NotificationAppServiceLocal notificationManager;
+	@EJB
+    private NotificationAppServiceLocal notifServ;
+
+    /**
      * Author : Oumayma
      */
 	public int addAppointment(Appointment app, int idPatient,String emailPatient) throws ParseException {
@@ -63,27 +59,30 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 				return app.getId();
 			}
 			return 0;
-			
+
 		}
 
 	 /**
      * Author : Oumayma
      */
-	public boolean cancelAppointment(int appId,int idP) {
-		Appointment app=em.find(Appointment.class, appId);
-		if(app!=null && app.getPatient().getId()==idP){
-			app.setState(states.CANCELED);
-			return true;	
-		}
-		return false;
-		
-	}
-	public void deleteAppointment(int idA,int idP){
-		Appointment app=em.find(Appointment.class, idA);
-		if(app.getPatient().getId()==idP)
-			em.remove(app);
-		
-	}
+    public boolean cancelAppointment(int appId, int idP) {
+
+        Appointment app = em.find(Appointment.class, appId);
+        if (app != null && app.getPatient().getId() == idP) {
+            app.setState(states.CANCELED);
+            notificationManager.addNotification(app);
+            return true;
+        }
+        return false;
+
+    }
+
+    public void deleteAppointment(int idA, int idP) {
+        Appointment app = em.find(Appointment.class, idA);
+        if (app.getPatient().getId() == idP)
+            em.remove(app);
+
+    }
 
 	 /**
      * Author : Oumayma
@@ -99,20 +98,30 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 	 /**
      * Author : Oumayma
      */
-	public Appointment getAppointmentById(int appointmentId) {
-		return (em.find(Appointment.class, appointmentId));
-	
-	}
-	
-	 /**
+    public Appointment getAppointmentById(int appointmentId) {
+        return (em.find(Appointment.class, appointmentId));
+
+    }
+
+    @Override
+    public List<Appointment> getAppointmentByDate(String dateapp) throws ParseException {
+        java.util.Date d1 = null;
+        System.out.println("1/ SELECT a FROM Appointment a WHERE a.date_start = :dateapp");
+        d1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateapp);
+        java.sql.Date d = new java.sql.Date(d1.getTime());
+        System.out.println(d1);
+        return em.createQuery("SELECT a FROM Appointment a WHERE a.date_start = :dateapp", Appointment.class).setParameter("dateapp", d1).getResultList();
+    }
+
+    /**
      * Author : Oumayma
      */
-	public List<Appointment> getAllAppointments() {
-		 TypedQuery< Appointment> query=em.createQuery("SELECT a FROM Appointment a",Appointment.class);
-		return query.getResultList();
-	}
+    public List<Appointment> getAllAppointments() {
+        TypedQuery<Appointment> query = em.createQuery("SELECT a FROM Appointment a", Appointment.class);
+        return query.getResultList();
+    }
 
-	 /**
+    /**
      * Author : Oumayma
      */
     public void affectConsultation(int idAppointment, int idConsultaion) {
@@ -125,14 +134,14 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
     /**
      * Author : Oumayma
      */
-	public List<Appointment> getAppointmentsByPatient(int idPatient) {
-		TypedQuery< Appointment> query=em.createQuery("SELECT a FROM Appointment a where a.patient.id= :idPatient",Appointment.class);
-		query.setParameter("idPatient", idPatient);
-		return query.getResultList();
-	}
+    public List<Appointment> getAppointmentsByPatient(int idPatient) {
+        TypedQuery<Appointment> query = em.createQuery("SELECT a FROM Appointment a where a.patient.id= :idPatient", Appointment.class);
+        query.setParameter("idPatient", idPatient);
+        return query.getResultList();
+    }
 
-	
-	 /**
+
+    /**
      * Author : Oumayma
      */
     public List<Appointment> getAppointmentsByDoctor(int idDoctor) {
@@ -140,6 +149,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         query.setParameter("idDoctor", idDoctor);
         return query.getResultList();
     }
+
     /**
      * Author : Oumayma
      */
@@ -155,7 +165,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         return query.getResultList();
     }
 
-	 /**
+    /**
      * Author : Oumayma
      */
     public List<Appointment> getPatientsAppointmentByDate(String date, int idP) throws ParseException {
@@ -186,9 +196,11 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
      * Author : Yassine
      */
     public Appointment ongoing(Doctor doctor) {
-        String sql = "SELECT a from Appointment a where a.state = :state "
+        String sql = "SELECT a from Appointment a where a.state = :state and a.doctor = :doctor "
                 + "order by a.date_start ASC ";
-        TypedQuery<Appointment> query = em.createQuery(sql, Appointment.class).setParameter("state", Appointment.states.ONGOING);
+        TypedQuery<Appointment> query = em.createQuery(sql, Appointment.class)
+				.setParameter("state", Appointment.states.ONGOING)
+				.setParameter("doctor",doctor);
         Appointment a;
         try {
             a = query.setMaxResults(1).getSingleResult();
@@ -212,11 +224,11 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
     /**
      * Author : Yassine
      */
-    public long totalAppointements(Doctor doctor, String from) {
+    public long totalAppointements(Doctor doctor, String since) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
         Date date = null;
         try {
-            date = formatter.parse(from);
+            date = formatter.parse(since);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -225,13 +237,27 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         return (long) query.getSingleResult();
     }
 
+	/**
+	 * Author : Yassine
+	 */
+	public Map<Date, Long> appointmentPerDay(Doctor doctor){
+		String sql = "SELECT count(a), date(a.date_start) from Appointment a " +
+				"where a.date_start > (current_date - 7) and a.date_start < current_date and a.doctor = :doctor " +
+				"GROUP BY date(a.date_start)";
+		Query query = em.createQuery(sql).setParameter("doctor", doctor);
+		List<Object[]> list = query.getResultList();
+		Map<Date, Long> map = new HashMap<>();
+		list.forEach( k -> map.put((Date) k[1], (Long)k[0]));
+		return map;
+	}
+
     /**
      * Author : Yassine
      */
     public Date averageDuration(Doctor doctor) {
         String sql = "SELECT SUM(duration)/ COUNT(*) as average FROM ( " +
                 "SELECT TIME_TO_SEC(TIMEDIFF(date_end, date_start)) as duration, TIME(date_start), TIME(date_end) FROM appointment " +
-                "WHERE doctor_id = :doctor AND state = :state " +
+                "WHERE doctor_id = :doctor AND state = :state AND date_end IS NOT NULL " +
                 ") AS durations";
         Query query = em.createNativeQuery(sql).setParameter("doctor", doctor.getId()).setParameter("state", Appointment.states.DONE.ordinal());
         BigDecimal avg = (BigDecimal) query.getSingleResult();
@@ -239,11 +265,3 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
     }
 
 }
-
-
-
-
-
-	
-
-

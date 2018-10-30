@@ -1,7 +1,6 @@
 package services;
 
 import javax.ejb.Stateless;
-import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -9,13 +8,14 @@ import javax.persistence.Query;
 
 import entities.User;
 import interfaces.UserServiceLocal;
-import interfaces.UserServiceRemote;
 
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Stateless
 public class UserService implements UserServiceLocal  {
@@ -85,9 +85,27 @@ public class UserService implements UserServiceLocal  {
 		} catch (ParseException e) {
 			since = new Date();
 		}
-		String sql = "SELECT COUNT(u) from User u where date(u.registred_at) >= date(:since)";
+		String sql = "SELECT COUNT(u) from User u where date(u.registered_at) >= date(:since)";
 		Query query = em.createQuery(sql).setParameter("since", since);
 		return (long) query.getSingleResult();
 	}
+
+	public Map<String, Long> subscrtionsPerMonth(){
+		String sql = "SELECT COUNT(*) total, DATE_FORMAT(registered_at, '%Y-%m') month, Date(registered_at) FROM user " +
+				"GROUP BY (DATE_FORMAT(registered_at, '%y-%m')) LIMIT 12";
+		Query query =em.createNativeQuery(sql);
+		List<Object[]> list = query.getResultList();
+		Map<String, Long> map = new HashMap<>();
+		list.forEach( k -> map.put((String) k[1], ((BigInteger)k[0]).longValue()));
+		return map;
+	}
+
+	public List<User> latestRegistrations(int limit){
+		Query query = em.createQuery("SELECT u FROM User u order by u.registered_at DESC");
+		if (limit != 0)
+			query.setMaxResults(limit);
+		return query.getResultList();
+	}
+
 
 }

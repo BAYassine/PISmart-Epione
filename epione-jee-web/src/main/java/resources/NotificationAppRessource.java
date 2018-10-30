@@ -80,5 +80,3 @@ public class NotificationAppRessource {
 		return Response.status(Status.OK).entity(notifManager.getNotficationByPatient(u.getId())).build();
 	}
 }
-
-}

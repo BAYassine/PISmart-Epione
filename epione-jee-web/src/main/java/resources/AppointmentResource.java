@@ -34,8 +34,9 @@ public class AppointmentResource {
 	AppointmentServiceLocal appointmentServ;
 	@EJB
 	UserServiceLocal userServ;
-	 /**
-     * Author : Oumayma
+
+	/**
+        * Author : Oumayma
      */
 	@GET
 	@RolesAllowed({ "ROLE_PATIENT", "ROLE_DOCTOR" })
@@ -96,9 +97,9 @@ public class AppointmentResource {
 		    return (Response.status(Response.Status.BAD_REQUEST).entity("No appointment").build());
 
 
-	}
+    }
 
-	 /**
+    /**
      * Author : Oumayma
      */
 	@POST
@@ -109,14 +110,14 @@ public class AppointmentResource {
 			User u=userServ.findUser(securityContext.getUserPrincipal().getName());
 			int id;
 			id=appointmentServ.addAppointment(app, u.getId(),u.getEmail());
-			if(id!=0) 
-				return Response.status(Status.CREATED).entity("Appointment added").build();	
-			return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();	
-		} 
+			if(id!=0)
+				return Response.status(Status.CREATED).entity("Appointment added").build();
+			return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();
+		}
 		else
 			return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();
 	}
-	
+
 	 /**
      * Author : Oumayma
      */
@@ -143,7 +144,7 @@ public class AppointmentResource {
         }
 
     }
-	 /**
+    /**
      * Author : Oumayma
      */
 	@DELETE

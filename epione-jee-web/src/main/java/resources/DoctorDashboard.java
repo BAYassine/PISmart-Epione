@@ -108,16 +108,5 @@ public class DoctorDashboard {
         return Response.status(200).entity(total).build();
     }
 
-    /**
-     * Author : Yassine
-     */
-    @PermitAll
-    @Produces("application/json")
-    @Consumes("application/json")
-    public Response addDoctor(Doctor d) {
-        int id = doctorService.create(d);
-        return Response.status(201).entity(id).build();
-    }
-
 
 }
