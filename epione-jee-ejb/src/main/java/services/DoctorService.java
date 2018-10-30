@@ -33,7 +33,7 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 		return query.setParameter("location",location).getResultList();
 	}
 
-	//By Oumayma (not correct yet)
+	//By Oumayma 
 	public List<Doctor> getDoctorByName(String name) {
 		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d , User u ,Profile p where u.role ='ROLE_DOCTOR' and p.firstname= :name and u.id=d.id and u.profile.id=p.id ",Doctor.class);
 		return query.setParameter("name",name).getResultList();

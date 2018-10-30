@@ -1,6 +1,7 @@
 package entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -41,6 +42,7 @@ public class User implements Serializable {
     protected Roles role;
 
 	@OneToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
 	protected Profile profile;
 
 	public User(){

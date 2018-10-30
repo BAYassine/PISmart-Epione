@@ -90,7 +90,7 @@ public class RoleBasedFilter implements ContainerRequestFilter
                 requestContext.abortWith(ACCESS_FORBIDDEN);
                 return;
             }
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy MM dd");
             String lastLogin = formatter.format(user.getLast_login());
             if(!formatter.format(new Date()).equals(lastLogin))
                 userService.updateLoginDate(user);

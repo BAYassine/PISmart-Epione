@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Consultation implements Serializable {
@@ -34,10 +35,11 @@ public class Consultation implements Serializable {
 	
 	private double price;
 	
-	@OneToOne(mappedBy="consultation", fetch = FetchType.LAZY)
+	@OneToOne(mappedBy="consultation", fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
 	private Report report;
 	
 	@OneToOne
+	@JsonIgnore
 	private Appointment appointment;
 	
 	
@@ -91,7 +93,7 @@ public class Consultation implements Serializable {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	 @XmlTransient
+
 	public Appointment getAppointment() {
 		return appointment;
 	}

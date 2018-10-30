@@ -14,14 +14,15 @@ import javax.ejb.Local;
 
 @Local
 public interface AppointmentServiceLocal {
-	public int addAppointment(Appointment app,int idPatient) throws ParseException;
+	public int addAppointment(Appointment app,int idPatient,String emailPatient) throws ParseException;
 	public boolean cancelAppointment(int appId,int idP);
-	public int updateAppointment(Appointment app);
-	public void deleteAppointment(int idA);
+	public int updateAppointment(Appointment app,int idP);
+	public void deleteAppointment(int idA,int idP);
 	public Appointment getAppointmentById(int appointmentId);
-	public List<Appointment> getAppointmentByDate(String dateapp) throws ParseException;
 	public List<Appointment> getAppointmentsByPatient(int idPatient);
-	public List<Appointment> getAppointmentsByDoctor(int idDoctor);
+	public List<Appointment> getAppointmentsByDoctor(int idDoctor) throws ParseException;
+	public List<Appointment> getDoctorsAppointmentByDate(String date,int idD) throws ParseException;
+	public List<Appointment> getPatientsAppointmentByDate(String date,int idP) throws ParseException;
 	public List<Appointment> getAllAppointments();
 	public void affectConsultation(int idAppointment,int idConsultaion);
 

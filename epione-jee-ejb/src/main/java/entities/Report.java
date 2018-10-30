@@ -13,6 +13,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Report  implements Serializable{
 	/**
@@ -31,6 +32,7 @@ public class Report  implements Serializable{
 	private String content;
 	
 	@OneToOne
+	@JsonIgnore
 	private Consultation consultation;
 	
 	public Report(){

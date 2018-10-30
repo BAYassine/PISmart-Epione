@@ -2,16 +2,18 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
@@ -25,9 +27,7 @@ public class Path implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Temporal(TemporalType.DATE)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
 	private Date date_path;
 	
 	private String description;
@@ -38,14 +38,14 @@ public class Path implements Serializable{
 	@ManyToOne
 	private Patient patient;
 	
-	
-	@OneToMany(/*fetch = FetchType.EAGER ,*/mappedBy="path")
-	private List<Treatment> list_treat;
+	@OneToMany(mappedBy="path", fetch = FetchType.EAGER)
+	@JsonIgnore
+	private Set<Treatment> list_treat= new HashSet<>();
 	
 	public Path() {
 	
 	}
-	public Path(int id, Date date_path, String description, List<Treatment> list_treat) {
+	public Path(int id, Date date_path, String description, Set<Treatment> list_treat) {
 		super();
 		this.id = id;
 		this.date_path = date_path;
@@ -70,12 +70,25 @@ public class Path implements Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	//@JsonIgnore
-	public List<Treatment> getList_treat() {
+	public Set<Treatment> getList_treat() {
 		return list_treat;
 	}
-	public void setList_treat(List<Treatment> list_treat) {
+	public void setList_treat(Set<Treatment> list_treat) {
 		this.list_treat = list_treat;
+	}
+
+	public Doctor getDoctor() {
+		return doctor;
+	}
+	public void setDoctor(Doctor doctor) {
+		this.doctor = doctor;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 	
 	

@@ -12,14 +12,15 @@ import java.util.List;
 @Remote
 public interface AppointmentServiceRemote {
 	
-	public int addAppointment(Appointment app,int idPatient)throws ParseException;
+	public int addAppointment(Appointment app,int idPatient,String emailPatient)throws ParseException;
 	public boolean cancelAppointment(int appId,int idP);
-	public int updateAppointment(Appointment app);
+	public int updateAppointment(Appointment app,int idP);
 	public Appointment getAppointmentById(int appointmentId);
-	public void deleteAppointment(int idA);
-	public List<Appointment> getAppointmentByDate(String dateapp) throws ParseException ;
+	public void deleteAppointment(int idA,int idP);
 	public List<Appointment> getAppointmentsByPatient(int idPatient);
 	public List<Appointment> getAppointmentsByDoctor(int idDoctor);
+	public List<Appointment> getDoctorsAppointmentByDate(String date,int idD) throws ParseException;
+	public List<Appointment> getPatientsAppointmentByDate(String date,int idP) throws ParseException;
 	public List<Appointment> getAllAppointments();
 	public void affectConsultation(int idAppointment,int idConsultaion);
 	

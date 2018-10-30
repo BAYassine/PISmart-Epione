@@ -2,6 +2,7 @@ package entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -38,8 +39,9 @@ public class Appointment implements Serializable {
 
     @OneToOne
 	private Reason reason;
-
+    
     @ManyToOne
+
     @JoinColumn(updatable=false)
     private Patient patient;
 
@@ -47,10 +49,10 @@ public class Appointment implements Serializable {
     @JoinColumn(updatable=false)
     private Doctor doctor;
 
-    @OneToOne(mappedBy="appointment", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy="appointment", fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
     private Consultation consultation;
 
-    @OneToOne(mappedBy = "appointment", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "appointment", fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
     private Treatment treatment;
 
     public Appointment() {
@@ -81,6 +83,8 @@ public class Appointment implements Serializable {
         this.id = id;
     }
 
+  
+
     public String getMessage() {
         return message;
     }
@@ -88,8 +92,8 @@ public class Appointment implements Serializable {
     public void setMessage(String message) {
         this.message = message;
     }
-  
-    @XmlTransient
+
+   
     public Consultation getConsultation() {
         return consultation;
     }
@@ -145,6 +149,7 @@ public class Appointment implements Serializable {
     public void setState(states state) {
         this.state = state;
     }
+
 	public Reason getReason() {
 		return reason;
 	}
@@ -152,5 +157,5 @@ public class Appointment implements Serializable {
 	public void setReason(Reason reason) {
 		this.reason = reason;
 	}
-
+	
 }

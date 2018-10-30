@@ -23,6 +23,7 @@ public class Patient extends User  implements Serializable{
 	private int social_number;
 	
 	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
+	@JsonIgnore
 	private Set<Path> paths=new HashSet<>();
 
 	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
@@ -30,6 +31,7 @@ public class Patient extends User  implements Serializable{
 	private Set<Appointment> appointments = new HashSet<>();
 	
 	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
+	@JsonIgnore
 	private Set<Message> messages=new HashSet<>();
 
 	public Patient() {

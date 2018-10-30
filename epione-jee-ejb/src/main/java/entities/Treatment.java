@@ -13,6 +13,8 @@ import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @XmlRootElement
 public class Treatment implements Serializable {
@@ -30,6 +32,7 @@ public class Treatment implements Serializable {
 	private String recomended_doc;
 	
 	@OneToOne
+	@JsonIgnore
 	private Appointment appointment;
 	
 	@ManyToOne
