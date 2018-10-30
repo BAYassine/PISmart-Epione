@@ -103,7 +103,7 @@ public class AppointmentResource {
      */
 	@POST
 	@RolesAllowed("ROLE_PATIENT")
-	@Consumes(MediaType.APPLICATION_XML)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addAppointment(@Context SecurityContext securityContext,Appointment app) throws ParseException {
 		if (app != null) {
 			User u=userServ.findUser(securityContext.getUserPrincipal().getName());

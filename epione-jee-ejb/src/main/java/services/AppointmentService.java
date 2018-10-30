@@ -86,7 +86,6 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
      * Author : Oumayma
      */
 	public int updateAppointment(Appointment app,int idP) {
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!! "+app.getPatient().getId());
 		if(app.getPatient().getId()==idP){
 			em.merge(app);
 			return app.getId();

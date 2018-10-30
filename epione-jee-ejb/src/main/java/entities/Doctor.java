@@ -18,7 +18,10 @@ public class Doctor extends User implements Serializable {
      *
      */
     private static final long serialVersionUID = 1L;
-
+    private String name;
+    private double latitude;
+    private double longitude;
+    private String city;
     private String presentation;
     private double location;
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
@@ -106,5 +109,37 @@ public class Doctor extends User implements Serializable {
         this.presentation = presentation;
     }
 
-// s
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+
 }

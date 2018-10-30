@@ -70,7 +70,7 @@ public class Message implements Serializable {
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
-	@XmlTransient
+	
 	public Doctor getDoctor() {
 		return doctor;
 	}
