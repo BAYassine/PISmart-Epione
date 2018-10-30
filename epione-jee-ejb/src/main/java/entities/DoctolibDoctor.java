@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.List;
+
 public class DoctolibDoctor extends Doctolib{
 	
 	private String nbreRPPS;
@@ -10,6 +12,9 @@ public class DoctolibDoctor extends Doctolib{
 	private String formeJuridique;
 	private String adresseSocialSiege;
 	private String socialReason;
+	private double lat;
+	private double lng;
+	private List<String> skills;
 	
 	@Override
 	public String toString() {
@@ -18,6 +23,35 @@ public class DoctolibDoctor extends Doctolib{
 				+ formeJuridique + ", adresseSocialSiege=" + adresseSocialSiege + ", socialReason=" + socialReason
 				+ "]";
 	}
+	
+	
+	
+	public List<String> getSkills() {
+		return skills;
+	}
+
+
+	public void setSkills(List<String> skills) {
+		this.skills = skills;
+	}
+
+
+	public double getLat() {
+		return lat;
+	}
+
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLng() {
+		return lng;
+	}
+
+	public void setLng(double lng) {
+		this.lng = lng;
+	}
+
 	public String getNbreRPPS() {
 		return nbreRPPS;
 	}

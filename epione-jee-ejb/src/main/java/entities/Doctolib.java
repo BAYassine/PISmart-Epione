@@ -5,8 +5,17 @@ public class Doctolib {
 	private String name;
 	private String img;
 	private String address;
+	private String city;
 	private String path;
 	private String speciality;
+	
+	
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
 	public String getName() {
 		return name;
 	}
@@ -59,17 +68,6 @@ public class Doctolib {
 		} else if (!path.equals(other.path))
 			return false;
 		return true;
-	}
-	public Doctolib(String name, String img, String address, String path, String speciality) {
-		super();
-		this.name = name;
-		this.img = img;
-		this.address = address;
-		this.path = path;
-		this.speciality = speciality;
-	}
-	public Doctolib() {
-		super();
 	}
 	
 	
