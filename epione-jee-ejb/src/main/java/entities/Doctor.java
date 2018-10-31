@@ -37,7 +37,8 @@ public class Doctor extends User implements Serializable {
     private String socialReason;
     @ElementCollection
     @CollectionTable(name ="skills")
-    private List<String> skills = new ArrayList<String>();
+    @JsonIgnore
+    private Set<String> skills = new HashSet<String>();
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
     @JsonIgnore
@@ -229,11 +230,11 @@ public class Doctor extends User implements Serializable {
 		this.image = image;
 	}
 
-	public List<String> getSkills() {
+	public Set<String> getSkills() {
 		return skills;
 	}
 
-	public void setSkills(List<String> skills) {
+	public void setSkills(Set<String> skills) {
 		this.skills = skills;
 	}
 

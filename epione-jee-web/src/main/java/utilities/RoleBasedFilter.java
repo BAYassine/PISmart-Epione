@@ -32,7 +32,7 @@ import java.util.*;
  * */
 @Provider
 @ManagedBean
-public class RoleBasedFilter //implements ContainerRequestFilter
+public class RoleBasedFilter implements ContainerRequestFilter
 {
 
     @Inject
@@ -46,7 +46,7 @@ public class RoleBasedFilter //implements ContainerRequestFilter
     ContainerRequestContext requestContext;
     SecurityContext securityContext;
 
-    @Override
+    
     public void filter(ContainerRequestContext requestContext)
     {
         ResourceMethodInvoker methodInvoker = (ResourceMethodInvoker) requestContext.getProperty("org.jboss.resteasy.core.ResourceMethodInvoker");

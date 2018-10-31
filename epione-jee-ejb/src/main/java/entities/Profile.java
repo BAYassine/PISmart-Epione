@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
@@ -44,6 +45,7 @@ public class Profile implements Serializable {
     private String telephone;
 
     @OneToOne(mappedBy="profile")
+    @JsonIgnore
 	private User user;
 	
 	

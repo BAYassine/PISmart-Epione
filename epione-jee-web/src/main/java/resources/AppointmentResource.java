@@ -123,7 +123,7 @@ public class AppointmentResource {
      */
     @PUT
     @RolesAllowed("ROLE_PATIENT")
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response updateAppointment(@Context SecurityContext securityContext,Appointment app,@QueryParam(value="idA")int idApp){
         User u=userServ.findUser(securityContext.getUserPrincipal().getName());
         if(idApp==0){
@@ -149,7 +149,7 @@ public class AppointmentResource {
      */
 	@DELETE
 	@RolesAllowed("ROLE_PATIENT")
-	@Consumes(MediaType.APPLICATION_XML)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteAppointment(@Context SecurityContext securityContext,@QueryParam(value = "idA") int idA) {
 		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
 		if (idA !=0) {

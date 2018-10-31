@@ -62,6 +62,66 @@
         <dependent-module archiveName="jackson-annotations.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.9.7/jackson-annotations-2.9.7.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="java-sdk.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/ibm/watson/developer_cloud/java-sdk/6.8.0/java-sdk-6.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="assistant.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/ibm/watson/developer_cloud/assistant/6.8.0/assistant-6.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="conversation.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/ibm/watson/developer_cloud/conversation/6.8.0/conversation-6.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="core.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/ibm/watson/developer_cloud/core/6.8.0/core-6.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="okhttp.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/squareup/okhttp3/okhttp/3.11.0/okhttp-3.11.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="okio.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/squareup/okio/okio/1.14.0/okio-1.14.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="logging-interceptor.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/squareup/okhttp3/logging-interceptor/3.11.0/logging-interceptor-3.11.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="okhttp-urlconnection.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/squareup/okhttp3/okhttp-urlconnection/3.11.0/okhttp-urlconnection-3.11.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="gson.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/google/code/gson/gson/2.8.0/gson-2.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="commons-lang3.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="jersey-jsr166e.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/glassfish/jersey/bundles/repackaged/jersey-jsr166e/2.25.1/jersey-jsr166e-2.25.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="discovery.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/ibm/watson/developer_cloud/discovery/6.8.0/discovery-6.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="language-translator.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/ibm/watson/developer_cloud/language-translator/6.8.0/language-translator-6.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="natural-language-classifier.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/ibm/watson/developer_cloud/natural-language-classifier/6.8.0/natural-language-classifier-6.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="natural-language-understanding.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/ibm/watson/developer_cloud/natural-language-understanding/6.8.0/natural-language-understanding-6.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="personality-insights.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/ibm/watson/developer_cloud/personality-insights/6.8.0/personality-insights-6.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="speech-to-text.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/ibm/watson/developer_cloud/speech-to-text/6.8.0/speech-to-text-6.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="text-to-speech.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/ibm/watson/developer_cloud/text-to-speech/6.8.0/text-to-speech-6.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="tone-analyzer.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/ibm/watson/developer_cloud/tone-analyzer/6.8.0/tone-analyzer-6.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="visual-recognition.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/ibm/watson/developer_cloud/visual-recognition/6.8.0/visual-recognition-6.8.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="jsoup.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/jsoup/jsoup/1.11.3/jsoup-1.11.3.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>

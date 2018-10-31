@@ -7,6 +7,8 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -67,7 +69,7 @@ public class Patient extends User  implements Serializable{
 	public void setPaths(Set<Path> paths) {
 		this.paths = paths;
 	}
-
+    @XmlTransient
 	public Set<Appointment> getAppointments() {
 		return appointments;
 	}

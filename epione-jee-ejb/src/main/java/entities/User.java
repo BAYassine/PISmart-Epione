@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
@@ -46,6 +47,7 @@ public class User implements Serializable {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+	@JsonIgnore
 	protected Profile profile;
 
 	public User(){
@@ -96,6 +98,7 @@ public class User implements Serializable {
 	public void setRole(Roles role) {
 		this.role = role;
 	}
+	@JsonIgnore
 	public Profile getProfile() {
 		return profile;
 	}

@@ -39,7 +39,7 @@ public class ReasonResource {
 	@POST
 	@Path("{idS}")
 	@RolesAllowed("ROLE_PATIENT")
-	@Consumes(MediaType.APPLICATION_XML)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addReason(Reason r,@PathParam(value = "idS") int idS) {
 		if (r != null) {
 			reasonServ.addReason(r, idS);
@@ -51,7 +51,7 @@ public class ReasonResource {
 	@DELETE
 	@Path("{idR}")
 	@RolesAllowed("ROLE_PATIENT")
-	@Consumes(MediaType.APPLICATION_XML)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response DeleteReason(@PathParam(value = "idR") int idR) {
 		if (idR !=0) {
 			reasonServ.removeReason(idR);
