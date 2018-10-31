@@ -84,5 +84,9 @@ public class Patient extends User  implements Serializable{
 		this.messages = messages;
 	}
 
-
+	public void copy(Patient p) {
+		super.copy(p);
+		if(this.social_number == 0 && p.social_number != 0)
+			this.social_number = p.social_number;
+	}
 }

@@ -68,13 +68,13 @@ public class DoctorResource {
             return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the name").build());
         }
 
-        // Search by Location
-        else if ((name == null) && (location != 0.0) && (idS == 0)) {
-            doc = doctorService.getDoctorByLocation(location);
-            if (!doc.isEmpty())
-                return (Response.status(Response.Status.FOUND).entity(doc).build());
-            return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the Location.").build());
-        }
+//        // Search by Location
+//        else if ((name == null) && (location != 0.0) && (idS == 0)) {
+//            doc = doctorService.getDoctorByLocation(location);
+//            if (!doc.isEmpty())
+//                return (Response.status(Response.Status.FOUND).entity(doc).build());
+//            return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the Location.").build());
+//        }
 
         // Search by Speciality
         else if ((name == null) && (location == 0.0) && (idS != 0)) {
@@ -85,12 +85,12 @@ public class DoctorResource {
         }
 
         // Search by speciality and location
-        else if ((name == null) && (location != 0.0) && (idS != 0)) {
-            doc = doctorService.getDoctorBySpecialitAndLocation(idS, location);
-            if (!doc.isEmpty())
-                return (Response.status(Response.Status.FOUND).entity(doc).build());
-            return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the location and speciality.").build());
-        }
+//        else if ((name == null) && (location != 0.0) && (idS != 0)) {
+//            doc = doctorService.getDoctorBySpecialitAndLocation(idS, location);
+//            if (!doc.isEmpty())
+//                return (Response.status(Response.Status.FOUND).entity(doc).build());
+//            return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the location and speciality.").build());
+//        }
 
         // Search all doctors
         else {

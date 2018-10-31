@@ -6,6 +6,7 @@ import entities.User;
 import interfaces.DoctorServiceLocal;
 import interfaces.PatientServiceLocal;
 import interfaces.UserServiceLocal;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -30,16 +31,18 @@ public class UsersRessource {
     @PermitAll
     @Consumes("application/json")
     public Response register(User d){
-        userService.create(d);
+        d.setPassword(BCrypt.hashpw(d.getPassword(), BCrypt.gensalt()));
         d.setLast_login(new Date());
+        userService.create(d);
         return Response.status(201).entity("Thank you for joining us").build();
     }
 
     @PUT
     @RolesAllowed("ROLE_PATIENT")
     @Consumes("application/json")
-    public Response editProfile(@Context SecurityContext securityContext, Patient patient){
+    public Response editProfilePatient(@Context SecurityContext securityContext, Patient patient){
         Patient p = patientService.findPatient(securityContext.getUserPrincipal().getName());
+        patient.copy(p);
         patient.setId(p.getId());
         patientService.update(patient);
         return Response.status(200).entity("Profile updated successfully").build();
@@ -49,10 +52,10 @@ public class UsersRessource {
     @RolesAllowed("ROLE_DOCTOR")
     @Consumes("application/json")
     public Response editProfileDoctor(@Context SecurityContext securityContext, Doctor doctor){
+        System.out.println(securityContext.getUserPrincipal().getName());
         Doctor d = doctorService.findDoctor(securityContext.getUserPrincipal().getName());
         doctor.copy(d);
         doctor.setId(d.getId());
-        System.out.println(doctor);
         doctorService.update(doctor);
         return Response.status(200).entity("Profile updated successfully").build();
     }

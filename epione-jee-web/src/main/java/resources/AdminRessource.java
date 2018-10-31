@@ -45,8 +45,6 @@ public class AdminRessource {
 
         PDDocument document = new PDDocument();
         PDPage page = new PDPage();
-        PDFont courierBoldFont = PDType1Font.COURIER_BOLD;
-        int fontSize = 12;
 
         PDPageContentStream contentStream;
         ByteArrayOutputStream output = new ByteArrayOutputStream();
