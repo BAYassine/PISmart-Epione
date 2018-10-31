@@ -82,6 +82,18 @@ public class Path implements Serializable{
 	public void setList_treat(List<Treatment> list_treat) {
 		this.list_treat = list_treat;
 	}
+	public Doctor getDoctor() {
+		return doctor;
+	}
+	public void setDoctor(Doctor doctor) {
+		this.doctor = doctor;
+	}
+	public Patient getPatient() {
+		return patient;
+	}
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
 	
 	
 

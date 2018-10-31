@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -15,23 +16,29 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
 import entities.Report;
+import entities.User;
 import interfaces.ReportServiceLocal;
+import interfaces.UserServiceLocal;
 
 @Path("/reports")
 public class ReportResource {
 	
 	@EJB
 	ReportServiceLocal rs ;
-	
+
+	@EJB
+	UserServiceLocal userServ;
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	public Response addReport(Report report) {
 		rs.addReport(report);
 		return Response.status(Status.FOUND).entity(report).build();
@@ -40,7 +47,7 @@ public class ReportResource {
 	
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	public Response updateReport(Report report) {
 		rs.updateReport(report);
 		return Response.status(Status.FOUND).entity(report).build();
@@ -48,7 +55,7 @@ public class ReportResource {
 	}
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	public Response deleteReport(Report report) {
 		rs.deleteReport(report);
 		return Response.status(Status.FOUND).entity("Report Removed").build();
@@ -94,6 +101,16 @@ public class ReportResource {
 		}
 		
 		
+	}
+	
+	@GET
+	@RolesAllowed("ROLE_PATIENT")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/getPatientConnected")
+	public Response getReportsUserConnected(@Context SecurityContext securityContext) {
+		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+		
+		return  Response.status(Status.ACCEPTED).entity(rs.getPatientsReport(u.getId())).build();
 	}
 	
 	private Date convertDate(String s) {

@@ -73,6 +73,20 @@ public class TreatmentService implements TreatmentServiceLocal, TreatmentService
 		 return (List<Treatment>) query.setParameter("treat", "%"+recDoc+"%").setParameter("desc", "%"+desc+"%").getResultList();
 	}
 	
+	
+	@Override
+	public List<Treatment> getPatientsTreatment(int id) {
+			System.out.println("req num 5) SELECT p FROM Treatment p WHERE p.patient.id = :id");
+			TypedQuery<Treatment> query = em.createQuery("SELECT t FROM Treatment t WHERE t.path.id = (SELECT p.id FROM Path p WHERE p.patient.id = :id )", Treatment.class);
+		 return (List<Treatment>) query.setParameter("id", id).getResultList();
 
+	}
+	@Override
+	public List<Treatment> getDoctorsTreatment(int id) {
+			System.out.println("req num 6) SELECT t FROM Treatment t WHERE t.path.id = (SELECT p.id FROM Path WHERE p.doctor.id = :id )");
+		 TypedQuery<Treatment> query = em.createQuery("SELECT t FROM Treatment t WHERE t.path.id = (SELECT p.id FROM Path p WHERE p.doctor.id = :id )", Treatment.class);
+		 return (List<Treatment>) query.setParameter("id", id).getResultList();
+
+	}
 	
 }

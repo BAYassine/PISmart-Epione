@@ -13,6 +13,8 @@ public interface ConsultationServiceLocal {
 	public int updateConsultation(Consultation c);
 	public Consultation getConsultationById(int consultationId);
 	public List<Consultation> getAllConsultation();
+	List<Consultation> getPricyConsultation(double price);
+	List<Consultation> getBestConsultations();
 	
 
 }

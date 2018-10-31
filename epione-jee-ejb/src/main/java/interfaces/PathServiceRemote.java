@@ -25,4 +25,6 @@ public interface PathServiceRemote {
 	public Doctor getPathDoctor(int id);
 	public Patient getPathPatient(int id);
 	public Path addTreatToPath(int id ,Treatment treat);
+	List<Path> getPatientsPath(int id);
+
 }

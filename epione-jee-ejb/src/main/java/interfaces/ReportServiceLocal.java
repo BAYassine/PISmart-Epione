@@ -21,6 +21,7 @@ public interface ReportServiceLocal {
 	public List<Report> getReportDateGreaterThen(Date date);
 	public List<Report> getReportDateLessThen(Date date);
 	public List<Report> getReportByDateContent(Date date, String content);
+	List<Report> getPatientsReport(int id);
 
 
 }

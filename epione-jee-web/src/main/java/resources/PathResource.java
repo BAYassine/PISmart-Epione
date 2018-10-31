@@ -19,12 +19,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.SecurityContext;
 
 import entities.Path;
 import entities.Treatment;
 import entities.User;
+import interfaces.DoctorServiceLocal;
 import interfaces.PathServiceLocal;
 import interfaces.TreatmentServiceLocal;
 import interfaces.UserServiceLocal;
@@ -42,12 +43,17 @@ public class PathResource {
 	@EJB
 	UserServiceLocal userServ;
 	
+	@EJB
+	DoctorServiceLocal doctorServ;
+	
 		
 	
 	@POST
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addPath(Path p) {
+	public Response addPath(Path p, @Context SecurityContext securityContext) {
+		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+		p.setDoctor(doctorServ.getDoctorById(u.getId()));
 		ps.addPath(p);
 		return Response.status(Status.CREATED).entity(p).build();
     }
@@ -56,7 +62,7 @@ public class PathResource {
 	
 	@POST
 	@javax.ws.rs.Path("/addTreatment")
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addTreatemntToPath(@QueryParam("idPath") int idPath , Treatment treat ) {
 		if((idPath != 0)&&(treat != null)) {
@@ -89,7 +95,7 @@ public class PathResource {
 	
 	
 	@PUT
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updatePath(Path p) {
 		ps.updatePath(p);
@@ -97,10 +103,9 @@ public class PathResource {
 	}
 	
 	
-	//à tester...
 	
 	@DELETE
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deletePath(Path p) {
 		
@@ -109,15 +114,7 @@ public class PathResource {
 	}
 	
 
-	@GET
-	@RolesAllowed("ROLE_ADMIN")
-	@Produces("text/plain")
-	@javax.ws.rs.Path("/test")
-	public Response test(@Context SecurityContext securityContext) {
-		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
-		return  Response.status(Status.ACCEPTED).entity(u.getId()).build();
-	}
-	
+
 	
 	// GETALL | SEARCH by id | by date | by >date | by  <date | by date && desc
 
@@ -158,6 +155,27 @@ public class PathResource {
 				
 				
 			}
+			
+			@GET
+			@RolesAllowed("ROLE_PATIENT")
+			@Produces(MediaType.APPLICATION_JSON)
+			@javax.ws.rs.Path("/getPatientConnected")
+			public Response getPathsUserConnected(@Context SecurityContext securityContext) {
+				User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+				
+				return  Response.status(Status.ACCEPTED).entity(ps.getPatientsPath(u.getId())).build();
+			}
+			
+			@GET
+			@RolesAllowed("ROLE_DOCTOR")
+			@Produces(MediaType.APPLICATION_JSON)
+			@javax.ws.rs.Path("/getDoctorConnected")
+			public Response getPathsDoctorConnected(@Context SecurityContext securityContext) {
+				User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+				
+				return  Response.status(Status.ACCEPTED).entity(ps.getDoctorsPath(u.getId())).build();
+			}
+			
 			
 
 			

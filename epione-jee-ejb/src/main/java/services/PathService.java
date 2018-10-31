@@ -112,6 +112,20 @@ public class PathService implements PathServiceLocal, PathServiceRemote {
 	}
 	
 	@Override
+	public List<Path> getPatientsPath(int id) {
+			System.out.println("req num 9) SELECT p FROM Path p WHERE p.patient.id = :id");
+		 TypedQuery<Path> query = em.createQuery("SELECT p FROM Path p WHERE p.patient.id = :id", Path.class);
+		 return (List<Path>) query.setParameter("id", id).getResultList();
+
+	}
+	@Override
+	public List<Path> getDoctorsPath(int id) {
+			System.out.println("req num 10) SELECT p FROM Path p WHERE p.doctor.id = :id");
+		 TypedQuery<Path> query = em.createQuery("SELECT p FROM Path p WHERE p.doctor.id = :id", Path.class);
+		 return (List<Path>) query.setParameter("id", id).getResultList();
+
+	}
+	@Override
 	public Path addTreatToPath(int id ,Treatment treat) {
 		Path path = em.find(Path.class, id);
 		List<Treatment> treats = path.getList_treat();
