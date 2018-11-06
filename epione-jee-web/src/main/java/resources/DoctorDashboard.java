@@ -32,27 +32,14 @@ public class DoctorDashboard {
     @GET
     @RolesAllowed("ROLE_DOCTOR")
     @Produces("application/json")
-    public Response router(@QueryParam("path") String path,
-                           @QueryParam("from") String since,
+    public Response router(@QueryParam("from") String since,
                            @QueryParam("limit") int limit,
                            @Context SecurityContext securityContext) {
-        if(path == null)
-            return dashboard(securityContext);
-        switch (path) {
-            case "app_inc":
-                return nextAppointments(securityContext);
-            case "total":
-                if (since != null)
+            if(since != null)
                     return totalAppointments(securityContext, since);
-                else
-                    return totalAppointments(securityContext, "2018/10/19");
-            case "inbox":
-                if (limit != 0)
-                    return inbox(securityContext, limit);
-                else return inbox(securityContext, 10);
-            default:
-                return dashboard(securityContext);
-        }
+            if(limit != 0)
+                return inbox(securityContext, limit);
+            return dashboard(securityContext);
     }
 
 

@@ -1,24 +1,21 @@
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @XmlRootElement
 @PrimaryKeyJoinColumn(name = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Doctor extends User implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private String presentation;
     private String name;
@@ -37,29 +34,31 @@ public class Doctor extends User implements Serializable {
     private String socialReason;
     @ElementCollection
     @CollectionTable(name ="skills")
-    private List<String> skills = new ArrayList<String>();
+	@JsonIgnore
+    private List<String> skills = new ArrayList<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Set<Availability> availabilities = new HashSet<>();
+    @OneToMany(mappedBy = "doctor")
+	@JsonIgnore
+	private Set<Availability> availabilities = new HashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Set<Appointment> appointments = new HashSet<>();
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Set<Appointment> appointments = new HashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Set<Path> paths = new HashSet<>();
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Set<Path> paths = new HashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Set<Message> messages = new HashSet<>();
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Set<Message> messages = new HashSet<>();
 
     @ManyToOne
     private Speciality speciality;
     
     /*Fares*/
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Set<Reason> reasons=new HashSet<>();
 
     public Doctor() {
@@ -68,6 +67,16 @@ public class Doctor extends User implements Serializable {
 
     public Doctor(Speciality speciality) {
         this.speciality = speciality;
+    }
+
+    public Doctor(User u) {
+        this.username = u.username;
+        this.password = u.password;
+        this.email = u.email;
+        this.role = u.role;
+        this.registered_at = new Date();
+        this.last_login = new Date();
+        this.confirmed = u.confirmed;
     }
 
     @XmlTransient
@@ -240,12 +249,6 @@ public class Doctor extends User implements Serializable {
 	public void setSkills(List<String> skills) {
 		this.skills = skills;
 	}
-
-	public void copy(Doctor d) {
-        super.copy(d);
-        if (this.speciality == null && d.speciality != null)
-            this.speciality = d.speciality;
-    }
 
 	public Set<Reason> getReasons() {
 		return reasons;

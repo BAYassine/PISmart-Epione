@@ -17,29 +17,23 @@ import interfaces.AvailabilityServiceLocal;
 
 @Path("Availability")
 public class AvailabilityResource {
-	@EJB
-	AvailabilityServiceLocal availableServ;
-	
-	@GET
-	@RolesAllowed({ "ROLE_PATIENT", "ROLE_DOCTOR" })
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDoctor(@QueryParam(value = "idD") int idD,@QueryParam(value = "startDate") String startDate) throws ParseException{
-	  if(startDate!= null)
-	  {
-	  	if (!availableServ.checkAvailability(idD,startDate).isEmpty())
-		return(Response.status(Response.Status.OK).entity("not available").build());
-	  	else
-	  		return(Response.status(Response.Status.OK).entity("available").build());
-	  	
-	  	
-	  }
-	  return(Response.status(Response.Status.OK).entity(availableServ.checkAvailabilityById(idD)).build());
-		
-	}
+    @EJB
+    AvailabilityServiceLocal availableServ;
 
-	private void retrun(Response build) {
-		// TODO Auto-generated method stub
-		
-	}
+    @GET
+    @RolesAllowed({"ROLE_PATIENT", "ROLE_DOCTOR"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDoctor(@QueryParam(value = "idD") int idD, @QueryParam(value = "startDate") String startDate) throws ParseException {
+        if (startDate != null) {
+            if (!availableServ.checkAvailability(idD, startDate).isEmpty())
+                return (Response.status(Response.Status.OK).entity("not available").build());
+            else
+                return (Response.status(Response.Status.OK).entity("available").build());
+
+
+        }
+        return (Response.status(Response.Status.OK).entity(availableServ.checkAvailabilityById(idD)).build());
+
+    }
 
 }

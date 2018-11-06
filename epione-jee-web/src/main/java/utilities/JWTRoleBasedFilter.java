@@ -81,13 +81,6 @@ public class JWTRoleBasedFilter implements ContainerRequestFilter
 
             //Verifying Username and password
             User user = userService.findUser(username);
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-            if (user.getLast_login() != null) {
-                String lastLogin = formatter.format(user.getLast_login());
-                if (!formatter.format(new Date()).equals(lastLogin)) {
-                    userService.updateLoginDate(user);
-                }
-            } else userService.updateLoginDate(user);
             //Verify user access
             if (method.isAnnotationPresent(RolesAllowed.class)) {
                 RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);

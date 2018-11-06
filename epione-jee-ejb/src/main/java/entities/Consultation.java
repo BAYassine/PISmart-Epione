@@ -13,9 +13,12 @@ import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Consultation implements Serializable {
 	
 	/**
@@ -41,9 +44,7 @@ public class Consultation implements Serializable {
 	@OneToOne
 	@JsonIgnore
 	private Appointment appointment;
-	
-	
-	
+
 	public Consultation(){
 		
 	}

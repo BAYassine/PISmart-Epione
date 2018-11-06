@@ -7,15 +7,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 /**
  * Entity implementation class for Entity: Profile
  *
  */
 @Entity
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Profile implements Serializable {
 
     public enum Gender {FEMALE, MALE}
@@ -45,10 +44,9 @@ public class Profile implements Serializable {
     @Pattern(regexp = "[1-9][0-9]{7}")
     private String telephone;
 
-    @OneToOne(mappedBy="profile")
+    @OneToOne(mappedBy="profile", fetch = FetchType.LAZY)
+    @JsonIgnore
 	private User user;
-	
-	
 
     public int getId() {
         return id;
@@ -112,22 +110,6 @@ public class Profile implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public void copy(Profile p) {
-        this.id = p.id;
-        if (this.firstname == null)
-            this.firstname = p.firstname;
-        if(this.lastname == null)
-            this.lastname = p.lastname;
-        if(this.birthDate== null)
-            this.birthDate= p.birthDate;
-        if(this.gender== null)
-            this.gender= p.gender;
-        if(this.address== null)
-            this.address= p.address;
-        if(this.telephone== null)
-            this.telephone= p.telephone;
     }
 
 }

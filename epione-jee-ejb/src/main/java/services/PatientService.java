@@ -24,4 +24,9 @@ public class PatientService implements PatientServiceLocal, PatientServiceRemote
     public void update(Patient patient){
         em.merge(patient);
     }
+
+    public int create(Patient p){
+        em.persist(p);
+        return p.getId();
+    }
 }

@@ -1,24 +1,18 @@
 package entities;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.xml.bind.annotation.XmlRootElement;
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @XmlRootElement
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Speciality implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
@@ -27,11 +21,11 @@ public class Speciality implements Serializable{
 	private int id;
 	private String name;
 	
-	@OneToMany(mappedBy="speciality", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="speciality", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<Reason> reasons=new HashSet<>();
 	
-	@OneToMany(mappedBy="speciality", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="speciality", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<Doctor> doctors=new HashSet<>();
 	

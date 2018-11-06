@@ -44,6 +44,8 @@ public class AuthResource {
                 .setSubject(u.getUsername())
                 .setExpiration(expiration)
                 .signWith(key).compact();
+
+        userService.updateLoginDate(u);
         return Response.status(200).entity(jws).build();
     }
 

@@ -1,6 +1,6 @@
 package entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,41 +12,53 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * Entity implementation class for Entity: User
  *
  */
 @Entity
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id")
 @XmlRootElement
 @Inheritance(strategy=InheritanceType.JOINED)
 public class User implements Serializable {
-	
-	public enum Roles { ROLE_ADMIN, ROLE_DOCTOR, ROLE_PATIENT}
+
+    public enum Roles { ROLE_ADMIN, ROLE_DOCTOR, ROLE_PATIENT}
 
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int id;
+
     @NotNull
     @Column(unique = true)
     protected String username;
-    protected String password;
+
     @NotNull
     @Pattern(regexp = "[a-z][a-zA-Z0-9]*@[a-z0-9]*\\.[a-z0-9]*", message = "Email is not valid")
     protected String email;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
     protected Date registered_at;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
     protected Date last_login;
+
+    @NotNull
+    protected boolean confirmed;
+
+	@NotNull
     @Enumerated(EnumType.STRING)
     protected Roles role;
 
+    @NotNull
+    protected String password;
+
 	@OneToOne(cascade = CascadeType.ALL)
-	@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 	protected Profile profile;
+
 
 	public User(){
 		this.registered_at = new Date();
@@ -110,18 +122,14 @@ public class User implements Serializable {
 		this.last_login = last_login;
 	}
 
-	public void copy(User u){
-		this.username = u.username;
-		this.password = u.password;
-		this.email = u.email;
-		this.role = u.role;
-		this.registered_at = u.registered_at;
-		this.last_login= u.last_login;
-		if(this.profile == null && u.profile != null)
-			this.profile = u.profile;
-		else if (this.profile != null && u.profile != null)
-			this.profile.copy(u.profile);
-	}
+
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
 
 	@Override
 	public String toString() {

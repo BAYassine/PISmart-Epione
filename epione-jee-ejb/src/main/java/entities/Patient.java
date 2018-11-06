@@ -1,6 +1,8 @@
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,29 +10,29 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 @Entity
 @XmlRootElement
 @PrimaryKeyJoinColumn(name="id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Patient extends User  implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private int social_number;
 	
-	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="patient",fetch=FetchType.LAZY)
 	@JsonIgnore
 	private Set<Path> paths=new HashSet<>();
 
-	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
-    @JsonIgnore
+	@OneToMany(mappedBy="patient",fetch=FetchType.LAZY)
+	@JsonIgnore
 	private Set<Appointment> appointments = new HashSet<>();
 	
-	@OneToMany(mappedBy="patient",fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="patient",fetch=FetchType.LAZY)
 	@JsonIgnore
 	private Set<Message> messages=new HashSet<>();
 
@@ -52,7 +54,17 @@ public class Patient extends User  implements Serializable{
 		this.messages = messages;
 	}
 
-	public int getSocial_number() {
+    public Patient(User u) {
+        this.username = u.username;
+        this.password = u.password;
+        this.email = u.email;
+        this.role = u.role;
+        this.registered_at = new Date();
+        this.last_login = new Date();
+        this.confirmed = u.confirmed;
+    }
+
+    public int getSocial_number() {
 		return social_number;
 	}
 
@@ -84,9 +96,4 @@ public class Patient extends User  implements Serializable{
 		this.messages = messages;
 	}
 
-	public void copy(Patient p) {
-		super.copy(p);
-		if(this.social_number == 0 && p.social_number != 0)
-			this.social_number = p.social_number;
-	}
 }

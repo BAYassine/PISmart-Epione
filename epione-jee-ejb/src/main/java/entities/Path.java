@@ -17,8 +17,10 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Path implements Serializable{
 	
 	/**
@@ -43,8 +45,8 @@ public class Path implements Serializable{
 	private Patient patient;
 	
 	
-	@OneToMany(fetch = FetchType.EAGER ,mappedBy="path", cascade = CascadeType.ALL)
-	@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+	@OneToMany(fetch = FetchType.LAZY ,mappedBy="path", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<Treatment> list_treat;
 	
 	public Path() {

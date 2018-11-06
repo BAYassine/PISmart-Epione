@@ -10,4 +10,5 @@ public interface PatientServiceLocal {
     Patient findPatient(String username);
     void update(Patient patient);
 
+    int create(Patient u);
 }
