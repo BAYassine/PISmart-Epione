@@ -1,17 +1,15 @@
 package entities;
 
-import com.fasterxml.jackson.annotation.*;
-
-import java.io.Serializable;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Entity implementation class for Entity: User
@@ -58,7 +56,6 @@ public class User implements Serializable {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	protected Profile profile;
-
 
 	public User(){
 		this.registered_at = new Date();

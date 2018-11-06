@@ -46,25 +46,25 @@ public class EmailService {
 	}
 	
 	
-//	public List<Appointment> checkTomorrowAppointments() throws ParseException{
-//		 List<Appointment> listApp=new ArrayList<>();
-//		 Date dt = new Date();
-//		 Calendar c = Calendar.getInstance(); 
-//		 c.setTime(dt); 
-//		 c.add(Calendar.DATE, 1);
-//		 dt = c.getTime();
-//		 //listApp=appServ.getAppointmentByDate(dt.toString());
-//		return listApp;
-//			 
-//	}
-//	   public static void main(String[] args) throws ParseException {
-//		   EmailService em=new EmailService();
-//	        Timer timer = new Timer();
-//	     List<Appointment> listApp=new ArrayList<>();
-//	     listApp=em.checkTomorrowAppointments();
-//	     if(!listApp.isEmpty()){
-//	    	 em.sendEmail("Appointment reminder","You have an appointment tomororw.","oumayma.habbouri@gmail.com");
-//	     }
-//	        timer.schedule(new AutomaticEmailSender(), new Date(), 60*1000);
-//	    }
+	public List<Appointment> checkTomorrowAppointments() throws ParseException{
+		 List<Appointment> listApp=new ArrayList<>();
+		 Date dt = new Date();
+		 Calendar c = Calendar.getInstance(); 
+		 c.setTime(dt); 
+		 c.add(Calendar.DATE, 1);
+		 dt = c.getTime();
+		 listApp=appServ.getAppointmentByDate(dt.toString());
+		return listApp;
+			 
+	}
+	   public static void main(String[] args) throws ParseException {
+		   EmailService em=new EmailService();
+	        Timer timer = new Timer();
+	     List<Appointment> listApp=new ArrayList<>();
+	     listApp=em.checkTomorrowAppointments();
+	     if(!listApp.isEmpty()){
+	    	 em.sendEmail("Appointment reminder","You have an appointment tomororw.","oumayma.habbouri@gmail.com");
+	     }
+	        timer.schedule(new AutomaticEmailSender(), new Date(), 60*1000);
+	    }
 }

@@ -8,7 +8,10 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @XmlRootElement
@@ -16,6 +19,9 @@ import java.util.*;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Doctor extends User implements Serializable {
 
+    /**
+     *
+     */
     private static final long serialVersionUID = 1L;
     private String presentation;
     private String name;
@@ -34,28 +40,28 @@ public class Doctor extends User implements Serializable {
     private String socialReason;
     @ElementCollection
     @CollectionTable(name ="skills")
-	@JsonIgnore
-    private List<String> skills = new ArrayList<>();
+    @JsonIgnore
+    private Set<String> skills = new HashSet<String>();
 
-    @OneToMany(mappedBy = "doctor")
-	@JsonIgnore
-	private Set<Availability> availabilities = new HashSet<>();
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<Availability> availabilities = new HashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-	@JsonIgnore
-	private Set<Appointment> appointments = new HashSet<>();
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<Appointment> appointments = new HashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-	@JsonIgnore
-	private Set<Path> paths = new HashSet<>();
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<Path> paths = new HashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-	@JsonIgnore
-	private Set<Message> messages = new HashSet<>();
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<Message> messages = new HashSet<>();
 
     @ManyToOne
     private Speciality speciality;
-    
+
     /*Fares*/
     @ManyToMany(fetch = FetchType.LAZY)
 	@JsonIgnore
@@ -242,11 +248,11 @@ public class Doctor extends User implements Serializable {
 		this.image = image;
 	}
 
-	public List<String> getSkills() {
+	public Set<String> getSkills() {
 		return skills;
 	}
 
-	public void setSkills(List<String> skills) {
+	public void setSkills(Set<String> skills) {
 		this.skills = skills;
 	}
 
@@ -257,5 +263,5 @@ public class Doctor extends User implements Serializable {
 	public void setReasons(Set<Reason> reasons) {
 		this.reasons = reasons;
 	}
-	
+
 }

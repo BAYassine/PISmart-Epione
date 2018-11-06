@@ -25,10 +25,8 @@ public class UsersRessource {
 
     @EJB
     private UserServiceLocal userService;
-
     @EJB
     private PatientServiceLocal patientService;
-
     @EJB
     private DoctorServiceLocal doctorService;
 
@@ -69,7 +67,7 @@ public class UsersRessource {
     @PUT
     @RolesAllowed({"ROLE_PATIENT", "ROLE_DOCTOR"})
     @Consumes("application/json")
-    public Response editProfilePatient(@Context SecurityContext securityContext, Map<String, Object> json){
+    public Response editProfile(@Context SecurityContext securityContext, Map<String, Object> json){
         Gson gs = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         JSONObject user = new JSONObject(json);
         User u = userService.findUser((String) user.get("username"));
@@ -83,16 +81,6 @@ public class UsersRessource {
             Patient p = gs.fromJson(user.toString(), Patient.class);
             patientService.update(p);
         }
-        return Response.status(200).entity("Profile updated successfully").build();
-    }
-
-    @PUT
-    @RolesAllowed("ROLE_DOCTOR")
-    @Consumes("application/json")
-    public Response editProfileDoctor(@Context SecurityContext securityContext, Doctor doctor){
-        Doctor d = doctorService.findDoctor(securityContext.getUserPrincipal().getName());
-        doctor.setId(d.getId());
-        doctorService.update(doctor);
         return Response.status(200).entity("Profile updated successfully").build();
     }
 
