@@ -34,7 +34,7 @@ public class UsersRessource {
     @POST
     @PermitAll
     @Consumes("application/json")
-    public Response register(User d){
+    public Response register(Patient d){
         userService.create(d);
         d.setLast_login(new Date());
         return Response.status(201).entity("Thank you for joining us").build();
