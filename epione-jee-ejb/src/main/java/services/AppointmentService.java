@@ -55,7 +55,6 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 			notificationManager.addNotification(app);
 			return true;	
 		}
-		System.out.println("qqqq");
 		return false;
 		
 		
