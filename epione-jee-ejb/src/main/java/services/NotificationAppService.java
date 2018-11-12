@@ -28,17 +28,37 @@ public class NotificationAppService implements NotificationAppServiceLocal, Noti
     @PersistenceContext(unitName = "epione-jee-ejb")
     EntityManager em;
 
-    @Override
-    public JsonObject addNotification(Appointment app) {
-        NotificationApp na = new NotificationApp();
-        na.setNotified_at(new Date());
-        na.setNew_Appointement_Date(app.getDate_start());
-        na.setPatientnotif(app.getPatient());
-        na.setConfirmation(Confiramtion.WAITING);
-        na.toString();
-        em.persist(na);
-        return Json.createObjectBuilder().add("Success", "Notification Envoyé").add("id", na.toString()).build();
-    }
+	@Override
+	public JsonObject addNotification(Appointment app) {
+		System.out.println("App"+app.toString());
+		System.out.println("App"+app.getDate_start().getYear());
+		TypedQuery<Appointment> queryPa = em
+				.createQuery("SELECT n FROM Appointment n WHERE DAY(n.date_start) = :dateS ORDER BY n.date_start DESC", Appointment.class)
+				.setParameter("dateS", app.getDate_start().getDate());
+		queryPa.setMaxResults(1);
+		List<Appointment> DernierPatient = queryPa.getResultList();
+		System.out.println("Les appointement de lannée"+DernierPatient);
+		TypedQuery<NotificationApp> query = em
+				.createQuery("SELECT n FROM NotificationApp n WHERE n.patientnotif = :idp and n.new_Appointement_Date = :dateS", NotificationApp.class)
+				.setParameter("idp", app.getPatient())
+				.setParameter("dateS", app.getDate_start());
+		List<NotificationApp> liste = query.getResultList();
+		System.out.println("Nottt"+liste);
+		if(liste.isEmpty()){
+		NotificationApp na = new NotificationApp();
+		na.setNotified_at(new Date());
+		na.setNew_Appointement_Date(app.getDate_start());
+		na.setPatientnotif(DernierPatient.get(0).getPatient());
+		na.setConfirmation(Confiramtion.WAITING);
+		na.toString();
+		em.persist(na);
+		System.out.println("Notification envoyé");
+		return Json.createObjectBuilder().add("Success", "Notification Envoyé").add("id", na.toString()).build();
+		}
+		else {
+			System.out.println("Vous étes Déja Notifié");
+			return Json.createObjectBuilder().add("Failed", "Vous étes Déja notifié").build();}
+	}
 
     @Override
     public List<NotificationApp> getNotificationByDate(String date) {
@@ -61,6 +81,37 @@ public class NotificationAppService implements NotificationAppServiceLocal, Noti
         return query.getResultList();
     }
 
+
+
+    @Override
+    public JsonObject Confirmation(int idP) {
+        Patient pat = em.find(Patient.class, idP);
+        TypedQuery<NotificationApp> query = em
+                .createQuery("SELECT n FROM NotificationApp n WHERE n.patientnotif = :idP", NotificationApp.class)
+                .setParameter("idP", pat);
+        NotificationApp na = query.getSingleResult();
+        TypedQuery<Appointment> querya = em
+                .createQuery("SELECT n FROM Appointment n WHERE n.patient = :idP", Appointment.class)
+                .setParameter("idP", pat);
+        Appointment a = querya.getSingleResult();
+        Date confirmedat= new Date();
+        System.out.println("cooooo"+confirmedat);
+        System.out.println(confirmedat.getHours()-na.getNotified_at().getHours());
+        if (na.getConfirmation().equals(Confiramtion.YES)) {
+            return Json.createObjectBuilder().add("Ooups !", "Vous avez Deja Change le RDV").build();
+        } else if (na.getConfirmation().equals(Confiramtion.WAITING) &&
+                na.getNotified_at().getDay()==na.getNew_Appointement_Date().getDay() &&
+                na.getNotified_at().getDate()==na.getNew_Appointement_Date().getDate() &&
+                na.getNotified_at().getMonth()==na.getNew_Appointement_Date().getMonth() &&
+                na.getNotified_at().getYear()==na.getNew_Appointement_Date().getYear()&&
+                confirmedat.getHours()-na.getNotified_at().getHours()<2) {
+            a.setDate_start(na.getNew_Appointement_Date());
+            em.persist(a);
+            em.flush();
+            return Json.createObjectBuilder().add("Success !", "Confirmation Effectue").build();
+        } else
+            return Json.createObjectBuilder().add("Ooups !", "Vous avez Deja Annule le changement dhoraire").build();
+    }
     @Override
     public JsonObject Confirmation(int idP) {
         Patient pat = em.find(Patient.class, idP);

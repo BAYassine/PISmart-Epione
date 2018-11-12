@@ -15,6 +15,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Rating implements Serializable{
@@ -24,11 +26,11 @@ public class Rating implements Serializable{
 	private int id;
 	private int rate;
 	private String comment;
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date created_at;
 	
-    //@OneToOne
-	//private Appointment appointment;
+    @OneToOne
+	private Appointment appointment;
 	
 	public int getId() {
 		return id;
@@ -54,12 +56,12 @@ public class Rating implements Serializable{
 	public void setCreated_at(Date created_at) {
 		this.created_at = created_at;
 	}
-//	public Appointment getAppointment() {
-//		return appointment;
-//	}
-//	public void setAppointment(Appointment appointment) {
-//		this.appointment = appointment;
-//	}
+	public Appointment getAppointment() {
+		return appointment;
+	}
+	public void setAppointment(Appointment appointment) {
+		this.appointment = appointment;
+	}
 	@Override
 	public String toString() {
 		return "Rating AFF [id=" + id + ", rate=" + rate + ", comment=" + comment + ", created_at=" + created_at + "]";

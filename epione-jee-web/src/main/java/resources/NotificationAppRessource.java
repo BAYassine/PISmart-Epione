@@ -63,7 +63,6 @@ public class NotificationAppRessource {
 	@GET
 	@Path("confirmation")
 	@RolesAllowed({ "ROLE_PATIENT"})
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response ConfirmationRDV(@Context SecurityContext securityContext){
 		User u = usersManager.findUser(securityContext.getUserPrincipal().getName());

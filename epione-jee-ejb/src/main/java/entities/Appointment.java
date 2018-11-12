@@ -16,7 +16,6 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @XmlRootElement
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Appointment implements Serializable {
 
     public enum states { CANCELED, UPCOMING, ONGOING, DONE }
@@ -30,14 +29,12 @@ public class Appointment implements Serializable {
     private Date date_start;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
     private Date date_end;
+    @OneToOne
+    private Reason reason;
     private String message;
     private states state;
 
-    @OneToOne
-	private Reason reason;
-    
     @ManyToOne
-
     @JoinColumn(updatable=false)
     private Patient patient;
 
@@ -50,6 +47,10 @@ public class Appointment implements Serializable {
 
     @OneToOne(mappedBy = "appointment", fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
     private Treatment treatment;
+
+    @JsonIgnore
+    @OneToOne(mappedBy="appointment", fetch = FetchType.EAGER)
+    private Rating rating;
 
     public Appointment() {
 
@@ -79,7 +80,7 @@ public class Appointment implements Serializable {
         this.id = id;
     }
 
-  
+
 
     public String getMessage() {
         return message;
@@ -89,7 +90,7 @@ public class Appointment implements Serializable {
         this.message = message;
     }
 
-   
+
     public Consultation getConsultation() {
         return consultation;
     }
@@ -145,7 +146,6 @@ public class Appointment implements Serializable {
     public void setState(states state) {
         this.state = state;
     }
-
 	public Reason getReason() {
 		return reason;
 	}
@@ -153,5 +153,19 @@ public class Appointment implements Serializable {
 	public void setReason(Reason reason) {
 		this.reason = reason;
 	}
-	
+
+
+	public Rating getRating() {
+		return rating;
+	}
+	public void setRating(Rating rating) {
+		this.rating = rating;
+	}
+	@Override
+	public String toString() {
+		return "Appointment [id=" + id + ", date_start=" + date_start + ", date_end=" + date_end + ", reason=" + reason
+				+ ", message=" + message + ", state=" + state + ", patient=" + patient + ", doctor=" + doctor
+				+ ", consultation=" + consultation + ", treatment=" + treatment + "]";
+	}
+
 }
