@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <title>Doctor</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+	<body onload="initTimer()">
+		 <form method="post" action="api/messages/ques/send" class="table">
+
+	            <div>Response to question</div>
+	            <div>
+	                <input type="hidden" name="key" id="keyPatient"/>
+	            </div>
+	            <div>
+	                <span>Doctor:</span>
+	                <input type="text" name="doctorName" id="doctorName"/>
+	            </div>
+	            <div>
+	                <span>Message:</span>
+	                <input type="text" name="message" id="messageToOtherKey"/>
+	            </div>
+	            <input type="submit" value="Send" onclick="onFormSubmit();" class="button">
+	        </form>
+	        <br>
+	        <div id="patients">
+		 </div><br><br>
+	        <div id="messages"></div>
+	        <script type="text/javascript">
+	        
+			function getKeys(){
+				var xmlhttp;
+				var xhttp = new XMLHttpRequest();
+				xhttp.open('GET','http://127.0.0.1:18080/epione-jee-web/api/messages/ques/PatientsQuestions/');
+				xhttp.send(null);
+				xhttp.onreadystatechange = function(){
+					if(xhttp.readyState == 4){
+						if(xhttp.status == 200) {
+							var json = JSON.parse(xhttp.responseText);
+							document.getElementById('patients').innerHTML = '';
+							for(var i in json){
+								document.getElementById('patients').innerHTML += 
+									'<input type="button" value="'+ json[i].key +'" onclick="connect(this);return false;" />';
+							}
+						}
+					}
+					
+				}
+				
+			}
+			function initTimer() {
+                timer = setInterval(getKeys, 500);
+            }
+            var timer;
+            var ws;
+            var yourKey;
+            connect = function(elem) {
+            	if(ws){
+            		ws.send(JSON.stringify({'message': doc+" disconnected", "doctorName": "","patientName" : "","isPatient" : ""}));
+            		ws.close();
+                	}
+					
+					
+            	doc = document.getElementById('doctorName').value
+                id = elem.value;
+                var webSocketUrl = 'ws://localhost:18080/epione-jee-web/chat/quest/' + id;
+                ws = new WebSocket(webSocketUrl);
+                ws.onopen = function() {
+                    appendMessage('info', 'Connected! with Patient'+id);
+                    ws.send(JSON.stringify({'message': doc+" is connected", "doctorName": "","patientName" : "","isPatient" : ""}))
+                };
+                ws.onmessage = function(event) {
+                	 var json = JSON.parse(event.data);
+                    appendMessage('message', json.doctorName+json.patientName+ ': '+json.message);
+                };
+                ws.onclose = function() {
+                    appendMessage('warn', 'WebSocket closed');
+                };
+                ws.onerror = function(err) {
+                    appendMessage(err);
+                };
+                document.getElementById('keyPatient').value = id;
+            };
+            
+            appendMessage = function(type, text) {
+                document.getElementById('messages').innerHTML += '<div class="' + type + '">' + text + '</div>';
+            };
+            
+            onFormSubmit = function() {
+                setTimeout(function() {
+                	document.getElementById('messageToOtherKey').value = "";
+                	}, 500);
+            };
+           
+            
+        </script>
+	</body>
+</html>

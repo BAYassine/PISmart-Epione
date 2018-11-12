@@ -53,6 +53,10 @@ public class Appointment implements Serializable {
     @OneToOne(mappedBy = "appointment", fetch = FetchType.LAZY)
     private Treatment treatment;
 
+    @JsonIgnore
+    @OneToOne(mappedBy="appointment", fetch = FetchType.EAGER)
+    private Rating rating;
+    
     public Appointment() {
 
     }
@@ -150,4 +154,19 @@ public class Appointment implements Serializable {
 	public void setReason(Reason reason) {
 		this.reason = reason;
 	}
+	
+	
+	public Rating getRating() {
+		return rating;
+	}
+	public void setRating(Rating rating) {
+		this.rating = rating;
+	}
+	@Override
+	public String toString() {
+		return "Appointment [id=" + id + ", date_start=" + date_start + ", date_end=" + date_end + ", reason=" + reason
+				+ ", message=" + message + ", state=" + state + ", patient=" + patient + ", doctor=" + doctor
+				+ ", consultation=" + consultation + ", treatment=" + treatment + "]";
+	}
+
 }
