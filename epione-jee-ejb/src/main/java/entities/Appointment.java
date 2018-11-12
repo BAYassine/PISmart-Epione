@@ -36,7 +36,6 @@ public class Appointment implements Serializable {
     @OneToOne
     private Reason reason;
     private String message;
-    @JsonIgnore
     private states state;
 
     @ManyToOne
