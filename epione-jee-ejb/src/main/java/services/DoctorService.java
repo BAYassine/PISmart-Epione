@@ -35,7 +35,8 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 
 	//By Oumayma 
 	public List<Doctor> getDoctorByName(String name) {
-		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d , User u ,Profile p where u.role ='ROLE_DOCTOR' and p.firstname= :name and u.id=d.id and u.profile.id=p.id ",Doctor.class);
+		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d , User u ,Profile p where u.role ='ROLE_DOCTOR' and  (p.firstname LIKE CONCAT('%',:name,'%') or p.lastname LIKE CONCAT('%',:name,'%')) and u.id=d.id and u.profile.id=p.id ",Doctor.class);
+		System.out.println("queryy" +query.toString());
 		return query.setParameter("name",name).getResultList();
 	}
 	//By Oumayma
@@ -73,12 +74,12 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 
 	@Override
 	public List<Doctor> getDoctorByNameAndLocation(String name, double latitude, double longitude) {
-		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d , User u ,Profile p where u.role ='ROLE_DOCTOR' and p.firstname= :name and u.id=d.id and u.profile.id=p.id and d.latitude= :latitude and d.longitude= :longitude",Doctor.class);
+		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d , User u ,Profile p where u.role ='ROLE_DOCTOR' and (p.firstname LIKE CONCAT('%',:name,'%') or p.lastname LIKE CONCAT('%',:name,'%')) and u.id=d.id and u.profile.id=p.id and d.latitude= :latitude and d.longitude= :longitude",Doctor.class);
 		return query.setParameter("name",name).setParameter("latitude", latitude).setParameter("longitude", longitude).getResultList();
 	}
 	@Override
 	public List<Doctor> getDoctorByNameAndCity(String name, String city) {
-		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d , User u ,Profile p where u.role ='ROLE_DOCTOR' and p.firstname= :name and u.id=d.id and u.profile.id=p.id and d.city= :city",Doctor.class);
+		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d , User u ,Profile p where u.role ='ROLE_DOCTOR' and (p.firstname LIKE CONCAT('%',:name,'%') or p.lastname LIKE CONCAT('%',:name,'%')) and u.id=d.id and u.profile.id=p.id and d.city= :city",Doctor.class);
 		return query.setParameter("name",name).setParameter("city", city).getResultList();
 	}
    /** 

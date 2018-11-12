@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import entities.User;
+import entities.Patient;
 import interfaces.UserServiceLocal;
 
 import java.math.BigInteger;
@@ -36,6 +37,12 @@ public class UserService implements UserServiceLocal  {
 	public int create(User u){
 		em.persist(u);
 		return u.getId();
+	}
+
+	@Override
+	public int create(Patient p){
+		em.persist(p);
+		return p.getId();
 	}
 
 	@Override

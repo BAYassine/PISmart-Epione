@@ -1,5 +1,6 @@
 package interfaces;
 
+import entities.Patient;
 import entities.User;
 
 import javax.ejb.Local;
@@ -12,6 +13,7 @@ public interface UserServiceLocal {
 
     User findUser(String username) throws NoResultException;
     int create(User u);
+    int create(Patient u);
     void update(User u);
     void remove(User u);
     void updateLoginDate(User u);
