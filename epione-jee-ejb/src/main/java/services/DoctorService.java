@@ -1,15 +1,12 @@
 package services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.print.Doc;
 
-import entities.Appointment;
 import entities.Doctor;
 import interfaces.DoctorServiceLocal;
 import interfaces.DoctorServiceRemote;
@@ -86,7 +83,7 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
     * YASSINE
     * **/
     public int create(Doctor doctor){
-        doctor.setRegistred_at(new Date());
+        doctor.setRegistered_at(new Date());
         em.persist(doctor);
         return doctor.getId();
     }

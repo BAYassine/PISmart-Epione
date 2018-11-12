@@ -93,11 +93,11 @@ public class User implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Date getRegistred_at() {
+	public Date getRegistered_at() {
 		return registered_at;
 	}
-	public void setRegistred_at(Date registred_at) {
-		this.registered_at = registred_at;
+	public void setRegistered_at(Date registered_at) {
+		this.registered_at = registered_at;
 	}
 	public String getRole() {
 		return role.toString();
@@ -135,7 +135,7 @@ public class User implements Serializable {
 				", username='" + username + '\'' +
 				", password='" + password + '\'' +
 				", email='" + email + '\'' +
-				", registred_at=" + registered_at +
+				", registered_at=" + registered_at +
 				", role=" + role.toString() +
 				", profile=" + profile;
 	}

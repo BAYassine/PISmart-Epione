@@ -5,7 +5,6 @@ import interfaces.UserServiceLocal;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import javax.annotation.security.PermitAll;
@@ -116,7 +115,7 @@ public class AdminRessource {
         return "  " + u.getId() + calculateSpaces(u.getId()+"", 6) +
                 u.getUsername() + calculateSpaces(u.getUsername() , 16) +
                 email + calculateSpaces(email , 26) +
-                format.format(u.getRegistred_at()) + calculateSpaces(format.format(u.getRegistred_at()) , 14) +
+                format.format(u.getRegistered_at()) + calculateSpaces(format.format(u.getRegistered_at()) , 14) +
                 format.format(u.getLast_login()) + calculateSpaces(format.format(u.getLast_login()) , 13) +
                 userRole ;
     }
