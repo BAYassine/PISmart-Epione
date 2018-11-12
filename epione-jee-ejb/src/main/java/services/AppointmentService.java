@@ -1,30 +1,21 @@
 package services;
 
-import java.sql.Date;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.New;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TemporalType;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 
-import entities.Appointment;
+import entities.*;
 import entities.Appointment.states;
-import entities.Consultation;
-import entities.Doctor;
-import entities.Patient;
-import entities.Reason;
 import interfaces.AppointmentServiceLocal;
 import interfaces.AppointmentServiceRemote;
+import interfaces.AvailabilityServiceLocal;
 import interfaces.NotificationAppServiceLocal;
 
 
@@ -63,47 +54,40 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
             return app.getId();
         }
         return 0;
+    }
 
-        /**
-         * Author : Oumayma + Amine
-         */
-        public boolean cancelAppointment ( int appId, int idP){
+    /**
+     * Author : Oumayma + Amine
+     */
+    public boolean cancelAppointment(int appId, int idP) {
 
-            Appointment app = em.find(Appointment.class, appId);
-            if (app != null && app.getPatient().getId() == idP) {
-                app.setState(states.CANCELED);
-                notificationManager.addNotification(app);
-                return true;
-            }
-            return false;
-
+        Appointment app = em.find(Appointment.class, appId);
+        if (app != null && app.getPatient().getId() == idP) {
+            app.setState(states.CANCELED);
+            notificationManager.addNotification(app);
+            return true;
         }
+        return false;
 
-        public void deleteAppointment ( int idA, int idP){
-            Appointment app = em.find(Appointment.class, idA);
-            if (app.getPatient().getId() == idP)
-                em.remove(app);
+    }
 
-        }
+    public void deleteAppointment(int idA, int idP) {
+        Appointment app = em.find(Appointment.class, idA);
+        if (app.getPatient().getId() == idP)
+            em.remove(app);
 
-        /**
-         * Author : Oumayma
-         */
-        public int updateAppointment(Appointment app,int idP) {
-            em.merge(app);
-            return app.getId();
+    }
 
-        }
+    /**
+     * Author : Oumayma
+     */
+    public int updateAppointment(Appointment app, int idP) {
+        em.merge(app);
+        return app.getId();
 
-        @Override
-        public int updateAppointment (Appointment app,int idR){
-            Reason r = em.find(Reason.class, idR);
-            app.setReason(r);
-            em.merge(app);
-            return app.getId();
-        }
+    }
 
-	 /**
+    /**
      * Author : Oumayma
      */
     public Appointment getAppointmentById(int appointmentId) {
@@ -177,7 +161,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
      * Author : Oumayma
      */
     public List<Appointment> getPatientsAppointmentByDate(String date, int idP) throws ParseException {
-        java.util.Date d1 = null;
+        Date d1 = null;
         d1 = new SimpleDateFormat("yyyy-MM-dd").parse(date);
         java.sql.Date d = new java.sql.Date(d1.getTime());
         java.sql.Date tomorrow = new java.sql.Date(d.getTime() + 24 * 60 * 60 * 1000);
@@ -190,8 +174,6 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         return query.getResultList();
     }
 
-
-    }
     /**
      * Author : Yassine
      */
@@ -201,6 +183,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         Query query = em.createQuery(sql).setParameter("id_doctor", doctor.getId());
         return query.getResultList();
     }
+
     /**
      * Author : Yassine
      */
@@ -208,8 +191,8 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         String sql = "SELECT a from Appointment a where a.state = :state and a.doctor = :doctor "
                 + "order by a.date_start ASC ";
         TypedQuery<Appointment> query = em.createQuery(sql, Appointment.class)
-				.setParameter("state", Appointment.states.ONGOING)
-				.setParameter("doctor",doctor);
+                .setParameter("state", Appointment.states.ONGOING)
+                .setParameter("doctor", doctor);
         Appointment a;
         try {
             a = query.setMaxResults(1).getSingleResult();
@@ -246,19 +229,19 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         return (long) query.getSingleResult();
     }
 
-	/**
-	 * Author : Yassine
-	 */
-	public Map<Date, Long> appointmentPerDay(Doctor doctor){
-		String sql = "SELECT count(a), date(a.date_start) from Appointment a " +
-				"where a.date_start > (current_date - 7) and a.date_start < current_date and a.doctor = :doctor " +
-				"GROUP BY date(a.date_start)";
-		Query query = em.createQuery(sql).setParameter("doctor", doctor);
-		List<Object[]> list = query.getResultList();
-		Map<Date, Long> map = new HashMap<>();
-		list.forEach( k -> map.put((Date) k[1], (Long)k[0]));
-		return map;
-	}
+    /**
+     * Author : Yassine
+     */
+    public Map<Date, Long> appointmentPerDay(Doctor doctor) {
+        String sql = "SELECT count(a), date(a.date_start) from Appointment a " +
+                "where a.date_start > (current_date - 7) and a.date_start < current_date and a.doctor = :doctor " +
+                "GROUP BY date(a.date_start)";
+        Query query = em.createQuery(sql).setParameter("doctor", doctor);
+        List<Object[]> list = query.getResultList();
+        Map<Date, Long> map = new HashMap<>();
+        list.forEach(k -> map.put((Date) k[1], (Long) k[0]));
+        return map;
+    }
 
     /**
      * Author : Yassine
