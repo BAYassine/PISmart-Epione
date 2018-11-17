@@ -51,7 +51,7 @@ public class AppointmentResource {
 			System.out.println("*****************************************by id only");
 		        app=appointmentServ.getAppointmentById(id);
 				if(app!=null)
-					return (Response.status(Response.Status.FOUND).entity(app).build());
+					return (Response.status(Response.Status.OK).entity(app).build());
 			    return (Response.status(Response.Status.NOT_FOUND).entity("Appointment not founded").build());
          }
 	// Search by Patient/Doctor Id and Date
@@ -61,14 +61,14 @@ public class AppointmentResource {
   			       appList=appointmentServ.getPatientsAppointmentByDate(date,u.getId());
   			       if(!appList.isEmpty())
   			       { System.out.println("**********************************appppp");
-  			    	   return (Response.status(Response.Status.FOUND).entity(appList).build());}
+  			    	   return (Response.status(Response.Status.OK).entity(appList).build());}
   	  			    return (Response.status(Response.Status.NOT_FOUND).entity("No appointment").build());
 
     	        }
     	        else if(u.getRole().equals("ROLE_DOCTOR")){
    			       appList=appointmentServ.getDoctorsAppointmentByDate(date,u.getId());
    			       if(!appList.isEmpty())
-   			    	   return (Response.status(Response.Status.FOUND).entity(appList).build());
+   			    	   return (Response.status(Response.Status.OK).entity(appList).build());
    	  			    return (Response.status(Response.Status.NOT_FOUND).entity("No appointment").build());
      	        }
     	        else
@@ -80,14 +80,14 @@ public class AppointmentResource {
     	  if(u.getRole().equals("ROLE_PATIENT")){
 			       appList=appointmentServ.getAppointmentsByPatient(u.getId());
 			       if(!appList.isEmpty())
-			    	   return (Response.status(Response.Status.FOUND).entity(appList).build());
+			    	   return (Response.status(Response.Status.OK).entity(appList).build());
 	  			    return (Response.status(Response.Status.NOT_FOUND).entity("No appointment").build());
 
 	        }
 	        else if(u.getRole().equals("ROLE_DOCTOR")){
 			       appList=appointmentServ.getAppointmentsByDoctor(u.getId());
 			       if(!appList.isEmpty())
-			    	   return (Response.status(Response.Status.FOUND).entity(appList).build());
+			    	   return (Response.status(Response.Status.OK).entity(appList).build());
 	  			    return (Response.status(Response.Status.NOT_FOUND).entity("No appointment").build());
 
 	        }
@@ -111,7 +111,7 @@ public class AppointmentResource {
 			int id;
 			id=appointmentServ.addAppointment(app, u.getId(),u.getEmail());
 			if(id!=0)
-				return Response.status(Status.CREATED).entity("Appointment added").build();
+				return Response.status(Status.OK).entity("Appointment added").build();
 			return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();
 		}
 		else

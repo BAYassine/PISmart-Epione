@@ -44,7 +44,7 @@ public class NotificationAppRessource {
 	public Response addNotification(@Context SecurityContext securityContext){
 		User u = usersManager.findUser(securityContext.getUserPrincipal().getName());
 		//notifManager.addNotification(Appointment app,);
-		return Response.status(Status.CREATED).entity("Notification Envoyée :").build();
+		return Response.status(Status.OK).entity("Notification Envoyée :").build();
 	}
 	
 	@GET
@@ -52,7 +52,7 @@ public class NotificationAppRessource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getNotificationByDate(@QueryParam(value="date")String date){
 		if (date!=null){
-			return (Response.status(Response.Status.FOUND).entity(notifManager.getNotificationByDate(date)).build());	
+			return (Response.status(Response.Status.OK).entity(notifManager.getNotificationByDate(date)).build());	
 		}else{
 			List<NotificationApp> list=new ArrayList<NotificationApp>();
 			list= notifManager.getAllNotification();
