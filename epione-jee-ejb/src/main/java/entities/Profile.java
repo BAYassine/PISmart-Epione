@@ -46,11 +46,21 @@ public class Profile implements Serializable {
     @Pattern(regexp = "[1-9][0-9]{7}")
     private String telephone;
 
+    private String image;
+    
     @OneToOne(mappedBy="profile", fetch = FetchType.LAZY)
     @JsonIgnore
 	private User user;
 
-    public int getId() {
+    public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public int getId() {
         return id;
     }
 
