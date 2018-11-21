@@ -45,7 +45,7 @@ public class DoctorResource {
     public Response getDoctorById(@PathParam(value = "id") int id) {
         Doctor doc = doctorService.getDoctorById(id);
         if (doc != null)
-            return (Response.status(Response.Status.FOUND).entity(doc).build());
+            return (Response.status(Response.Status.OK).entity(doc).build());
 
         return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the Id").build());
     }
@@ -54,7 +54,7 @@ public class DoctorResource {
      * Author : Oumayma
      */
     @GET
-    @RolesAllowed({ "ROLE_PATIENT", "ROLE_DOCTOR" })
+    @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDoctor(@QueryParam(value = "idS") int idS, @QueryParam(value = "lat") double lat,
     						  @QueryParam(value = "lon") double lon,
@@ -66,7 +66,7 @@ public class DoctorResource {
         if ((name != null) && (lat == 0.0) && (lon == 0.0)&& (city == null) && (idS == 0)) {
             doc = doctorService.getDoctorByName(name);
             if (!doc.isEmpty())
-                return (Response.status(Response.Status.FOUND).entity(doc).build());
+                return (Response.status(Response.Status.OK).entity(doc).build());
             return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the name").build());
         }
 
@@ -74,7 +74,7 @@ public class DoctorResource {
         else if ((name == null) && (lat != 0.0) && (lon != 0.0)&& (city == null) && (idS == 0)){
             doc = doctorService.getDoctorByLocation(lat,lon);
             if (!doc.isEmpty())
-                return (Response.status(Response.Status.FOUND).entity(doc).build());
+                return (Response.status(Response.Status.OK).entity(doc).build());
             return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the Location.").build());
         }
 
@@ -82,7 +82,7 @@ public class DoctorResource {
         else if ((name == null) && (lat == 0.0) && (lon == 0.0)&& (city == null) && (idS != 0)) {
             doc = doctorService.getDoctorBySpeciality(idS);
             if (!doc.isEmpty())
-                return (Response.status(Response.Status.FOUND).entity(doc).build());
+                return (Response.status(Response.Status.OK).entity(doc).build());
             return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the speciality.").build());
         }
 
@@ -90,21 +90,21 @@ public class DoctorResource {
         else if ((name == null) && (lat != 0.0) && (lon != 0.0)&& (city == null) && (idS != 0)) {
             doc = doctorService.getDoctorBySpecialitAndLocation(idS, lat,lon);
             if (!doc.isEmpty())
-                return (Response.status(Response.Status.FOUND).entity(doc).build());
+                return (Response.status(Response.Status.OK).entity(doc).build());
             return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the location and speciality.").build());
         }
        // search by city
         else if ((name == null) && (lat == 0.0) && (lon == 0.0)&& (city != null) && (idS == 0)) {
             doc = doctorService.getDoctorByCity(city);
             if (!doc.isEmpty())
-                return (Response.status(Response.Status.FOUND).entity(doc).build());
+                return (Response.status(Response.Status.OK).entity(doc).build());
             return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the location and speciality.").build());
         }
         //search by name and city
         else if ((name != null) && (lat == 0.0) && (lon == 0.0)&& (city != null) && (idS == 0)) {
             doc = doctorService.getDoctorByNameAndCity(name, city);
             if (!doc.isEmpty())
-                return (Response.status(Response.Status.FOUND).entity(doc).build());
+                return (Response.status(Response.Status.OK).entity(doc).build());
             return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the location and speciality.").build());
         }
 
@@ -112,7 +112,7 @@ public class DoctorResource {
         else {
             doc = doctorService.getDoctors();
             if (!doc.isEmpty())
-                return (Response.status(Response.Status.FOUND).entity(doc).build());
+                return (Response.status(Response.Status.OK).entity(doc).build());
             return (Response.status(Response.Status.NOT_FOUND).entity("NO doctors").build());
         }
     }
