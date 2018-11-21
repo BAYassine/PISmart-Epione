@@ -17,4 +17,9 @@ public interface MessageServiceLocal {
      * Author : Yassine
      */
     List<Message> inbox(Doctor doctor, int limit);
+
+    /**
+     * Author : Yassine
+     */
+    long unreadMessages(Doctor doctor);
 }

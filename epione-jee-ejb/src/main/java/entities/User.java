@@ -2,6 +2,7 @@ package entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
@@ -16,9 +17,7 @@ import java.util.Date;
  *
  */
 @Entity
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id")
+//@Table(uniqueConstraints={@UniqueConstraint(columnNames={"username", "email"})})
 @XmlRootElement
 @Inheritance(strategy=InheritanceType.JOINED)
 public class User implements Serializable {
@@ -31,10 +30,11 @@ public class User implements Serializable {
     protected int id;
 
     @NotNull
-    @Column(unique = true)
+	@Column(unique = true)
     protected String username;
 
     @NotNull
+	@Column(unique = true)
     @Pattern(regexp = "[a-z][a-zA-Z0-9]*@[a-z0-9]*\\.[a-z0-9]*", message = "Email is not valid")
     protected String email;
 
@@ -55,6 +55,7 @@ public class User implements Serializable {
     protected String password;
 
 	@OneToOne(cascade = CascadeType.ALL)
+	@JsonManagedReference
 	protected Profile profile;
 
 	public User(){

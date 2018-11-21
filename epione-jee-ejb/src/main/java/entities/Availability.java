@@ -13,11 +13,11 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @XmlRootElement
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Availability implements Serializable {
     /**
      *
@@ -34,6 +34,7 @@ public class Availability implements Serializable {
     private String description;
 
     @ManyToOne
+    @JsonManagedReference
     private Doctor doctor;
 
     public Availability() {

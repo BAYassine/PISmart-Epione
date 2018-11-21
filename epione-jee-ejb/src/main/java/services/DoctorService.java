@@ -1,17 +1,15 @@
 package services;
 
-import java.util.List;
+import entities.Doctor;
+import interfaces.DoctorServiceLocal;
+import interfaces.DoctorServiceRemote;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-
-import entities.Doctor;
-import interfaces.DoctorServiceLocal;
-import interfaces.DoctorServiceRemote;
-
 import java.util.Date;
+import java.util.List;
 
 @Stateless
 public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
@@ -27,7 +25,7 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 	//By Oumayma
 	public List<Doctor>  getDoctorByLocation(double latitude,double longitude) {
 		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d WHERE d.latitude= :latitude AND d.longitude= :longitude",Doctor.class);
-		return query.setParameter("latidue",latitude).setParameter("longitude",longitude).getResultList();
+		return query.setParameter("latitude",latitude).setParameter("longitude",longitude).getResultList();
 	}
 
 	//By Oumayma 
@@ -82,7 +80,7 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
    /** 
     * YASSINE
     * **/
-    public int create(Doctor doctor){
+    public int create(Doctor doctor) {
         doctor.setRegistered_at(new Date());
         em.persist(doctor);
         return doctor.getId();

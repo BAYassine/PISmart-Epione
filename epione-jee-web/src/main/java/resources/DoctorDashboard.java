@@ -6,6 +6,8 @@ import entities.Message;
 import interfaces.AppointmentServiceLocal;
 import interfaces.DoctorServiceLocal;
 import interfaces.MessageServiceLocal;
+import org.jboss.resteasy.annotations.Query;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.annotation.security.PermitAll;
@@ -16,7 +18,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 @Path("/dashboard")
@@ -32,11 +36,21 @@ public class DoctorDashboard {
     @GET
     @RolesAllowed("ROLE_DOCTOR")
     @Produces("application/json")
-    public Response router(@QueryParam("from") String since,
+    public Response router(@QueryParam("graph") String graph,
+                           @QueryParam("value") String value,
+                           @QueryParam("since") String since,
                            @QueryParam("limit") int limit,
                            @Context SecurityContext securityContext) {
-            if(since != null)
+            if(value != null)
                     return totalAppointments(securityContext, since);
+            if(graph != null){
+                if(graph.equals("month"))
+                    return monthAppointements(securityContext, since);
+                if(graph.equals("day"))
+                    return dayAppointements(securityContext, since);
+                if(graph.equals("year"))
+                    return yearAppointements(securityContext, since);
+            }
             if(limit != 0)
                 return inbox(securityContext, limit);
             return dashboard(securityContext);
@@ -63,16 +77,16 @@ public class DoctorDashboard {
         Doctor doctor = doctorService.findDoctor(securityContext.getUserPrincipal().getName());
         List<Appointment> appointments = appointmentService.upcoming(doctor);
         JSONObject result = new JSONObject();
-        result.put("doctor", doctor);
         result.put("appointments upcoming", appointments);
         result.put("average appointements per day", appointmentService.averageAppointements(doctor));
-//        result.put("appointment per day",appointmentService.appointmentPerDay(doctor));
-        result.put("ongoing", appointmentService.ongoing(doctor) != null ? appointmentService.ongoing(doctor) : "No ongoing appointements");
-        SimpleDateFormat time_formatter = new SimpleDateFormat("H' hours, 'm' minutes and 's' seconds'");
+        result.put("appointment per day",appointmentService.appointmentPerMonth(doctor, null));
+        result.put("ongoing", appointmentService.ongoing(doctor) != null ? appointmentService.ongoing(doctor) : appointments.size() > 0 ? appointments.get(0) : null);
+        SimpleDateFormat time_formatter = new SimpleDateFormat("H'h' m'm' s's'");
         time_formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-        result.put("average duration for consultaions", time_formatter.format(appointmentService.averageDuration(doctor)));
-        result.put("total appointements this week", appointmentService.totalAppointements(doctor, "2018/10/19"));
+        result.put("average duration for consultations", time_formatter.format(appointmentService.averageDuration(doctor)));
+        result.put("total appointments this week", appointmentService.totalAppointements(doctor, null));
         result.put("inbox", messageService.inbox(doctor, 10));
+        result.put("unread messages", messageService.unreadMessages(doctor));
         return Response.status(200).entity(result).build();
     }
 
@@ -95,5 +109,25 @@ public class DoctorDashboard {
         return Response.status(200).entity(total).build();
     }
 
+    @RolesAllowed("ROLE_DOCTOR")
+    @Produces("application/json")
+    public Response dayAppointements(@Context SecurityContext securityContext, String since) {
+        Doctor doctor = doctorService.findDoctor(securityContext.getUserPrincipal().getName());
+        return Response.status(200).entity(appointmentService.appointmentPerDay(doctor, since)).build();
+    }
+
+    @RolesAllowed("ROLE_DOCTOR")
+    @Produces("application/json")
+    public Response monthAppointements(@Context SecurityContext securityContext, String since) {
+        Doctor doctor = doctorService.findDoctor(securityContext.getUserPrincipal().getName());
+        return Response.status(200).entity(appointmentService.appointmentPerMonth(doctor, since)).build();
+    }
+
+    @RolesAllowed("ROLE_DOCTOR")
+    @Produces("application/json")
+    public Response yearAppointements(@Context SecurityContext securityContext, String since) {
+        Doctor doctor = doctorService.findDoctor(securityContext.getUserPrincipal().getName());
+        return Response.status(200).entity(appointmentService.appointmentPerYear(doctor,since)).build();
+    }
 
 }

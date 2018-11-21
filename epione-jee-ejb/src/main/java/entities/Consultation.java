@@ -12,13 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Consultation implements Serializable {
 	
 	/**
@@ -29,7 +25,7 @@ public class Consultation implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
 	private Date date_cons;
 	
 	private String remarks;
@@ -39,10 +35,11 @@ public class Consultation implements Serializable {
 	private double price;
 	
 	@OneToOne(mappedBy="consultation", fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
+	@JsonBackReference
 	private Report report;
 	
 	@OneToOne
-	
+	@JsonManagedReference
 	private Appointment appointment;
 
 	public Consultation(){

@@ -16,7 +16,6 @@ import com.fasterxml.jackson.annotation.*;
  *
  */
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Profile implements Serializable {
 
     public enum Gender {FEMALE, MALE}
@@ -47,8 +46,8 @@ public class Profile implements Serializable {
     private String telephone;
 
     @OneToOne(mappedBy="profile", fetch = FetchType.LAZY)
-    @JsonIgnore
-	private User user;
+    @JsonBackReference
+    private User user;
 
     public int getId() {
         return id;

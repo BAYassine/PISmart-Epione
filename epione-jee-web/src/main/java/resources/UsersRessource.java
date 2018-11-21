@@ -14,6 +14,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -36,15 +37,21 @@ public class UsersRessource {
     @Consumes("application/json")
     public Response register(User u){
         u.setPassword(BCrypt.hashpw(u.getPassword(), BCrypt.gensalt()));
-        if(u.getRole().equals(User.Roles.ROLE_DOCTOR.toString())){
-            Doctor d = new Doctor(u);
-            doctorService.create(d);
+        u.setUsername(u.getUsername().toLowerCase());
+        u.setEmail(u.getEmail().toLowerCase());
+        try {
+            if(u.getRole().equals(User.Roles.ROLE_DOCTOR.toString())){
+                Doctor d = new Doctor(u);
+                doctorService.create(d);
+            }
+            else if(u.getRole().equals(User.Roles.ROLE_PATIENT.toString())){
+                Patient p = new Patient(u);
+                patientService.create(p);
+            }
+            else userService.create(u);
+        }catch (EJBException e){
+            return Response.status(Response.Status.NOT_ACCEPTABLE).entity("Email or username already used").build();
         }
-        else if(u.getRole().equals(User.Roles.ROLE_PATIENT.toString())){
-            Patient p = new Patient(u);
-            patientService.create(p);
-        }
-        else userService.create(u);
         return Response.status(201).entity("Thank you for joining us").build();
     }
 

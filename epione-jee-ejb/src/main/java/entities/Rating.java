@@ -2,6 +2,7 @@ package entities;
 
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -18,7 +19,6 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Rating implements Serializable{
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -30,6 +30,7 @@ public class Rating implements Serializable{
 	private Date created_at;
 	
     @OneToOne
+	@JsonBackReference
 	private Appointment appointment;
 	
 	public int getId() {

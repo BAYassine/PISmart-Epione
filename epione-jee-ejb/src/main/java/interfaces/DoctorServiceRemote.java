@@ -1,10 +1,8 @@
 package interfaces;
 
-import javax.ejb.Local;
-import javax.ejb.Remote;
-
 import entities.Doctor;
 
+import javax.ejb.Remote;
 import java.util.List;
 
 @Remote

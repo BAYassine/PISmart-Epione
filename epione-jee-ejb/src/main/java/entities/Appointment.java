@@ -1,9 +1,6 @@
 package entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,6 +13,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @XmlRootElement
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Appointment implements Serializable {
 
     public enum states { CANCELED, UPCOMING, ONGOING, DONE }
@@ -36,20 +34,24 @@ public class Appointment implements Serializable {
 
     @ManyToOne
     @JoinColumn(updatable=false)
+    @JsonManagedReference
     private Patient patient;
 
     @ManyToOne
     @JoinColumn(updatable=false)
+    @JsonManagedReference
     private Doctor doctor;
 
     @OneToOne(mappedBy="appointment", fetch = FetchType.LAZY,cascade= CascadeType.REMOVE)
+    @JsonBackReference
     private Consultation consultation;
 
     @OneToOne(mappedBy = "appointment", fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
+    @JsonBackReference
     private Treatment treatment;
 
-    @JsonIgnore
-    @OneToOne(mappedBy="appointment", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy="appointment")
+    @JsonManagedReference
     private Rating rating;
 
     public Appointment() {

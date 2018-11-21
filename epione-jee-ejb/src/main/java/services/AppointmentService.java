@@ -1,14 +1,13 @@
 package services;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.ejb.EJB;
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.enterprise.inject.New;
 import javax.persistence.*;
 
 import entities.*;
@@ -178,9 +177,9 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
      * Author : Yassine
      */
     public List<Appointment> upcoming(Doctor doctor) {
-        String sql = "SELECT a,d from Appointment a JOIN a.doctor d WHERE d.id = :id_doctor "
-                + "AND a.date_start > CURRENT_DATE ";
-        Query query = em.createQuery(sql).setParameter("id_doctor", doctor.getId());
+        String sql = "SELECT a from Appointment a WHERE a.doctor = :doctor "
+                + "AND a.state = :state AND date(a.date_start) = date(current_date)";
+        Query query = em.createQuery(sql).setParameter("doctor", doctor).setParameter("state", Appointment.states.UPCOMING);
         return query.getResultList();
     }
 
@@ -218,11 +217,15 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
      */
     public long totalAppointements(Doctor doctor, String since) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-        Date date = null;
+        Date date = new Date();
         try {
             date = formatter.parse(since);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (ParseException | NullPointerException e) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            System.out.println(c.getFirstDayOfWeek());
+            c.add(Calendar.DATE, c.getFirstDayOfWeek());
+            date = c.getTime();
         }
         String sql = "SELECT count(a) from Appointment a where a.date_start > :from and a.date_start < current_date and a.doctor = :doctor";
         Query query = em.createQuery(sql).setParameter("from", date).setParameter("doctor", doctor);
@@ -232,14 +235,71 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
     /**
      * Author : Yassine
      */
-    public Map<Date, Long> appointmentPerDay(Doctor doctor) {
+    public Map<Date, Long> appointmentPerDay(Doctor doctor, String since) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-d");
+        Date date = new Date();
+        try {
+            date = formatter.parse(since);
+        } catch (ParseException | NullPointerException e) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.DATE, -7);
+            date = c.getTime();
+        }
+        System.out.println(date.toString());
         String sql = "SELECT count(a), date(a.date_start) from Appointment a " +
-                "where a.date_start > (current_date - 7) and a.date_start < current_date and a.doctor = :doctor " +
+                "where a.date_start > :date and a.date_start < current_date and a.doctor = :doctor " +
                 "GROUP BY date(a.date_start)";
-        Query query = em.createQuery(sql).setParameter("doctor", doctor);
+        Query query = em.createQuery(sql).setParameter("doctor", doctor).setParameter("date", date);
         List<Object[]> list = query.getResultList();
         Map<Date, Long> map = new HashMap<>();
-        list.forEach(k -> map.put((Date) k[1], (Long) k[0]));
+        list.forEach(k -> {
+            map.put((Date) k[1], (Long) k[0]);
+        });
+        return map;
+    }
+
+    public Map<String, Long> appointmentPerMonth(Doctor doctor,String since) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        Date date = new Date();
+        try {
+            date = formatter.parse(since);
+        } catch (ParseException | NullPointerException e) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.MONTH, -7);
+            date = c.getTime();
+        }
+        String sql = "SELECT count(*) total, DATE_FORMAT(date_start, '%Y-%m') month " +
+                "FROM appointment " +
+                "WHERE doctor_id = :doctor_id AND state = 3 AND date_start > :date " +
+                "GROUP BY month";
+        Query query = em.createNativeQuery(sql).setParameter("doctor_id", doctor.getId()).setParameter("date", date);
+        List<Object[]> list = query.getResultList();
+        Map<String, Long> map = new HashMap<>();
+        list.forEach(k -> map.put((String) k[1], ((BigInteger) k[0]).longValue()));
+        return map;
+    }
+
+    public Map<String, Long> appointmentPerYear(Doctor doctor,String since) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
+        Date date = new Date();
+        try {
+            date = formatter.parse(since);
+        } catch (ParseException e) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.YEAR, -7);
+            date = c.getTime();
+        }
+        String sql = "SELECT count(*) total, DATE_FORMAT(date_start, '%Y') year " +
+                "FROM appointment " +
+                "WHERE doctor_id = :doctor_id AND state = 3 AND date_start > :date " +
+                "GROUP BY year";
+        Query query = em.createNativeQuery(sql).setParameter("doctor_id", doctor.getId()).setParameter("date", date);
+        List<Object[]> list = query.getResultList();
+        Map<String, Long> map = new HashMap<>();
+        list.forEach(k -> map.put((String) k[1], ((BigInteger) k[0]).longValue()));
         return map;
     }
 
@@ -253,7 +313,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
                 ") AS durations";
         Query query = em.createNativeQuery(sql).setParameter("doctor", doctor.getId()).setParameter("state", Appointment.states.DONE.ordinal());
         BigDecimal avg = (BigDecimal) query.getSingleResult();
-        return new Date(avg.longValue() * 1000);
+        return new Date(avg.longValue()*1000);
     }
 
 }

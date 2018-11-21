@@ -18,4 +18,9 @@ public interface MessageServiceRemote {
      * Author : Yassine
      */
     List<Message> inbox(Doctor doctor, int limit);
+
+    /**
+     * Author : Yassine
+     */
+    long unreadMessages(Doctor doctor);
 }

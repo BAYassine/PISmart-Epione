@@ -52,5 +52,14 @@ public class MessageService implements MessageServiceLocal, MessageServiceRemote
 		return query.setMaxResults(limit).getResultList();
 	}
 
+	/**
+	 * Author : Yassine
+	 */
+	public long unreadMessages(Doctor doctor){
+		String sql = "SELECT count(m) FROM Message m where m.doctor = :doctor and m.seen = false ";
+		Query query = em.createQuery(sql).setParameter("doctor", doctor);
+		return (long) query.getSingleResult();
+	}
+
 	
 }

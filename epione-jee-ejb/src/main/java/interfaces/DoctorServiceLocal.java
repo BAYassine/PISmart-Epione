@@ -1,9 +1,8 @@
 package interfaces;
 
-import javax.ejb.Local;
-
 import entities.Doctor;
 
+import javax.ejb.Local;
 import java.util.List;
 
 @Local

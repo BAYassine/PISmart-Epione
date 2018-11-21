@@ -117,17 +117,4 @@ public class DoctorResource {
         }
     }
 
-    /**
-     * Author : Yassine
-     */
-    @POST
-    @PermitAll
-    @Produces("application/json")
-    @Consumes("application/json")
-    public Response addDoctor(Doctor d) {
-        int id = doctorService.create(d);
-        return Response.status(201).entity(id).build();
-    }
-
-
 }

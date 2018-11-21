@@ -12,13 +12,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Report  implements Serializable{
 	/**
 	 * 
@@ -38,7 +34,7 @@ public class Report  implements Serializable{
 	private String pathFile;
 	
 	@OneToOne
-	@JsonIgnore
+	@JsonManagedReference
 	private Consultation consultation;
 	
 	@OneToOne

@@ -21,7 +21,6 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @XmlRootElement
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Treatment implements Serializable {
 	/**
 	 * 
@@ -37,9 +36,11 @@ public class Treatment implements Serializable {
 	private String recomended_doc;
 	
 	@OneToOne
+	@JsonManagedReference
 	private Appointment appointment;
 	
 	@ManyToOne
+	@JsonManagedReference
 	private Path path;
 	
 	public Treatment() {

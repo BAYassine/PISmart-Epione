@@ -1,7 +1,6 @@
 package entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -10,7 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 @Entity
 @XmlRootElement
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Reason {
 
 	@Id
@@ -19,9 +17,11 @@ public class Reason {
 	private String name;
 	
 	@ManyToOne
+	@JsonManagedReference
 	private Speciality speciality;
 	/*Fares*/
 	@ManyToMany(mappedBy="reasons", fetch = FetchType.LAZY)
+	@JsonBackReference
 	private Set<Doctor> doctors=new HashSet<>();
 
 	public Reason() {

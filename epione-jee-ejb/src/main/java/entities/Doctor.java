@@ -1,8 +1,6 @@
 package entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -13,7 +11,7 @@ import java.util.*;
 @Entity
 @XmlRootElement
 @PrimaryKeyJoinColumn(name = "id")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Doctor extends User implements Serializable {
 
     /**
@@ -37,31 +35,32 @@ public class Doctor extends User implements Serializable {
     private String socialReason;
     @ElementCollection
     @CollectionTable(name ="skills")
-    @JsonIgnore
+	@JsonBackReference
     private Set<String> skills = new HashSet<String>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
-    @JsonIgnore
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+	@JsonBackReference
     private Set<Availability> availabilities = new HashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
-    @JsonIgnore
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    @JsonBackReference
     private Set<Appointment> appointments = new HashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
-    @JsonIgnore
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+	@JsonBackReference
     private Set<Path> paths = new HashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
-    @JsonIgnore
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+	@JsonBackReference
     private Set<Message> messages = new HashSet<>();
 
     @ManyToOne
-    private Speciality speciality;
+	@JsonManagedReference
+	private Speciality speciality;
 
     /*Fares*/
-    @ManyToMany(fetch = FetchType.LAZY)
-	@JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
+	@JsonManagedReference
 	private Set<Reason> reasons=new HashSet<>();
 
     public Doctor() {

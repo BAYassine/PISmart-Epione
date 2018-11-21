@@ -1,5 +1,6 @@
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -12,7 +13,6 @@ import java.util.Set;
 
 @Entity
 @XmlRootElement
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Speciality implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
@@ -22,11 +22,11 @@ public class Speciality implements Serializable{
 	private String name;
 	
 	@OneToMany(mappedBy="speciality", fetch = FetchType.LAZY)
-	@JsonIgnore
+	@JsonBackReference
 	private Set<Reason> reasons=new HashSet<>();
 	
 	@OneToMany(mappedBy="speciality", fetch = FetchType.LAZY)
-	@JsonIgnore
+	@JsonBackReference
 	private Set<Doctor> doctors=new HashSet<>();
 	
 	

@@ -2,6 +2,7 @@ package entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.io.Serializable;
@@ -15,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Message implements Serializable {
 	/**
 	 * 
@@ -26,13 +26,15 @@ public class Message implements Serializable {
 	private int id;
 	
 	private String content;
-	 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
 	private Date date_msg;
 	
 	@ManyToOne
+	@JsonManagedReference
 	private Patient patient;
 
 	@ManyToOne
+	@JsonManagedReference
 	private Doctor doctor;
 	private boolean seen;
 
