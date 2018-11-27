@@ -1,5 +1,7 @@
 package resources;
 
+import java.util.List;
+
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -13,20 +15,25 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.SecurityContext;
 
 import entities.Treatment;
 import entities.User;
+import interfaces.PathServiceLocal;
 import interfaces.ReportServiceLocal;
 import interfaces.TreatmentServiceLocal;
 import interfaces.UserServiceLocal;
+import services.PathService;
+import services.TreatmentService;
 
 @Path("/treatments")
 public class TreatmentResource {
 	
 	@EJB
 	TreatmentServiceLocal ts ;
+	@EJB
+	PathServiceLocal ps;
 	@EJB
 	UserServiceLocal userServ;
 	@EJB
@@ -85,7 +92,7 @@ public class TreatmentResource {
 			
 		}else {
 			
-			return	Response.status(Status.FOUND).entity(ts.getAllTreatments()).build();
+			return	Response.status(Status.OK).entity(ts.getAllTreatments()).build();
 
 		}
 		
@@ -102,6 +109,16 @@ public class TreatmentResource {
 	}
 	
 	@GET
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/getTreatmentPath")
+	public Response getTreatmentPath(@QueryParam("idPath") int idPath ,@Context SecurityContext securityContext) {
+		
+		
+		return  Response.status(Status.ACCEPTED).entity(ts.getTreatmentsPath(idPath)).build();
+	}
+	
+	@GET
 	@RolesAllowed("ROLE_DOCTOR")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/getDoctorConnected")
@@ -109,6 +126,40 @@ public class TreatmentResource {
 		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
 		
 		return  Response.status(Status.ACCEPTED).entity(ts.getDoctorsTreatment(u.getId())).build();
+	}
+	
+	@POST
+	@RolesAllowed("ROLE_DOCTOR")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/getDoctorConnected")
+	public Response addTreatments(@Context SecurityContext securityContext) {
+		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+		
+		return  Response.status(Status.ACCEPTED).entity(ts.getDoctorsTreatment(u.getId())).build();
+	}
+	@POST
+	@Path("/copyListTreatment")
+	@Produces(MediaType.APPLICATION_JSON)
+	//@RolesAllowed("ROLE_DOCTOR")
+	@PermitAll
+	public Response copyListTreatment(List<Treatment> treats, int idPath) {
+		System.out.println("--------------"+ts.getTreatmentById(1).getDescription());
+		treats.forEach(a ->{ 
+			Treatment t = new Treatment();
+			Treatment treatGerer =ts.getTreatmentById(a.getId());
+			t.setDescription(treatGerer.getDescription());
+			t.setRecomended_doc(treatGerer.getRecomended_doc());
+			
+			
+			entities.Path p = ps.getPathById(idPath);
+			List<Treatment> treatss = p.getList_treat();
+			t.setPath(p);
+			ts.addTreatment(t);
+			p.setList_treat(treatss);
+	
+			//ts.updateTreatment(t);
+		});
+		return Response.status(Status.CREATED).entity("success").build();
 	}
 	
 	

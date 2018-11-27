@@ -77,6 +77,7 @@ public class Treatment implements Serializable {
 	public void setAppointment(Appointment appointment) {
 		this.appointment = appointment;
 	}
+	@JsonIgnore
 	public Path getPath() {
 		return path;
 	}

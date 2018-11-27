@@ -17,4 +17,5 @@ public interface TreatmentServiceRemote {
 	public List<Treatment> getTreatmentsByRecomDoc(String treat);
 	public List<Treatment> getTreatmentsByDesc(String desc);
 	public List<Treatment> getTreatmentsByRecomDocAndDesc(String recDoc , String desc);
+	public List<Treatment> getTreatmentsPath(int idPath);
 }

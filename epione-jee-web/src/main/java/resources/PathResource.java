@@ -27,6 +27,7 @@ import entities.Treatment;
 import entities.User;
 import interfaces.DoctorServiceLocal;
 import interfaces.PathServiceLocal;
+import interfaces.PatientServiceLocal;
 import interfaces.TreatmentServiceLocal;
 import interfaces.UserServiceLocal;
 
@@ -46,16 +47,25 @@ public class PathResource {
 	@EJB
 	DoctorServiceLocal doctorServ;
 	
+	@EJB
+	PatientServiceLocal patientService;
+	
 		
 	
 	@POST
 	@RolesAllowed("ROLE_DOCTOR")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addPath(Path p, @Context SecurityContext securityContext) {
-		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
-		p.setDoctor(doctorServ.getDoctorById(u.getId()));
-		ps.addPath(p);
-		return Response.status(Status.CREATED).entity(p).build();
+		try {
+
+			User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+		 	p.setDoctor(doctorServ.getDoctorById(u.getId()));
+			System.out.println("******************** Id : "+ u.getId());
+			ps.addPath(p);
+			return Response.status(Status.OK).entity(p).build();
+		} catch (Exception e) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
     }
 	
 	
@@ -150,7 +160,7 @@ public class PathResource {
 
 				}else {
 					
-					return Response.status(Status.FOUND).entity(ps.getAllPaths()).build();
+					return Response.status(Status.OK).entity(ps.getAllPaths()).build();
 				}
 				
 				
@@ -176,6 +186,15 @@ public class PathResource {
 				return  Response.status(Status.ACCEPTED).entity(ps.getDoctorsPath(u.getId())).build();
 			}
 			
+			@GET
+			@PermitAll
+			@Produces(MediaType.APPLICATION_JSON)
+			@javax.ws.rs.Path("/getAllPatient")
+			public Response getAllPatient(@Context SecurityContext securityContext) {
+				
+				
+				return  Response.status(Status.ACCEPTED).entity(patientService.findAll()).build();
+			}
 			
 
 			

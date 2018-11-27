@@ -89,4 +89,11 @@ public class TreatmentService implements TreatmentServiceLocal, TreatmentService
 
 	}
 	
+	public List<Treatment> getTreatmentsPath(int idPath){
+		System.out.println("SELECT t FROM Treatment t WHERE t.path.id = :id");
+		TypedQuery<Treatment> query = em.createQuery("SELECT t FROM Treatment t WHERE t.path.id = :id", Treatment.class);
+	 return (List<Treatment>) query.setParameter("id", idPath).getResultList();
+	}
+
+	
 }

@@ -25,9 +25,8 @@ public class Patient extends User  implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private int social_number;
-	
+	 
 	@OneToMany(mappedBy="patient",fetch=FetchType.LAZY)
-	@JsonIgnore
 	private Set<Path> paths=new HashSet<>();
 
 	@OneToMany(mappedBy="patient",fetch=FetchType.LAZY)

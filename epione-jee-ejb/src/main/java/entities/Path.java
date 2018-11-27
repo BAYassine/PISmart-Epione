@@ -42,6 +42,7 @@ public class Path implements Serializable{
 	private Doctor doctor;
 	
 	@ManyToOne
+	@JsonIgnore
 	private Patient patient;
 	
 	
