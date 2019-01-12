@@ -56,7 +56,7 @@ public class UsersRessource {
     }
 
     @GET
-    @RolesAllowed({"ROLE_PATIENT", "ROLE_DOCTOR"})
+    @RolesAllowed({"ROLE_PATIENT", "ROLE_DOCTOR", "ROLE_ADMIN"})
     @Produces("application/json")
     public Response showInfos(@Context SecurityContext securityContext){
         User u = userService.findUser(securityContext.getUserPrincipal().getName());

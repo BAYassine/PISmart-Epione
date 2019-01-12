@@ -21,7 +21,7 @@ public class Profile implements Serializable {
     public enum Gender {FEMALE, MALE}
 
     private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;

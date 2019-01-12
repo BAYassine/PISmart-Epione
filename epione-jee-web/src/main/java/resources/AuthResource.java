@@ -30,12 +30,9 @@ public class AuthResource {
     @POST
     @PermitAll
     public Response auth(@FormParam("username")String username, @FormParam("password") String password) {
-        User u;
-        try {
-            u = userService.findUser(username);
-        } catch (NoResultException e){
+        User u = userService.findUser(username);
+        if( u == null)
             return Response.status(Response.Status.BAD_REQUEST).entity("Bad credentials").build();
-        }
         if (!BCrypt.checkpw(password, u.getPassword()))
             return Response.status(Response.Status.BAD_REQUEST).entity("Bad credentials").build();
         Date now = new Date();

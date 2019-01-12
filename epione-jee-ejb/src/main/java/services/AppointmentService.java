@@ -223,8 +223,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         } catch (ParseException | NullPointerException e) {
             Calendar c = Calendar.getInstance();
             c.setTime(date);
-            System.out.println(c.getFirstDayOfWeek());
-            c.add(Calendar.DATE, c.getFirstDayOfWeek());
+            c.add(Calendar.DATE, -(6 - c.get(Calendar.DAY_OF_WEEK)));
             date = c.getTime();
         }
         String sql = "SELECT count(a) from Appointment a where a.date_start > :from and a.date_start < current_date and a.doctor = :doctor";
@@ -235,7 +234,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
     /**
      * Author : Yassine
      */
-    public Map<Date, Long> appointmentPerDay(Doctor doctor, String since) {
+    public Map<String, Long> appointmentPerDay(Doctor doctor, String since) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-d");
         Date date = new Date();
         try {
@@ -246,15 +245,14 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
             c.add(Calendar.DATE, -7);
             date = c.getTime();
         }
-        System.out.println(date.toString());
         String sql = "SELECT count(a), date(a.date_start) from Appointment a " +
                 "where a.date_start > :date and a.date_start < current_date and a.doctor = :doctor " +
                 "GROUP BY date(a.date_start)";
         Query query = em.createQuery(sql).setParameter("doctor", doctor).setParameter("date", date);
         List<Object[]> list = query.getResultList();
-        Map<Date, Long> map = new HashMap<>();
+        Map<String, Long> map = new HashMap<>();
         list.forEach(k -> {
-            map.put((Date) k[1], (Long) k[0]);
+            map.put(formatter.format((Date) k[1]), (Long) k[0]);
         });
         return map;
     }
@@ -286,7 +284,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         Date date = new Date();
         try {
             date = formatter.parse(since);
-        } catch (ParseException e) {
+        } catch (ParseException | NullPointerException e) {
             Calendar c = Calendar.getInstance();
             c.setTime(date);
             c.add(Calendar.YEAR, -7);
@@ -315,5 +313,36 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         BigDecimal avg = (BigDecimal) query.getSingleResult();
         return new Date(avg.longValue()*1000);
     }
+
+    /**
+     * Author : Yassine
+     */
+    public Long totalPatient(Doctor doctor){
+        String sql = "SELECT count(distinct a.patient) from Appointment a where a.doctor = :doctor";
+        Query q = em.createQuery(sql).setParameter("doctor", doctor);
+        return (Long) q.getSingleResult();
+    }
+
+    /**
+     * Author : Yassine
+     */
+    public boolean startEndAppointment(int id, boolean action, int uid){
+        Appointment app = em.find(Appointment.class, id);
+        if(app.getDoctor().getId() != uid)
+            return false;
+        if(action){
+            app.setState(states.ONGOING);
+            app.setDate_start(new Date());
+        }
+        else {
+            app.setState(states.DONE);
+            app.setDate_end(new Date());
+        }
+        em.merge(app);
+        return true;
+    }
+
+
+
 
 }

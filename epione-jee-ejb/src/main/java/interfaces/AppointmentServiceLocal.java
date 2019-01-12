@@ -22,9 +22,11 @@ public interface AppointmentServiceLocal {
 	double averageAppointements(Doctor doctor);
 	Appointment ongoing(Doctor doctor);
 	long totalAppointements(Doctor doctor, String from);
-    Map<Date, Long> appointmentPerDay(Doctor doctor, String since);
+    Map<String, Long> appointmentPerDay(Doctor doctor, String since);
 	Map<String, Long> appointmentPerMonth(Doctor doctor,String since);
 	Map<String, Long> appointmentPerYear(Doctor doctor,String since);
+	Long totalPatient(Doctor doctor);
+	boolean startEndAppointment(int id, boolean action, int uid);
 
 	/**
 	 * Author : Oumayma

@@ -5,6 +5,7 @@ import entities.User;
 
 import javax.ejb.Local;
 import javax.persistence.NoResultException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,4 +30,6 @@ public interface UserServiceLocal {
     Map<String, Long> subscrtionsPerMonth();
 
     List<User> latestRegistrations(int limit);
+
+    Map<Date, Long> connectionsPerDay();
 }

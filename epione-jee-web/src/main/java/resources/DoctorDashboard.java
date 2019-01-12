@@ -79,14 +79,17 @@ public class DoctorDashboard {
         JSONObject result = new JSONObject();
         result.put("appointments upcoming", appointments);
         result.put("average appointements per day", appointmentService.averageAppointements(doctor));
-        result.put("appointment per day",appointmentService.appointmentPerMonth(doctor, null));
-        result.put("ongoing", appointmentService.ongoing(doctor) != null ? appointmentService.ongoing(doctor) : appointments.size() > 0 ? appointments.get(0) : null);
+        result.put("appointment per day",appointmentService.appointmentPerDay(doctor, null));
+        result.put("appointment per month",appointmentService.appointmentPerMonth(doctor, null));
+        result.put("appointment per year",appointmentService.appointmentPerYear(doctor, null));
+        Appointment ongoing = appointmentService.ongoing(doctor);
+        result.put("ongoing", ongoing != null ? ongoing : appointments.size() > 0 ? appointments.get(0) : null);
         SimpleDateFormat time_formatter = new SimpleDateFormat("H'h' m'm' s's'");
         time_formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
         result.put("average duration for consultations", time_formatter.format(appointmentService.averageDuration(doctor)));
         result.put("total appointments this week", appointmentService.totalAppointements(doctor, null));
         result.put("inbox", messageService.inbox(doctor, 10));
-        result.put("unread messages", messageService.unreadMessages(doctor));
+        result.put("total patients", appointmentService.totalPatient(doctor));
         return Response.status(200).entity(result).build();
     }
 

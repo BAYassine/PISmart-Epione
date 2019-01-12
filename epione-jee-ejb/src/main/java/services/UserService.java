@@ -107,6 +107,17 @@ public class UserService implements UserServiceLocal  {
 		return map;
 	}
 
+	public Map<Date, Long> connectionsPerDay(){
+		String sql = "SELECT COUNT(*), last_login FROM user " +
+				"WHERE last_login IS NOT NULL " +
+				"GROUP BY (DATE_FORMAT(last_login, '%y-%m-%d')) LIMIT 15";
+		Query query =em.createNativeQuery(sql);
+		List<Object[]> list = query.getResultList();
+		Map<Date, Long> map = new HashMap<>();
+		list.forEach( k -> map.put((Date) k[1], ((BigInteger)k[0]).longValue()));
+		return map;
+	}
+
 	public List<User> latestRegistrations(int limit){
 		Query query = em.createQuery("SELECT u FROM User u order by u.registered_at DESC");
 		if (limit != 0)
