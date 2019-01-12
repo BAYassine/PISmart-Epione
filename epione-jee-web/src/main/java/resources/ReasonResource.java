@@ -94,7 +94,7 @@ public class ReasonResource {
 	   if(reasons.isEmpty()){
 		   return (Response.status(Response.Status.NOT_FOUND).entity("This doctor hasn't yet chosen his reasons").build());}
 	   else 
-		   return (Response.status(Response.Status.FOUND).entity(reasons).build());
+		   return (Response.status(Response.Status.OK).entity(reasons).build());
 	}
 	@POST
 	@Path("ReasonAdding")

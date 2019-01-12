@@ -39,7 +39,7 @@ public class DoctorResource {
      * Author : Oumayma
      */
     @GET
-    @RolesAllowed({ "ROLE_PATIENT", "ROLE_DOCTOR" })
+    @PermitAll
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDoctorById(@PathParam(value = "id") int id) {
@@ -56,14 +56,14 @@ public class DoctorResource {
     @GET
     @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDoctor(@QueryParam(value = "idS") int idS, @QueryParam(value = "lat") double lat,
-    						  @QueryParam(value = "lon") double lon,
+    public Response getDoctor(@QueryParam(value = "idS") int idS, @QueryParam(value = "lat") String lat,
+    						  @QueryParam(value = "lon") String lon,
     						  @QueryParam(value = "city") String city,
                               @QueryParam(value = "name") String name) {
         List<Doctor> doc = new ArrayList<>();
 
         // Search by name
-        if ((name != null) && (lat == 0.0) && (lon == 0.0)&& (city == null) && (idS == 0)) {
+        if ((name != null) && (lat == null) && (lon == null)&& (city == null) && (idS == 0)) {
             doc = doctorService.getDoctorByName(name);
             if (!doc.isEmpty())
                 return (Response.status(Response.Status.OK).entity(doc).build());
@@ -71,7 +71,7 @@ public class DoctorResource {
         }
 
         // Search by Location
-        else if ((name == null) && (lat != 0.0) && (lon != 0.0)&& (city == null) && (idS == 0)){
+        else if ((name == null) && (lat != null) && (lon !=null)&& (city == null) && (idS == 0)){
             doc = doctorService.getDoctorByLocation(lat,lon);
             if (!doc.isEmpty())
                 return (Response.status(Response.Status.OK).entity(doc).build());
@@ -79,7 +79,7 @@ public class DoctorResource {
         }
 
         // Search by Speciality
-        else if ((name == null) && (lat == 0.0) && (lon == 0.0)&& (city == null) && (idS != 0)) {
+        else if ((name == null) && (lat ==null) && (lon == null)&& (city == null) && (idS != 0)) {
             doc = doctorService.getDoctorBySpeciality(idS);
             if (!doc.isEmpty())
                 return (Response.status(Response.Status.OK).entity(doc).build());
@@ -87,22 +87,28 @@ public class DoctorResource {
         }
 
         // Search by speciality and location
-        else if ((name == null) && (lat != 0.0) && (lon != 0.0)&& (city == null) && (idS != 0)) {
+        else if ((name == null) && (lat != null) && (lon !=null)&& (city == null) && (idS != 0)) {
             doc = doctorService.getDoctorBySpecialitAndLocation(idS, lat,lon);
             if (!doc.isEmpty())
                 return (Response.status(Response.Status.OK).entity(doc).build());
             return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the location and speciality.").build());
         }
        // search by city
-        else if ((name == null) && (lat == 0.0) && (lon == 0.0)&& (city != null) && (idS == 0)) {
+        else if ((name == null) && (lat == null) && (lon ==null)&& (city != null) && (idS == 0)) {
             doc = doctorService.getDoctorByCity(city);
             if (!doc.isEmpty())
                 return (Response.status(Response.Status.OK).entity(doc).build());
             return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the location and speciality.").build());
         }
-        //search by name and city
-        else if ((name != null) && (lat == 0.0) && (lon == 0.0)&& (city != null) && (idS == 0)) {
-            doc = doctorService.getDoctorByNameAndCity(name, city);
+        //search by name and speciality
+        else if ((name != null) && (lat == null) && (lon ==null)&& (city == null) && (idS != 0)) {
+            doc = doctorService.getDoctorByNameAndSpeciality(name, idS);
+            if (!doc.isEmpty())
+                return (Response.status(Response.Status.OK).entity(doc).build());
+            return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the location and speciality.").build());
+        }
+        else if ((name != null) && (lat !=null) && (lon !=null)&& (city == null) && (idS != 0)) {
+            doc = doctorService.getDoctorByNameAndSpecialitAndLocation(name, idS, lat, lon);
             if (!doc.isEmpty())
                 return (Response.status(Response.Status.OK).entity(doc).build());
             return (Response.status(Response.Status.NOT_FOUND).entity("Doctor not found please verify the location and speciality.").build());

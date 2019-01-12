@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 
@@ -119,8 +120,9 @@ public class AppointmentResource {
      * Author : Oumayma
      */
     @PUT
-    @RolesAllowed("ROLE_PATIENT")
+    @RolesAllowed({"ROLE_PATIENT", "ROLE_DOCTOR"})
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response updateAppointment(@Context SecurityContext securityContext, Appointment app, @QueryParam(value = "idA") int idApp) {
         User u = userServ.findUser(securityContext.getUserPrincipal().getName());
         if (idApp == 0) {
@@ -131,7 +133,7 @@ public class AppointmentResource {
             } else
                 return Response.status(Status.NOT_ACCEPTABLE).entity("Not Updated").build();
         } else {
-            if (appointmentServ.cancelAppointment(idApp, u.getId())) {
+            if (appointmentServ.cancelAppointment(idApp, u.getId()) != 0) {
                 return Response.status(Status.OK).entity("Canceled").build();
             }
             return Response.status(Status.NOT_FOUND).entity("can't canceled").build();

@@ -13,19 +13,19 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @XmlRootElement
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Appointment implements Serializable {
 
-    public enum states { CANCELED, UPCOMING, ONGOING, DONE }
+    public enum states {CANCELED, UPCOMING, ONGOING, DONE}
+
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+01")
     private Date date_start;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+01")
     private Date date_end;
     @OneToOne
     private Reason reason;
@@ -33,24 +33,24 @@ public class Appointment implements Serializable {
     private states state;
 
     @ManyToOne
-    @JoinColumn(updatable=false)
+    @JoinColumn(updatable = false)
     @JsonManagedReference
     private Patient patient;
 
     @ManyToOne
-    @JoinColumn(updatable=false)
+    @JoinColumn(updatable = false)
     @JsonManagedReference
     private Doctor doctor;
 
-    @OneToOne(mappedBy="appointment", fetch = FetchType.LAZY,cascade= CascadeType.REMOVE)
+    @OneToOne(mappedBy = "appointment", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonBackReference
     private Consultation consultation;
 
-    @OneToOne(mappedBy = "appointment", fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
+    @OneToOne(mappedBy = "appointment", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonBackReference
     private Treatment treatment;
 
-    @OneToOne(mappedBy="appointment")
+    @OneToOne(mappedBy = "appointment")
     @JsonManagedReference
     private Rating rating;
 
@@ -83,7 +83,6 @@ public class Appointment implements Serializable {
     }
 
 
-
     public String getMessage() {
         return message;
     }
@@ -91,7 +90,6 @@ public class Appointment implements Serializable {
     public void setMessage(String message) {
         this.message = message;
     }
-
 
     public Consultation getConsultation() {
         return consultation;
@@ -148,26 +146,28 @@ public class Appointment implements Serializable {
     public void setState(states state) {
         this.state = state;
     }
-	public Reason getReason() {
-		return reason;
-	}
 
-	public void setReason(Reason reason) {
-		this.reason = reason;
-	}
+    public Reason getReason() {
+        return reason;
+    }
 
+    public void setReason(Reason reason) {
+        this.reason = reason;
+    }
 
-	public Rating getRating() {
-		return rating;
-	}
-	public void setRating(Rating rating) {
-		this.rating = rating;
-	}
-	@Override
-	public String toString() {
-		return "Appointment [id=" + id + ", date_start=" + date_start + ", date_end=" + date_end + ", reason=" + reason
-				+ ", message=" + message + ", state=" + state + ", patient=" + patient + ", doctor=" + doctor
-				+ ", consultation=" + consultation + ", treatment=" + treatment + "]";
-	}
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment [id=" + id + ", date_start=" + date_start + ", date_end=" + date_end + ", reason=" + reason
+                + ", message=" + message + ", state=" + state + ", patient=" + patient + ", doctor=" + doctor
+                + ", consultation=" + consultation + ", treatment=" + treatment + "]";
+    }
 
 }

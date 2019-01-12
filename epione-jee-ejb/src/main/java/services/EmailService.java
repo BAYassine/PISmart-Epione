@@ -20,7 +20,7 @@ public class EmailService {
 	}
 	public  void sendEmail(String subject, String content,String email){
 		final String username = "oumayma.habouri@gmail.com";
-		final String password = "14761952";
+		final String password = "2205320233";
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");

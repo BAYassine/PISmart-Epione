@@ -11,7 +11,6 @@ import java.util.*;
 @Entity
 @XmlRootElement
 @PrimaryKeyJoinColumn(name = "id")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Doctor extends User implements Serializable {
 
     /**
@@ -21,8 +20,8 @@ public class Doctor extends User implements Serializable {
     private String presentation;
     private String name;
     private String image;
-    private double latitude;
-    private double longitude;
+    private String latitude;
+    private String longitude;
     private String address;
     private String city;
     private String nbreRPPS;
@@ -81,7 +80,6 @@ public class Doctor extends User implements Serializable {
         this.confirmed = u.confirmed;
     }
 
-    @XmlTransient
     public Speciality getSpeciality() {
         return speciality;
     }
@@ -132,19 +130,19 @@ public class Doctor extends User implements Serializable {
 
 
 
-    public double getLatitude() {
+    public String getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(double latitude) {
+	public void setLatitude(String latitude) {
 		this.latitude = latitude;
 	}
 
-	public double getLongitude() {
+	public String getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(double longitude) {
+	public void setLongitude(String longitude) {
 		this.longitude = longitude;
 	}
 

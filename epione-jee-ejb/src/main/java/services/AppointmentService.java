@@ -2,6 +2,7 @@ package services;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -12,23 +13,24 @@ import javax.persistence.*;
 
 import entities.*;
 import entities.Appointment.states;
+
 import interfaces.AppointmentServiceLocal;
 import interfaces.AppointmentServiceRemote;
 import interfaces.AvailabilityServiceLocal;
 import interfaces.NotificationAppServiceLocal;
 
-
 @Stateless
 public class AppointmentService implements AppointmentServiceLocal, AppointmentServiceRemote {
-    @PersistenceContext(unitName = "epione-jee-ejb")
-    EntityManager em;
 
-    @EJB
-    private AvailabilityServiceLocal availServ;
+    @PersistenceContext(unitName="epione-jee-ejb")
+	EntityManager em;
 
-    @EJB
+	@EJB
+	private AvailabilityServiceLocal availServ;
+
+	@EJB
     NotificationAppServiceLocal notificationManager;
-    @EJB
+	@EJB
     private NotificationAppServiceLocal notifServ;
 
     /**
@@ -55,18 +57,18 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         return 0;
     }
 
-    /**
-     * Author : Oumayma + Amine
+	 /**
+     * Author : Oumayma
      */
-    public boolean cancelAppointment(int appId, int idP) {
+    public int cancelAppointment(int appId, int idP) {
 
         Appointment app = em.find(Appointment.class, appId);
         if (app != null && app.getPatient().getId() == idP) {
             app.setState(states.CANCELED);
             notificationManager.addNotification(app);
-            return true;
+            return app.getId();
         }
-        return false;
+        return 0;
 
     }
 
@@ -74,7 +76,6 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         Appointment app = em.find(Appointment.class, idA);
         if (app.getPatient().getId() == idP)
             em.remove(app);
-
     }
 
     /**
@@ -83,7 +84,6 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
     public int updateAppointment(Appointment app, int idP) {
         em.merge(app);
         return app.getId();
-
     }
 
     /**

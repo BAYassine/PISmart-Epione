@@ -78,5 +78,12 @@ public class SpecialityRessource {
 	public Response newSpecName(@QueryParam(value="name") String name,@QueryParam(value="newName") String newName) {
 		return Response.ok(specService.changeSpecName(name, newName)).build();
 	}
+	@Path("getSpecialities")
+	@GET
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSpecialities() {
+		return Response.ok(specService.getAllSpecialities()).build();
+	}
 		
 }

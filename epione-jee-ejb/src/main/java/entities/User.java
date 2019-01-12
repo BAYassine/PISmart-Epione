@@ -17,7 +17,6 @@ import java.util.Date;
  *
  */
 @Entity
-//@Table(uniqueConstraints={@UniqueConstraint(columnNames={"username", "email"})})
 @XmlRootElement
 @Inheritance(strategy=InheritanceType.JOINED)
 public class User implements Serializable {
