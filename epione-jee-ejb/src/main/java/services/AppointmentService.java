@@ -55,7 +55,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 				subject="Medical Appointment confirmation";
 				content="Your appointment on : "+app.getDate_start()+" has been confirmed. ";
 				email.sendEmail(subject,content,emailPatient);
-				NotificationApp n=new NotificationApp(new Date(), pat, "Your appointment has been confirmed.");
+				NotificationApp n=new NotificationApp(new Date(), pat, "Your appointment on "+app.getDate_start() +" has been confirmed.");
 				notifServ.sendNotifToPatient(idPatient, n);
 				return app.getId();
 			}
@@ -66,15 +66,15 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 	 /**
      * Author : Oumayma
      */
-    public boolean cancelAppointment(int appId, int idP) {
+    public int cancelAppointment(int appId, int idP) {
 
         Appointment app = em.find(Appointment.class, appId);
         if (app != null && app.getPatient().getId() == idP) {
             app.setState(states.CANCELED);
-            notificationManager.addNotification(app);
-            return true;
+           // notificationManager.addNotification(app);
+            return app.getId();
         }
-        return false;
+        return 0;
 
     }
 

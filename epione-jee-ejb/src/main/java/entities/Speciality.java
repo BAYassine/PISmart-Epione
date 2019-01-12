@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @XmlRootElement
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Speciality implements Serializable{
 	private static final long serialVersionUID = 1L;
 	

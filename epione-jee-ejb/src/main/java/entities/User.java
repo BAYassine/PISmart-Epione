@@ -16,9 +16,9 @@ import java.util.Date;
  *
  */
 @Entity
-@JsonIdentityInfo(
+/*@JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id")
+		property = "id")*/
 @XmlRootElement
 @Inheritance(strategy=InheritanceType.JOINED)
 public class User implements Serializable {
@@ -54,6 +54,7 @@ public class User implements Serializable {
     @NotNull
     protected String password;
 
+    
 	@OneToOne(cascade = CascadeType.ALL)
 	protected Profile profile;
 

@@ -25,9 +25,9 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 	}
 
 	//By Oumayma
-	public List<Doctor>  getDoctorByLocation(double latitude,double longitude) {
+	public List<Doctor>  getDoctorByLocation(String latitude,String longitude) {
 		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d WHERE d.latitude= :latitude AND d.longitude= :longitude",Doctor.class);
-		return query.setParameter("latidue",latitude).setParameter("longitude",longitude).getResultList();
+		return query.setParameter("latitude",latitude).setParameter("longitude",longitude).getResultList();
 	}
 
 	//By Oumayma 
@@ -42,7 +42,7 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 	}
 
 	//By Oumayma
-	public List<Doctor>  getDoctorBySpecialitAndLocation(int specialityID, double latitude,double longitude) {
+	public List<Doctor>  getDoctorBySpecialitAndLocation(int specialityID, String latitude,String longitude) {
 		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d WHERE d.latitude= :latitude AND d.longitude= :longitude AND d.speciality.id= :specialityID",Doctor.class);
 		query.setParameter("latitude",latitude);
 		query.setParameter("longitude", longitude);
@@ -70,14 +70,14 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 	}
 
 	@Override
-	public List<Doctor> getDoctorByNameAndLocation(String name, double latitude, double longitude) {
+	public List<Doctor> getDoctorByNameAndLocation(String name, String latitude, String longitude) {
 		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d , User u ,Profile p where u.role ='ROLE_DOCTOR' and (p.firstname LIKE CONCAT('%',:name,'%') or p.lastname LIKE CONCAT('%',:name,'%')) and u.id=d.id and u.profile.id=p.id and d.latitude= :latitude and d.longitude= :longitude",Doctor.class);
 		return query.setParameter("name",name).setParameter("latitude", latitude).setParameter("longitude", longitude).getResultList();
 	}
 	@Override
-	public List<Doctor> getDoctorByNameAndCity(String name, String city) {
-		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d , User u ,Profile p where u.role ='ROLE_DOCTOR' and (p.firstname LIKE CONCAT('%',:name,'%') or p.lastname LIKE CONCAT('%',:name,'%')) and u.id=d.id and u.profile.id=p.id and d.city= :city",Doctor.class);
-		return query.setParameter("name",name).setParameter("city", city).getResultList();
+	public List<Doctor> getDoctorByNameAndSpeciality(String name,int id) {
+		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d , User u ,Profile p where u.role ='ROLE_DOCTOR' and (p.firstname LIKE CONCAT('%',:name,'%') or p.lastname LIKE CONCAT('%',:name,'%')) and u.id=d.id and u.profile.id=p.id and d.speciality.id= :idS",Doctor.class);
+		return query.setParameter("name",name).setParameter("idS", id).getResultList();
 	}
    /** 
     * YASSINE
@@ -96,6 +96,14 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
 
     public void update(Doctor doctor){
 		em.merge(doctor);
+	}
+
+	@Override
+	public List<Doctor> getDoctorByNameAndSpecialitAndLocation(String name, int specialityID, String latitude,
+			String longitude) {
+		TypedQuery<Doctor> query=em.createQuery("SELECT d from Doctor d , User u ,Profile p where u.role ='ROLE_DOCTOR' and (p.firstname LIKE CONCAT('%',:name,'%') or p.lastname LIKE CONCAT('%',:name,'%')) and u.id=d.id and u.profile.id=p.id and d.latitude= :latitude and d.longitude= :longitude and d.speciality.id= :specialityID",Doctor.class);
+		return query.setParameter("name",name).setParameter("latitude", latitude).setParameter("longitude", longitude).setParameter("specialityID", specialityID).getResultList();
+
 	}
 
 

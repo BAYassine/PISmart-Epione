@@ -49,7 +49,7 @@ public class UsersRessource {
     }
 
     @GET
-    @RolesAllowed({"ROLE_PATIENT", "ROLE_DOCTOR"})
+    @RolesAllowed({"ROLE_DOCTOR", "ROLE_PATIENT"})
     @Produces("application/json")
     public Response showInfos(@Context SecurityContext securityContext){
         User u = userService.findUser(securityContext.getUserPrincipal().getName());
@@ -57,7 +57,8 @@ public class UsersRessource {
             Doctor d = doctorService.findDoctor(u.getUsername());
             return Response.status(200).entity(d).build();
         }
-        else if(u.getRole().equals(User.Roles.ROLE_PATIENT.toString())){
+        else 
+        	if(u.getRole().equals(User.Roles.ROLE_PATIENT.toString())){
             Patient p = patientService.findPatient(u.getUsername());
             return Response.status(200).entity(p).build();
         }

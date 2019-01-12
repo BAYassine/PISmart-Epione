@@ -36,7 +36,7 @@ public interface AppointmentServiceLocal {
 	List<Appointment> getAppointmentByDate(String dateapp) throws ParseException;
 	Appointment getAppointmentById(int appointmentId);
 	int updateAppointment(Appointment app, int idP);
-	boolean cancelAppointment(int appId, int idP);
+	int cancelAppointment(int appId, int idP);
 	int addAppointment(Appointment app, int idPatient, String emailPatient) throws ParseException;
 	void deleteAppointment(int idA, int idP);
 }

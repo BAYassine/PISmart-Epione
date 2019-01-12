@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.*;
  *
  */
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Profile implements Serializable {
 
     public enum Gender {FEMALE, MALE}

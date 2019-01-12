@@ -1,8 +1,12 @@
 package entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.io.Serializable;
@@ -16,7 +20,8 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @XmlRootElement
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Appointment implements Serializable {
 
     public enum states { CANCELED, UPCOMING, ONGOING, DONE }
@@ -26,23 +31,26 @@ public class Appointment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="UTC")
     private Date date_start;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="UTC +2")
     private Date date_end;
     private String message;
+  
     private states state;
 
     @OneToOne
 	private Reason reason;
     
-    @ManyToOne
 
+    @ManyToOne
     @JoinColumn(updatable=false)
+    
     private Patient patient;
 
     @ManyToOne
     @JoinColumn(updatable=false)
+    
     private Doctor doctor;
 
     @OneToOne(mappedBy="appointment", fetch = FetchType.LAZY,cascade= CascadeType.REMOVE)

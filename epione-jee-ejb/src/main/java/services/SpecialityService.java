@@ -1,12 +1,16 @@
 package services;
 
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
+import entities.Appointment;
 import entities.Doctor;
 import entities.Speciality;
 import interfaces.SpecialityServiceLocal;
@@ -55,5 +59,11 @@ public class SpecialityService implements SpecialityServiceLocal,SpecialityServi
 		spec.setName(newspecName);
 		em.persist(spec);
 		return Json.createObjectBuilder().add("Speciality name is replaced with", spec.getName()).build();
+	}
+
+	@Override
+	public List<Speciality> getAllSpecialities() {
+		 TypedQuery<Speciality> query = em.createQuery("SELECT s FROM Speciality s", Speciality.class);
+	        return query.getResultList();
 	}
 }

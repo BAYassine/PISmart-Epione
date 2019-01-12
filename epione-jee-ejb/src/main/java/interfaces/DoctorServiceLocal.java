@@ -9,14 +9,15 @@ import java.util.List;
 @Local
 public interface DoctorServiceLocal {
 	public List<Doctor> getDoctorBySpeciality(int specialityID);
-	public List<Doctor> getDoctorByLocation(double latitude,double longitude);
+	public List<Doctor> getDoctorByLocation(String latitude,String longitude);
 	public List<Doctor> getDoctorByCity(String city);
 	public List<Doctor> getDoctorByName(String name);
 	public Doctor getDoctorById(int id);
-	public List<Doctor> getDoctorBySpecialitAndLocation(int specialityID,double latitude,double longitude);
+	public List<Doctor> getDoctorBySpecialitAndLocation(int specialityID,String latitude,String longitude);
 	public List<Doctor> getDoctorBySpecialitAndCity(int specialityID,String city);
-	public List<Doctor> getDoctorByNameAndLocation(String name,double latitude,double longitude);
-	public List<Doctor> getDoctorByNameAndCity(String name,String city);
+	public List<Doctor> getDoctorByNameAndLocation(String name,String latitude,String longitude);
+	public List<Doctor> getDoctorByNameAndSpeciality(String name,int id);
+	public List<Doctor> getDoctorByNameAndSpecialitAndLocation(String name,int specialityID,String latitude,String longitude);
 	public List<Doctor> getDoctors();
 
 	/**

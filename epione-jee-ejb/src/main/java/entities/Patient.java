@@ -1,7 +1,9 @@
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.Entity;
@@ -19,7 +21,8 @@ import java.util.Set;
 @Entity
 @XmlRootElement
 @PrimaryKeyJoinColumn(name="id")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Patient extends User  implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -81,7 +84,7 @@ public class Patient extends User  implements Serializable{
 	public void setPaths(Set<Path> paths) {
 		this.paths = paths;
 	}
-    @XmlTransient
+	
 	public Set<Appointment> getAppointments() {
 		return appointments;
 	}

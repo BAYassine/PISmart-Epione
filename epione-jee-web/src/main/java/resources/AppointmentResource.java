@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 
@@ -14,7 +15,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -39,13 +39,13 @@ public class AppointmentResource {
         * Author : Oumayma
      */
 	@GET
-	@RolesAllowed({ "ROLE_PATIENT", "ROLE_DOCTOR" })
+	@RolesAllowed({"ROLE_PATIENT", "ROLE_DOCTOR"})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAppointment(@Context SecurityContext securityContext,@QueryParam(value = "id") int id,@QueryParam(value = "date") String date) throws ParseException {
 		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
 		List<Appointment> appList=new ArrayList<>();
 		Appointment app;
-		System.out.println("****************************************"+u.getUsername());
+	//	System.out.println("****************************************"+u.getUsername());
 		// Search by Appointment ID
 		if(id!=0 && date==null){
 			System.out.println("*****************************************by id only");
@@ -56,8 +56,8 @@ public class AppointmentResource {
          }
 	// Search by Patient/Doctor Id and Date
       else if(id==0 && date!=null){
-    	  System.out.println("**********************************by y");
-    	        if(u.getRole().equals("ROLE_PATIENT")){
+//    	  System.out.println("**********************************by y");
+ 	        if(u.getRole().equals("ROLE_PATIENT")){
   			       appList=appointmentServ.getPatientsAppointmentByDate(date,u.getId());
   			       if(!appList.isEmpty())
   			       { System.out.println("**********************************appppp");
@@ -78,13 +78,21 @@ public class AppointmentResource {
       else if(id==0&&date==null){
     	  System.out.println("**********************************nothing");
     	  if(u.getRole().equals("ROLE_PATIENT")){
+    		  
 			       appList=appointmentServ.getAppointmentsByPatient(u.getId());
 			       if(!appList.isEmpty())
+			       {
+			    	   appList.forEach(e->{
+			    		   System.out.println(e.getPatient().getUsername());
+			    		   System.out.println(e.getDoctor().getName());
+			    	   });
 			    	   return (Response.status(Response.Status.OK).entity(appList).build());
+
+			       }
 	  			    return (Response.status(Response.Status.NOT_FOUND).entity("No appointment").build());
 
 	        }
-	        else if(u.getRole().equals("ROLE_DOCTOR")){
+	       else if(u.getRole().equals("ROLE_DOCTOR")){
 			       appList=appointmentServ.getAppointmentsByDoctor(u.getId());
 			       if(!appList.isEmpty())
 			    	   return (Response.status(Response.Status.OK).entity(appList).build());
@@ -103,13 +111,13 @@ public class AppointmentResource {
      * Author : Oumayma
      */
 	@POST
-	@RolesAllowed("ROLE_PATIENT")
+	  @RolesAllowed("ROLE_PATIENT")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addAppointment(@Context SecurityContext securityContext,Appointment app) throws ParseException {
 		if (app != null) {
 			User u=userServ.findUser(securityContext.getUserPrincipal().getName());
 			int id;
-			id=appointmentServ.addAppointment(app, u.getId(),u.getEmail());
+			id=appointmentServ.addAppointment(app,u.getId(),"oumayma.habouri@gmail.com");
 			if(id!=0)
 				return Response.status(Status.OK).entity("Appointment added").build();
 			return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment not added").build();
@@ -122,8 +130,9 @@ public class AppointmentResource {
      * Author : Oumayma
      */
     @PUT
-    @RolesAllowed("ROLE_PATIENT")
+    @RolesAllowed({"ROLE_PATIENT", "ROLE_DOCTOR"})
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response updateAppointment(@Context SecurityContext securityContext,Appointment app,@QueryParam(value="idA")int idApp){
         User u=userServ.findUser(securityContext.getUserPrincipal().getName());
         if(idApp==0){
@@ -138,7 +147,7 @@ public class AppointmentResource {
         }
         else
         {
-            if (appointmentServ.cancelAppointment(idApp,u.getId())){
+            if (appointmentServ.cancelAppointment(idApp,u.getId())!=0){
                 return Response.status(Status.OK).entity("Canceled").build();}
             return Response.status(Status.NOT_FOUND).entity("can't canceled").build();
         }
