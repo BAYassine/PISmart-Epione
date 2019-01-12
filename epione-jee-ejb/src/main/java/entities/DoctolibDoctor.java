@@ -4,6 +4,7 @@ import java.util.List;
 
 public class DoctolibDoctor extends Doctolib{
 	
+	private String description;
 	private String nbreRPPS;
 	private String statuts;
 	private String nbreInscriptionOrdre;
@@ -26,6 +27,18 @@ public class DoctolibDoctor extends Doctolib{
 	
 	
 	
+	public String getDescription() {
+		return description;
+	}
+
+
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+
+
 	public List<String> getSkills() {
 		return skills;
 	}
