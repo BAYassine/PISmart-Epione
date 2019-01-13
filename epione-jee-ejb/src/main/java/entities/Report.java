@@ -3,6 +3,7 @@ package entities;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,9 +31,10 @@ public class Report  implements Serializable{
 	private int id;
 
 	@Temporal(TemporalType.DATE)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date_rep;
 	
+	@Column(length = 1000)
 	private String content;
 	
 	private String pathFile;
@@ -42,6 +44,7 @@ public class Report  implements Serializable{
 	private Consultation consultation;
 	
 	@OneToOne
+	@JsonIgnore
 	private Patient patient ;
 	
 	

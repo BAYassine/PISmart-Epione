@@ -20,4 +20,5 @@ public interface TreatmentServiceLocal {
 	List<Treatment> getPatientsTreatment(int id);
 	List<Treatment> getDoctorsTreatment(int id);
 	public List<Treatment> getTreatmentsPath(int idPath);
+	public Long countTreatPath(int idPath);
 }

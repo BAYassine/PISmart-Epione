@@ -6,7 +6,6 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import entities.Doctor;
@@ -88,11 +87,23 @@ public class PathService implements PathServiceLocal, PathServiceRemote {
 
 	@Override
 	public Path getPathById(int id) {
-		System.out.println("test");
 		Path t = em.find(Path.class, id);
-		System.out.println("*****************test");
-		t.getList_treat().iterator();
-		return t;
+		
+			System.out.println("test");
+			
+			System.out.println("*****************test");
+			if (t.getList_treat() == null) {
+				System.out.println("________________ from getPathById ");
+				return t;}
+			else {
+				System.out.println("________________ from getPathById ELSE"+t.getList_treat());
+				t.getList_treat().iterator();
+			}
+			
+			return t;
+			
+		
+		
 	}
 	
 	

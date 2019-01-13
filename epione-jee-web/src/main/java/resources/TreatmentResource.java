@@ -16,6 +16,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.omg.CORBA.IdentifierHelper;
+
 import javax.ws.rs.core.SecurityContext;
 
 import entities.Treatment;
@@ -24,8 +27,6 @@ import interfaces.PathServiceLocal;
 import interfaces.ReportServiceLocal;
 import interfaces.TreatmentServiceLocal;
 import interfaces.UserServiceLocal;
-import services.PathService;
-import services.TreatmentService;
 
 @Path("/treatments")
 public class TreatmentResource {
@@ -105,7 +106,7 @@ public class TreatmentResource {
 	public Response getTreatmentsUserConnected(@Context SecurityContext securityContext) {
 		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
 		
-		return  Response.status(Status.ACCEPTED).entity(ts.getPatientsTreatment(u.getId())).build();
+		return  Response.status(Status.OK).entity(ts.getPatientsTreatment(u.getId())).build();
 	}
 	
 	@GET
@@ -142,8 +143,8 @@ public class TreatmentResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	//@RolesAllowed("ROLE_DOCTOR")
 	@PermitAll
-	public Response copyListTreatment(List<Treatment> treats, int idPath) {
-		System.out.println("--------------"+ts.getTreatmentById(1).getDescription());
+	public Response copyListTreatment(List<Treatment> treats,@QueryParam("idPath") int idPath) {
+		System.out.println("************");
 		treats.forEach(a ->{ 
 			Treatment t = new Treatment();
 			Treatment treatGerer =ts.getTreatmentById(a.getId());
@@ -163,6 +164,27 @@ public class TreatmentResource {
 	}
 	
 	
+	@DELETE
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON)
+	@javax.ws.rs.Path("/id")
+	public Response deleteTreatId(@QueryParam("idTreat") int idtreat) {
+		Treatment t = ts.getTreatmentById(idtreat);
+		ts.deleteTreatment(t);
+		
+		return Response.status(Status.ACCEPTED).entity("Treat Rmoved").build();
+	}
+	
+	
+	@GET
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/count")
+	public Response countTreatPath(@QueryParam("id") int id) {
+		
+		
+		return  Response.status(Status.OK).entity(ts.countTreatPath(id)).build();
+	}
 	
 
 	

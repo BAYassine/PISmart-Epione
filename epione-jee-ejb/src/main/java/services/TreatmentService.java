@@ -77,7 +77,7 @@ public class TreatmentService implements TreatmentServiceLocal, TreatmentService
 	@Override
 	public List<Treatment> getPatientsTreatment(int id) {
 			System.out.println("req num 5) SELECT p FROM Treatment p WHERE p.patient.id = :id");
-			TypedQuery<Treatment> query = em.createQuery("SELECT t FROM Treatment t WHERE t.path.id = (SELECT p.id FROM Path p WHERE p.patient.id = :id )", Treatment.class);
+			TypedQuery<Treatment> query = em.createQuery("SELECT t FROM Treatment t WHERE t.path.id in (SELECT p.id FROM Path p WHERE p.patient.id = :id )", Treatment.class);
 		 return (List<Treatment>) query.setParameter("id", id).getResultList();
 
 	}
@@ -95,5 +95,11 @@ public class TreatmentService implements TreatmentServiceLocal, TreatmentService
 	 return (List<Treatment>) query.setParameter("id", idPath).getResultList();
 	}
 
+	public Long countTreatPath(int idPath) {
+		System.out.println("SELECT t FROM Treatment t WHERE t.path.id = :id");
+		TypedQuery<Long> query = em.createQuery("SELECT count(t) FROM Treatment t WHERE t.path.id = :id", Long.class);
+	 return (Long) query.setParameter("id", idPath).getSingleResult();
+		
+	}
 	
 }

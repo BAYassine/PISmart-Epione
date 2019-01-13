@@ -53,14 +53,16 @@ public class PathResource {
 		
 	
 	@POST
-	@RolesAllowed("ROLE_DOCTOR")
+	//@RolesAllowed("ROLE_DOCTOR")
+	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addPath(Path p, @Context SecurityContext securityContext) {
+	public Response addPath(Path p/*, @Context SecurityContext securityContext*/) {
 		try {
 
-			User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+			/*User u=userServ.findUser(securityContext.getUserPrincipal().getName());
 		 	p.setDoctor(doctorServ.getDoctorById(u.getId()));
-			System.out.println("******************** Id : "+ u.getId());
+			System.out.println("******************** Id : "+ u.getId());*/
+			System.out.println("tttttttttttttttttttt    "+p.getDescription());
 			ps.addPath(p);
 			return Response.status(Status.OK).entity(p).build();
 		} catch (Exception e) {
@@ -72,7 +74,8 @@ public class PathResource {
 	
 	@POST
 	@javax.ws.rs.Path("/addTreatment")
-	@RolesAllowed("ROLE_DOCTOR")
+	//@RolesAllowed("ROLE_DOCTOR")
+	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addTreatemntToPath(@QueryParam("idPath") int idPath , Treatment treat ) {
 		if((idPath != 0)&&(treat != null)) {
@@ -122,6 +125,15 @@ public class PathResource {
 		ps.deletePath(p);
 		return Response.status(Status.ACCEPTED).entity("Path Rmoved").build();
 	}
+	@DELETE
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON)
+	@javax.ws.rs.Path("/id")
+	public Response deletePathId(@QueryParam("idpath") int idpath) {
+		Path p = ps.getPathById(idpath);
+		ps.deletePath(p);
+		return Response.status(Status.ACCEPTED).entity("Path Rmoved").build();
+	}
 	
 
 
@@ -136,7 +148,7 @@ public class PathResource {
 					                      ) {
 				if(id != 0) {
 					
-					return Response.status(Status.FOUND).entity(ps.getPathById(id)).build();
+					return Response.status(Status.OK).entity(ps.getPathById(id)).build();
 					
 				}else if ((desc != null) && (date == null)){
 					
