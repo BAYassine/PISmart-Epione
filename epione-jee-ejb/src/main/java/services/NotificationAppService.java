@@ -112,22 +112,7 @@ public class NotificationAppService implements NotificationAppServiceLocal, Noti
         } else
             return Json.createObjectBuilder().add("Ooups !", "Vous avez Deja Annule le changement dhoraire").build();
     }
-    @Override
-    public JsonObject Confirmation(int idP) {
-        Patient pat = em.find(Patient.class, idP);
-        TypedQuery<NotificationApp> query = em
-                .createQuery("SELECT n FROM NotificationApp n WHERE n.patientnotif = :idP", NotificationApp.class)
-                .setParameter("idP", idP);
-        NotificationApp na = query.getSingleResult();
-        System.out.println(na.toString());
-        if (na.getConfirmation().equals("YES")) {
-            return Json.createObjectBuilder().add("Ooups !", "Vous avez Déja Changé le RDV").build();
-        } else if (na.getConfirmation().equals("WAITING")) {
-            return Json.createObjectBuilder().add("Success !", "Confirmation Effectué").build();
-        } else
-            return Json.createObjectBuilder().add("Ooups !", "Vous avez Déja Annulé le changement dhoraire").build();
 
-    }
 
     @Override
     public int sendNotifToPatient(int idP, NotificationApp n) {

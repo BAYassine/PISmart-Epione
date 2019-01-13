@@ -122,6 +122,13 @@ public class RateService implements RateServiceLocal {
 			System.out.println(res);
 			return res;
 	 }
+	 
+	 @Override
+	 public List<Appointment> getAppbyuser(String username){
+		 TypedQuery<Appointment> query = em.createQuery(
+					"SELECT r FROM Appointment r where r.patient.username =:username", Appointment.class);
+			return query.setParameter("username", "sbouiamine").getResultList();
+	 }
 	
 
 }

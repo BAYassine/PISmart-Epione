@@ -1,30 +1,37 @@
 package services;
 
-import java.sql.Date;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.New;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
 import entities.Appointment;
 import entities.Appointment.states;
+import entities.Availability;
 import entities.Consultation;
 import entities.Doctor;
+import entities.NotificationApp;
 import entities.Patient;
 import entities.Reason;
 import interfaces.AppointmentServiceLocal;
 import interfaces.AppointmentServiceRemote;
+import interfaces.AvailabilityServiceLocal;
 import interfaces.NotificationAppServiceLocal;
 
 
@@ -63,7 +70,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
             return app.getId();
         }
         return 0;
-
+    }
         /**
          * Author : Oumayma + Amine
          */
@@ -86,14 +93,6 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
 
         }
 
-        /**
-         * Author : Oumayma
-         */
-        public int updateAppointment(Appointment app,int idP) {
-            em.merge(app);
-            return app.getId();
-
-        }
 
         @Override
         public int updateAppointment (Appointment app,int idR){
@@ -157,7 +156,11 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         query.setParameter("idDoctor", idDoctor);
         return query.getResultList();
     }
-
+    public List<Appointment> getAppointmentsByDoctorname(String name) {
+        TypedQuery<Appointment> query = em.createQuery("SELECT a FROM Appointment a where a.doctor.username= :name", Appointment.class);
+        query.setParameter("name", name);
+        return query.getResultList();
+    }
     /**
      * Author : Oumayma
      */
@@ -191,7 +194,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
     }
 
 
-    }
+    
     /**
      * Author : Yassine
      */
@@ -237,7 +240,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
         Date date = null;
         try {
-            date = formatter.parse(since);
+            date = (Date) formatter.parse(since);
         } catch (ParseException e) {
             e.printStackTrace();
         }

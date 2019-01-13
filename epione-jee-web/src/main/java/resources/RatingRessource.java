@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
+import entities.Appointment;
 import entities.Rating;
 import entities.User;
 import interfaces.RateServiceLocal;
@@ -62,6 +63,8 @@ public class RatingRessource {
 		return Response.ok(rateManager.getRateByAppoitement(appId)).build();
 	}
 	
+	
+	
 	@Path("edit")
 	@PUT
 	@RolesAllowed({ "ROLE_PATIENT"})
@@ -72,9 +75,9 @@ public class RatingRessource {
 	}
 	
 	@DELETE
+	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
-	@RolesAllowed({ "ROLE_PATIENT"})
 	public Response deleteRate (@PathParam("id") int id,@Context SecurityContext securityContext )
 	{
 		User u = usersManager.findUser(securityContext.getUserPrincipal().getName());
@@ -91,6 +94,7 @@ public class RatingRessource {
 	
 	@Path("doctor/{doctorUserName}")
 	@GET
+	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRatesByDoctorUserName(@PathParam("doctorUserName") String doctorUserName){
 		return Response.ok(rateManager.getRatesByDoctor(doctorUserName)).build();
@@ -98,6 +102,7 @@ public class RatingRessource {
 	
 	@Path("doctorRate/{doctorId}")
 	@GET
+	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response DoctorRate(@PathParam("doctorId") int doctorId){
 		return Response.ok(rateManager.DoctorRate(doctorId)).build();
@@ -105,10 +110,19 @@ public class RatingRessource {
 
 	
 	@GET
-    @RolesAllowed({ "ROLE_PATIENT", "ROLE_DOCTOR" })
+    @PermitAll
 	@Produces("application/json")
 	public Response getAllRate() {
 		List<Rating> lr = rateManager.getAllRate();
+		return Response.status(Response.Status.FOUND).entity(lr).build();
+	}
+	
+	@GET
+	@Path("app/{username}")
+    @RolesAllowed({ "ROLE_PATIENT", "ROLE_DOCTOR" })
+	@Produces("application/json")
+	public Response getuserAppbyusername(@PathParam("username")String username) {
+		List<Appointment> lr = rateManager.getAppbyuser(username);
 		return Response.status(Response.Status.FOUND).entity(lr).build();
 	}
 

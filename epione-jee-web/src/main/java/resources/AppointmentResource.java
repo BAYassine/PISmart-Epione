@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 
@@ -24,6 +25,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
 import entities.Appointment;
+import entities.Rating;
 import entities.User;
 import interfaces.AppointmentServiceLocal;
 import interfaces.UserServiceLocal;
@@ -38,8 +40,25 @@ public class AppointmentResource {
 	/**
         * Author : Oumayma
      */
+	
 	@GET
-	@RolesAllowed({ "ROLE_PATIENT", "ROLE_DOCTOR" })
+    @PermitAll
+	@Produces("application/json")
+	public Response getAllApp() {
+		List<Appointment> lr = appointmentServ.getAllAppointments();
+		System.out.println("Apppppppppp"+lr);
+		return Response.status(Response.Status.OK).entity(lr).build();
+	}
+	@GET
+    @PermitAll
+	@Path("/{name}")
+	@Produces("application/json")
+	public Response Appbydoc(@PathParam("name") String name) {
+		List<Appointment> lr = appointmentServ.getAppointmentsByDoctorname(name);
+		return Response.status(Response.Status.OK).entity(lr).build();
+	}
+	/*@GET
+	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAppointment(@Context SecurityContext securityContext,@QueryParam(value = "id") int id,@QueryParam(value = "date") String date) throws ParseException {
 		User u=userServ.findUser(securityContext.getUserPrincipal().getName());
@@ -97,7 +116,7 @@ public class AppointmentResource {
 		    return (Response.status(Response.Status.BAD_REQUEST).entity("No appointment").build());
 
 
-    }
+    }*/
 
     /**
      * Author : Oumayma
