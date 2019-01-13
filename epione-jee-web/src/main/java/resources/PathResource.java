@@ -53,8 +53,8 @@ public class PathResource {
 		
 	
 	@POST
-	//@RolesAllowed("ROLE_DOCTOR")
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
+	//@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addPath(Path p/*, @Context SecurityContext securityContext*/) {
 		try {
@@ -74,8 +74,8 @@ public class PathResource {
 	
 	@POST
 	@javax.ws.rs.Path("/addTreatment")
-	//@RolesAllowed("ROLE_DOCTOR")
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
+	//@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addTreatemntToPath(@QueryParam("idPath") int idPath , Treatment treat ) {
 		if((idPath != 0)&&(treat != null)) {

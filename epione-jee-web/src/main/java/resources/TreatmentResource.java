@@ -141,8 +141,8 @@ public class TreatmentResource {
 	@POST
 	@Path("/copyListTreatment")
 	@Produces(MediaType.APPLICATION_JSON)
-	//@RolesAllowed("ROLE_DOCTOR")
-	@PermitAll
+	@RolesAllowed("ROLE_DOCTOR")
+	//@PermitAll
 	public Response copyListTreatment(List<Treatment> treats,@QueryParam("idPath") int idPath) {
 		System.out.println("************");
 		treats.forEach(a ->{ 
