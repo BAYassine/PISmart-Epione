@@ -1,3 +1,5 @@
+
+
 package interfaces;
 
 import entities.Appointment;
@@ -24,6 +26,9 @@ public interface AppointmentServiceRemote {
 	Map<Date, Long> appointmentPerDay(Doctor doctor, String since);
 	Map<String, Long> appointmentPerMonth(Doctor doctor,String since);
 	Map<String, Long> appointmentPerYear(Doctor doctor,String since);
+	public void addAppHH(Appointment app);
+	public List<Appointment> getAllAppointments(int id);
+
 
 	/**
 	 * Author : Oumayma
@@ -40,4 +45,10 @@ public interface AppointmentServiceRemote {
 	boolean cancelAppointment(int appId, int idP);
 	int addAppointment(Appointment app, int idPatient, String emailPatient) throws ParseException;
 	void deleteAppointment(int idA, int idP);
+	public List<Appointment> getCalendarById(int doctorId);
+	public void addApp(Appointment app, int doctorId);
+	public void deleteAppointment(int id);
+
+	
+	
 }

@@ -22,5 +22,5 @@ public interface DoctorServiceRemote {
 	 */
 	public int create(Doctor doctor);
 	Doctor findDoctor(String username);
-	void update(Doctor doctor);
+	
 }

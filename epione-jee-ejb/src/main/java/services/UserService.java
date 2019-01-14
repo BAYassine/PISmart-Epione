@@ -5,8 +5,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import entities.User;
+import entities.Appointment;
 import entities.Patient;
 import interfaces.UserServiceLocal;
 
@@ -112,6 +114,22 @@ public class UserService implements UserServiceLocal  {
 		if (limit != 0)
 			query.setMaxResults(limit);
 		return query.getResultList();
+	}
+	
+	@Override
+	public User check(String username, String password) {
+	
+		try {
+			return em.createQuery("SELECT u FROM User u WHERE u.username= :username and u.password= :password",User.class)
+					.setParameter("username", username).setParameter("password", password).getSingleResult();
+		}catch (NoResultException e){
+			return null;
+		}
+	}
+	@Override
+	public User getAllAppointments(String username, String password) {
+		 TypedQuery<User> query = em.createQuery("SELECT u FROM User u where u.username= "+username+" and u.password = "+password, User.class);
+	        return (User) query.getSingleResult();
 	}
 
 

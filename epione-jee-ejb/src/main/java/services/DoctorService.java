@@ -92,9 +92,19 @@ public class DoctorService implements DoctorServiceLocal, DoctorServiceRemote {
         return query.getSingleResult();
     }
 
-    public void update(Doctor doctor){
-		em.merge(doctor);
+	@Override
+	public void update(Doctor d) {
+		em.merge(d);
+		
 	}
+
+  
+
+	
+
+	
+
+	
 
 
 

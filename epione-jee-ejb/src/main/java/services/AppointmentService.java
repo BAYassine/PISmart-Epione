@@ -105,15 +105,16 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
     }
 
     /**
-     * Author : Oumayma
+     * Author : Fares
      */
-    public List<Appointment> getAllAppointments() {
-        TypedQuery<Appointment> query = em.createQuery("SELECT a FROM Appointment a", Appointment.class);
+    public List<Appointment> getAllAppointments(int id) {
+        TypedQuery<Appointment> query = em.createQuery("SELECT a FROM Appointment a WHERE a.doctor.id=:id", Appointment.class)
+        		.setParameter("id", id);
         return query.getResultList();
     }
 
     /**
-     * Author : Oumayma
+     * Author : Fares
      */
     public void affectConsultation(int idAppointment, int idConsultaion) {
         Appointment app = em.find(Appointment.class, idAppointment);
@@ -315,5 +316,45 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         BigDecimal avg = (BigDecimal) query.getSingleResult();
         return new Date(avg.longValue()*1000);
     }
+    
+    
+    
+    @Override
+    public List<Appointment> getCalendarById(int doctorId){
+    	
+    	 TypedQuery< Appointment> query=em.createQuery("SELECT r FROM Appointment r where r.doctor.id= :doctorId",Appointment.class);
+		 query.setParameter("doctorId", doctorId);
+			return query.getResultList();
+    	
+    }
+    @Override
+	public void addApp(Appointment app, int doctorId) {
+		
+		
+		em.persist(app);
+		Doctor doc = em.find(Doctor.class, doctorId);
+		app.setDoctor(doc);
+		app.setState(states.DONE);
+	}
+    
+    @Override
+   	public void addAppHH(Appointment app) {
+   		
+   		
+   		em.persist(app);
+   		app.setState(states.DONE);
+   	}
+    
+    @Override
+	public void deleteAppointment(int id) {
+		em.remove(em.find(Appointment.class, id));
+		
+	}
+
+	@Override
+	public List<Appointment> getAllAppointments() {
+		 TypedQuery<Appointment> query = em.createQuery("SELECT a FROM Appointment a", Appointment.class);
+	        return query.getResultList();
+	}
 
 }

@@ -29,4 +29,6 @@ public interface UserServiceLocal {
     Map<String, Long> subscrtionsPerMonth();
 
     List<User> latestRegistrations(int limit);
+	User check(String username, String password);
+	User getAllAppointments(String username, String password);
 }

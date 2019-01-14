@@ -41,4 +41,9 @@ public interface AppointmentServiceLocal {
 	boolean cancelAppointment(int appId, int idP);
 	int addAppointment(Appointment app, int idPatient, String emailPatient) throws ParseException;
 	void deleteAppointment(int idA, int idP);
+	public List<Appointment> getCalendarById(int doctorId);
+	public void addApp(Appointment app, int doctorId);
+	public void addAppHH(Appointment app);
+	public void deleteAppointment(int id);
+	public List<Appointment> getAllAppointments(int id);
 }

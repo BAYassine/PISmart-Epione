@@ -9,9 +9,8 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
-@XmlRootElement
 @PrimaryKeyJoinColumn(name = "id")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Doctor extends User implements Serializable {
 
     /**
@@ -33,34 +32,36 @@ public class Doctor extends User implements Serializable {
     private String formeJuridique;
     private String adresseSocialSiege;
     private String socialReason;
+    
+    private String special;
     @ElementCollection
     @CollectionTable(name ="skills")
-	@JsonBackReference
+	@JsonIgnore
     private Set<String> skills = new HashSet<String>();
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-	@JsonBackReference
+    @JsonIgnore
     private Set<Availability> availabilities = new HashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Appointment> appointments = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-	@JsonBackReference
+    @JsonIgnore
     private Set<Path> paths = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-	@JsonBackReference
+    @JsonIgnore
     private Set<Message> messages = new HashSet<>();
 
     @ManyToOne
-	@JsonManagedReference
+    @JsonIgnore
 	private Speciality speciality;
 
     /*Fares*/
     @ManyToMany(fetch = FetchType.EAGER)
-	@JsonManagedReference
+    @JsonIgnore
 	private Set<Reason> reasons=new HashSet<>();
 
     public Doctor() {
@@ -260,4 +261,13 @@ public class Doctor extends User implements Serializable {
 		this.reasons = reasons;
 	}
 
+	public String getSpecial() {
+		return special;
+	}
+
+	public void setSpecial(String special) {
+		this.special = special;
+	}
+	
+	
 }

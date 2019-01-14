@@ -10,6 +10,7 @@ import javax.persistence.TypedQuery;
 
 import entities.Appointment;
 import entities.Consultation;
+import entities.Doctor;
 import interfaces.ConsultationServiceLocal;
 import interfaces.ConsultationServiceRemote;
 
@@ -37,8 +38,11 @@ public class ConsultationService implements ConsultationServiceLocal , Consultat
 	}
 
 	@Override
-	public Consultation getConsultationById(int consultationId) {
-		return (em.find(Consultation.class, consultationId));
+	public List<Consultation> getConsultationById(int consultationId) {
+		TypedQuery< Consultation> query=em.createQuery("SELECT c FROM Consultation c where c.id="+consultationId,Consultation.class);
+		 List<Consultation> list=new ArrayList<>();
+		 list=query.getResultList();
+		return list;
 	}
 
 	@Override
@@ -62,5 +66,28 @@ public class ConsultationService implements ConsultationServiceLocal , Consultat
 		 list=query.getResultList();
 		return list;
 	}
+	@Override
+	public List<Consultation> getDoctorConsultations(int doctor) {
+		Doctor doc=em.find(Doctor.class,doctor);
+		 TypedQuery<Appointment> query=em.createQuery("SELECT a FROM Appointment a  where a.doctor=:idDoc",Appointment.class).setParameter("idDoc", doc);
+		 List<Appointment> list=new ArrayList<>();
+		 list=query.getResultList();
+		 
+		 List<Consultation> listC=new ArrayList<>();
+		
+		for (int i=0;i<list.size();i++)
+		{
+			listC.add(list.get(i).getConsultation());
+		}
+
+		return listC;
+	}
+
+	@Override
+	public int addConsultation(Consultation c, int t) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	
 }

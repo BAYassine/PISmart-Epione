@@ -11,7 +11,7 @@ public interface ConsultationServiceRemote {
 	public int addConsultation(Consultation c);
 	public void deleteConsultation(int consultationId);
 	public int updateConsultation(Consultation c);
-	public Consultation getConsultationById(int consultationId);
+	public List<Consultation> getConsultationById(int consultationId);
 	public List<Consultation> getAllConsultation();
 	
 

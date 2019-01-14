@@ -4,7 +4,9 @@ import java.text.ParseException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 
@@ -24,6 +26,8 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
 import entities.Appointment;
+import entities.Consultation;
+import entities.Reason;
 import entities.User;
 import interfaces.AppointmentServiceLocal;
 import interfaces.UserServiceLocal;
@@ -159,4 +163,75 @@ public class AppointmentResource {
 		else
 			return Response.status(Status.NOT_ACCEPTABLE).entity("Appontment not deleted").build();
 	}
+	
+	@GET
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("AppById/{doctorId}")
+	public Response getAppointmentById(@PathParam(value="doctorId")int doctorId) {
+		
+		return Response.ok(appointmentServ.getCalendarById(doctorId)).build();
+		
+		
+	}
+	
+	@POST
+	@PermitAll
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("addAPP/{doctorId}")
+	public Response addApp(Appointment app,@PathParam(value="doctorId")int doctorId) {
+		
+		
+		appointmentServ.addApp(app, doctorId);	
+		return Response.status(Status.OK).entity("Appointment added").build();
+
+		
+	}
+
+	
+	@POST
+	@PermitAll
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("addAPPhh")
+	public Response addApp(Appointment app) {
+		
+		
+		appointmentServ.addAppHH(app);	
+		return Response.status(Status.OK).entity("Appointment added").build();
+
+		
+	}
+	
+	@GET
+	@Path("SearchAllAppointments")
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllConsultations() {
+		//User u = userServ.findUser(securityContext.getUserPrincipal().getName());
+	   List<Appointment> apps=appointmentServ.getAllAppointments();
+	   if(apps.isEmpty()){
+		   return (Response.status(Response.Status.NOT_FOUND).entity("No apps found in database").build());}
+	   else 
+		   return (Response.status(Response.Status.OK).entity(apps).build());
+	}
+	
+	@DELETE
+	@Path("Delete")
+	@PermitAll
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteConsultation(@QueryParam(value = "id") int id) {
+		if (id !=0) {
+			appointmentServ.deleteAppointment(id);
+			return Response.status(Status.OK).entity("Appointment deleted").build();
+		} 
+		else
+			return Response.status(Status.NOT_ACCEPTABLE).entity("Appointment couldn't be deleted").build();
+	}
+	
+	
+	
+	
+	
 }

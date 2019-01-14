@@ -11,16 +11,22 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.Response.Status;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.TimeZone;
 
 import entities.Appointment;
+import entities.Consultation;
 import entities.Doctor;
 import entities.Message;
+import entities.User;
 import interfaces.AppointmentServiceLocal;
 import interfaces.DoctorServiceLocal;
 import interfaces.MessageServiceLocal;
+import interfaces.UserServiceLocal;
+
 import org.primefaces.json.JSONObject;
 
 @Path("Doctor")
@@ -34,7 +40,9 @@ public class DoctorResource {
 
     @EJB
     private MessageServiceLocal messageService;
-
+    
+    @EJB
+    UserServiceLocal userService;
     /**
      * Author : Oumayma
      */
@@ -116,5 +124,7 @@ public class DoctorResource {
             return (Response.status(Response.Status.NOT_FOUND).entity("NO doctors").build());
         }
     }
+    
 
+    
 }
