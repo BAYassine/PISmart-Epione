@@ -74,28 +74,28 @@ public class Patient extends User implements Serializable {
         this.social_number = social_number;
     }
 
-    public Set<Path> getPaths() {
-        return paths;
-    }
+	public Set<Path> getPaths() {
+		return paths;
+	}
 
-    public void setPaths(Set<Path> paths) {
-        this.paths = paths;
-    }
+	public void setPaths(Set<Path> paths) {
+		this.paths = paths;
+	}
+    @XmlTransient
+	public Set<Appointment> getAppointments() {
+		return appointments;
+	}
 
-    public Set<Appointment> getAppointments() {
-        return appointments;
-    }
+	public void setAppointments(Set<Appointment> appointments) {
+		this.appointments = appointments;
+	}
 
-    public void setAppointments(Set<Appointment> appointments) {
-        this.appointments = appointments;
-    }
+	public Set<Message> getMessages() {
+		return messages;
+	}
 
-    public Set<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(Set<Message> messages) {
-        this.messages = messages;
-    }
+	public void setMessages(Set<Message> messages) {
+		this.messages = messages;
+	}
 
 }

@@ -38,10 +38,10 @@ public class ReportResource {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	@RolesAllowed("ROLE_DOCTOR")
+	@PermitAll
 	public Response addReport(Report report) {
 		rs.addReport(report);
-		return Response.status(Status.FOUND).entity(report).build();
+		return Response.status(Status.OK).entity(report).build();
 		
 	}
 	
@@ -73,31 +73,31 @@ public class ReportResource {
 		
 		if(id != 0) {
 			
-			return Response.status(Status.FOUND).entity(rs.getReportById(id)).build();
+			return Response.status(Status.OK).entity(rs.getReportById(id)).build();
 			
 		}else if ((content != null) && (date == null)){
 			
-			return Response.status(Status.FOUND).entity(rs.getReportByContent(content)).build();
+			return Response.status(Status.OK).entity(rs.getReportByContent(content)).build();
 
 		}else if ((content == null) && (date != null) && (dateComp == null)){
 			
-			return Response.status(Status.FOUND).entity(rs.getReportByDate(convertDate(date))).build();
+			return Response.status(Status.OK).entity(rs.getReportByDate(convertDate(date))).build();
 
 		}else if ( ((content != null) && (date != null))) {
 			
-			return Response.status(Status.FOUND).entity(rs.getReportByDateContent(convertDate(date), content)).build();
+			return Response.status(Status.OK).entity(rs.getReportByDateContent(convertDate(date), content)).build();
 
 		}else if ((date != null)&&(dateComp.equals(">"))) {
 			
-			return Response.status(Status.FOUND).entity(rs.getReportDateGreaterThen(convertDate(date))).build();
+			return Response.status(Status.OK).entity(rs.getReportDateGreaterThen(convertDate(date))).build();
 
 		}else if ((date != null)&&(dateComp.equals("<"))) {
 			
-			return Response.status(Status.FOUND).entity(rs.getReportDateLessThen(convertDate(date))).build();
+			return Response.status(Status.OK).entity(rs.getReportDateLessThen(convertDate(date))).build();
 
 		}else {
 			
-			return Response.status(Status.FOUND).entity(rs.getAllReports()).build();
+			return Response.status(Status.OK).entity(rs.getAllReports()).build();
 		}
 		
 		
