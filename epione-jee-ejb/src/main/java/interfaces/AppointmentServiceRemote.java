@@ -30,6 +30,7 @@ public interface AppointmentServiceRemote {
 	/**
 	 * Author : Oumayma
 	 */
+	List<Appointment> getAppointmentsByDoctorname(String name);
 	List<Appointment> getPatientsAppointmentByDate(String date, int idP) throws ParseException;
 	List<Appointment> getDoctorsAppointmentByDate(String date, int idD) throws ParseException;
 	List<Appointment> getAppointmentsByDoctor(int idDoctor);

@@ -111,6 +111,7 @@ public class NotificationAppService implements NotificationAppServiceLocal, Noti
             return Json.createObjectBuilder().add("Ooups !", "Vous avez Deja Annule le changement dhoraire").build();
     }
 
+
     @Override
     public int sendNotifToPatient(int idP, NotificationApp n) {
         if (n != null) {

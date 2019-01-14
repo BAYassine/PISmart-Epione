@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
 import entities.Appointment;
+import entities.Rating;
 import entities.Doctor;
 import entities.User;
 import interfaces.AppointmentServiceLocal;
@@ -36,6 +37,23 @@ public class AppointmentResource {
     AppointmentServiceLocal appointmentServ;
     @EJB
     UserServiceLocal userServ;
+
+    @GET
+    @PermitAll
+    @Produces("application/json")
+    public Response getAllApp() {
+        List<Appointment> lr = appointmentServ.getAllAppointments();
+        System.out.println("Apppppppppp"+lr);
+        return Response.status(Response.Status.OK).entity(lr).build();
+    }
+    @GET
+    @PermitAll
+    @Path("/{name}")
+    @Produces("application/json")
+    public Response Appbydoc(@PathParam("name") String name) {
+        List<Appointment> lr = appointmentServ.getAppointmentsByDoctorname(name);
+        return Response.status(Response.Status.OK).entity(lr).build();
+    }
 
     /**
      * Author : Oumayma
@@ -94,8 +112,6 @@ public class AppointmentResource {
                 return (Response.status(Response.Status.BAD_REQUEST).entity("No appointment").build());
         }
         return (Response.status(Response.Status.BAD_REQUEST).entity("No appointment").build());
-
-
     }
 
     /**

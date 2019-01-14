@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Local;
 import javax.json.JsonObject;
 
+import entities.Appointment;
 import entities.Rating;
 
 
@@ -20,5 +21,6 @@ public interface RateServiceLocal {
 	public JsonObject deleteRate(int id,int idP);
 	public double DoctorRate(int idDoctor);
 	public List<Rating> getAllRate();
+	public List<Appointment> getAppbyuser(String username);
 
 }

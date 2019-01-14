@@ -22,15 +22,15 @@ import interfaces.NotificationAppServiceLocal;
 @Stateless
 public class AppointmentService implements AppointmentServiceLocal, AppointmentServiceRemote {
 
-    @PersistenceContext(unitName="epione-jee-ejb")
-	EntityManager em;
+    @PersistenceContext(unitName = "epione-jee-ejb")
+    EntityManager em;
 
-	@EJB
-	private AvailabilityServiceLocal availServ;
+    @EJB
+    private AvailabilityServiceLocal availServ;
 
-	@EJB
+    @EJB
     NotificationAppServiceLocal notificationManager;
-	@EJB
+    @EJB
     private NotificationAppServiceLocal notifServ;
 
     /**
@@ -57,7 +57,7 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         return 0;
     }
 
-	 /**
+    /**
      * Author : Oumayma
      */
     public int cancelAppointment(int appId, int idP) {
@@ -78,10 +78,14 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
             em.remove(app);
     }
 
+
     /**
      * Author : Oumayma
      */
-    public int updateAppointment(Appointment app, int idP) {
+    @Override
+    public int updateAppointment(Appointment app, int idR) {
+        Reason r = em.find(Reason.class, idR);
+        app.setReason(r);
         em.merge(app);
         return app.getId();
     }
@@ -140,7 +144,11 @@ public class AppointmentService implements AppointmentServiceLocal, AppointmentS
         query.setParameter("idDoctor", idDoctor);
         return query.getResultList();
     }
-
+    public List<Appointment> getAppointmentsByDoctorname(String name) {
+        TypedQuery<Appointment> query = em.createQuery("SELECT a FROM Appointment a where a.doctor.username= :name", Appointment.class);
+        query.setParameter("name", name);
+        return query.getResultList();
+    }
     /**
      * Author : Oumayma
      */
