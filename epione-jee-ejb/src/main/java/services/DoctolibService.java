@@ -96,6 +96,13 @@ public class DoctolibService implements DoctolibServiceLocal, DoctolibServiceRem
 		
 		cnx = Jsoup.connect(url);
 		doc = cnx.get();
+		TranslateOptions translateOptionsDesc = new TranslateOptions.Builder()
+				  .addText(doc.selectFirst(".dl-profile-bio").text())
+				  .modelId("fr-en")
+				  .build();
+
+		TranslationResult description = languageTranslator.translate(translateOptionsDesc).execute();
+		doctor.setDescription(description.getTranslations().get(0).getTranslationOutput());
 		doctor.setName(doc.selectFirst(".dl-profile-header-name").text());
 		doctor.setImg("https:"+doc.selectFirst(".dl-profile-header-photo").selectFirst("img").attr("src"));
 		doc.selectFirst(".dl-profile-doctor-place-map").parent().selectFirst(".dl-profile-card-content").selectFirst(".dl-profile-practice-name").remove();
@@ -183,6 +190,13 @@ public class DoctolibService implements DoctolibServiceLocal, DoctolibServiceRem
 
 	@Override
 	public DoctolibOther getOtherByPath(String path) throws IOException {
+		LanguageTranslator languageTranslator = new LanguageTranslator(
+			    "2018-05-01",
+			    "a8c4aef8-5697-45f1-becf-740cf6a19be2",
+			    "rnPCZt8D87im");
+
+		languageTranslator.setEndPoint("https://gateway.watsonplatform.net/language-translator/api");
+		
 		DoctolibOther other = new DoctolibOther();
 		
 		String url = "https://www.doctolib.fr"+path;
@@ -197,7 +211,13 @@ public class DoctolibService implements DoctolibServiceLocal, DoctolibServiceRem
 		other.setAddress(doc.selectFirst(".dl-profile-doctor-place-map").parent().selectFirst(".dl-profile-card-content").selectFirst(".dl-profile-text").text());
 		other.setPath(path);
 		other.setCity(path.substring(path.indexOf("/",2) + 1, path.indexOf("/",path.indexOf("/",2) + 1)));
-		other.setSpeciality(doc.selectFirst(".dl-profile-header-speciality").text());
+		TranslateOptions translateOptionsSpe = new TranslateOptions.Builder()
+				  .addText(doc.selectFirst(".dl-profile-header-speciality").text())
+				  .modelId("fr-en")
+				  .build();
+
+		TranslationResult speciality = languageTranslator.translate(translateOptionsSpe).execute();
+		other.setSpeciality(speciality.getTranslations().get(0).getTranslationOutput());
 		List<Doctolib> lst = new ArrayList<Doctolib>();
 		Element content = doc.selectFirst(".dl-profile-team-profiles").parent();
 		Elements contentChildren = content.select("*");
@@ -211,13 +231,70 @@ public class DoctolibService implements DoctolibServiceLocal, DoctolibServiceRem
 					doctor.setName(headline.text());
 					doctor.setPath(headline.selectFirst("a").attr("href"));
 					doctor.setCity(other.getCity());
-					doctor.setSpeciality(contentChildren.get(contentChildren.indexOf(contentChild) - 1).text());
+					TranslateOptions translateOptionsSpeciality = new TranslateOptions.Builder()
+							  .addText(contentChildren.get(contentChildren.indexOf(contentChild) - 1).text())
+							  .modelId("fr-en")
+							  .build();
+
+					TranslationResult spe = languageTranslator.translate(translateOptionsSpeciality).execute();
+					doctor.setSpeciality(spe.getTranslations().get(0).getTranslationOutput());
 					lst.add(doctor);
 				}
 	        }
 		}
 		other.setLstDoctors(lst);
 		return other;
+	}
+
+	@Override
+	public List<Doctolib> getListDoctorsByNameAndLocation(String name, String location, String page) throws IOException {
+		List<Doctolib> lst = new ArrayList<Doctolib>();
+		
+		if(location.isEmpty()){
+			location = "france";
+		}
+		if(page.isEmpty()){
+			page = "0";
+		}
+		
+		String url = "https://www.doctolib.fr/doctors/"+name+"/"+location;
+		Document doc;
+		Connection cnx;
+		
+		
+		if(Integer.parseInt(page)>1){
+			url += "?page="+page;
+		}
+		
+		cnx = Jsoup.connect(url);
+		doc = cnx.get();
+		Elements newsHeadlines = doc.select(".dl-search-result-title-container");
+		for (Element headline : newsHeadlines) {
+			
+			LanguageTranslator languageTranslator = new LanguageTranslator(
+				    "2018-05-01",
+				    "a8c4aef8-5697-45f1-becf-740cf6a19be2",
+				    "rnPCZt8D87im");
+
+			languageTranslator.setEndPoint("https://gateway.watsonplatform.net/language-translator/api");
+			
+			Doctolib doctors = new Doctolib();
+			doctors.setAddress(headline.parent().select(".dl-text").text());
+			doctors.setCity(headline.select("h3").select("a").attr("href").substring(headline.select("h3").select("a").attr("href").indexOf("/",2) + 1, headline.select("h3").select("a").attr("href").indexOf("/",headline.select("h3").select("a").attr("href").indexOf("/",2) + 1)));
+			doctors.setName(headline.select("h3").select("div").html());
+			doctors.setImg("http:"+headline.select("img").attr("src"));
+			doctors.setPath(headline.select("h3").select("a").attr("href"));
+			TranslateOptions translateOptionsSpe = new TranslateOptions.Builder()
+					  .addText(headline.select(".dl-search-result-subtitle").text())
+					  .modelId("fr-en")
+					  .build();
+
+			TranslationResult spe = languageTranslator.translate(translateOptionsSpe).execute();
+			doctors.setSpeciality(spe.getTranslations().get(0).getTranslationOutput());
+			lst.add(doctors);
+		}
+		
+		return lst;
 	}
 
 }

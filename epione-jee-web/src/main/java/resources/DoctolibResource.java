@@ -32,7 +32,7 @@ public class DoctolibResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@PermitAll
-	public Response getDoctors(@QueryParam(value="path")String path,@QueryParam(value="speciality")String speciality,@DefaultValue("france") @QueryParam(value="location")String location,@DefaultValue("-1") @QueryParam(value="page") String page){
+	public Response getDoctors(@QueryParam(value="path")String path,@QueryParam(value="name")String name ,@QueryParam(value="speciality")String speciality,@DefaultValue("france") @QueryParam(value="location")String location,@DefaultValue("-1") @QueryParam(value="page") String page){
 		
 		if(path != null){
 			
@@ -64,17 +64,31 @@ public class DoctolibResource {
 			
 			}
 		}else{
+			
+			if(name != null){
+				List<Doctolib> lst = new ArrayList<Doctolib>();
+				
+				try {
+					lst = DoctolibService.getListDoctorsByNameAndLocation(name,location,page);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
+				return Response.status(Status.OK).entity(lst).build();
+			}else{
 		
-			List<Doctolib> lst = new ArrayList<Doctolib>();
+				List<Doctolib> lst = new ArrayList<Doctolib>();
 		
-			try {
-				lst = DoctolibService.getListDoctorsBySpecialityAndLocation(speciality,location,page);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				try {
+					lst = DoctolibService.getListDoctorsBySpecialityAndLocation(speciality,location,page);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		
+				return Response.status(Status.OK).entity(lst).build();
 			}
-		
-			return Response.status(Status.OK).entity(lst).build();
 		
 		}
 		
