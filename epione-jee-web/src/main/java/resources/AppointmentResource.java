@@ -40,18 +40,20 @@ public class AppointmentResource {
 
     @GET
     @PermitAll
-    @Produces("application/json")
-    public Response getAllApp() {
-        List<Appointment> lr = appointmentServ.getAllAppointments();
-        System.out.println("Apppppppppp"+lr);
-        return Response.status(Response.Status.OK).entity(lr).build();
-    }
-    @GET
-    @PermitAll
     @Path("/{name}")
     @Produces("application/json")
     public Response Appbydoc(@PathParam("name") String name) {
         List<Appointment> lr = appointmentServ.getAppointmentsByDoctorname(name);
+        return Response.status(Response.Status.OK).entity(lr).build();
+    }
+
+    @GET
+    @Path("all")
+    @PermitAll
+    @Produces("application/json")
+    public Response getAllApp() {
+        List<Appointment> lr = appointmentServ.getAllAppointments();
+        System.out.println("Apppppppppp"+lr);
         return Response.status(Response.Status.OK).entity(lr).build();
     }
 
@@ -158,21 +160,6 @@ public class AppointmentResource {
     }
 
     /**
-     * Author : Oumayma
-     */
-    @DELETE
-    @RolesAllowed("ROLE_PATIENT")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteAppointment(@Context SecurityContext securityContext, @QueryParam(value = "idA") int idA) {
-        User u = userServ.findUser(securityContext.getUserPrincipal().getName());
-        if (idA != 0) {
-            appointmentServ.deleteAppointment(idA, u.getId());
-            return Response.status(Status.OK).entity("Appointment deleted").build();
-        } else
-            return Response.status(Status.NOT_ACCEPTABLE).entity("Appontment not deleted").build();
-    }
-
-    /**
      * Author : Yassine
      */
     @PUT
@@ -185,6 +172,21 @@ public class AppointmentResource {
         if (!appointmentServ.startEndAppointment(id, action, u.getId()))
             return Response.status(Status.FORBIDDEN).build();
         return Response.status(Status.OK).build();
+    }
+
+    /**
+     * Author : Oumayma
+     */
+    @DELETE
+    @RolesAllowed("ROLE_PATIENT")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteAppointment(@Context SecurityContext securityContext, @QueryParam(value = "idA") int idA) {
+        User u = userServ.findUser(securityContext.getUserPrincipal().getName());
+        if (idA != 0) {
+            appointmentServ.deleteAppointment(idA, u.getId());
+            return Response.status(Status.OK).entity("Appointment deleted").build();
+        } else
+            return Response.status(Status.NOT_ACCEPTABLE).entity("Appontment not deleted").build();
     }
 
 }
