@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.*;
@@ -25,38 +26,39 @@ public class Consultation implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
-	private Date date_cons;
-	
+
+	  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+01")
+	    private Date date_cons;
 	private String remarks;
 	
 	private int rating;
 	
 	private double price;
-	
-	@OneToOne(mappedBy="consultation", fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
-	@JsonBackReference
-	private Report report;
+
 	
 	@OneToOne
-	@JsonManagedReference
 	private Appointment appointment;
 
 	public Consultation(){
 		
 	}
+	
+	public Consultation(int rating, double price) {
+		super();
+		this.rating=rating;
+		this.price= price;
+	}
 
-	public Consultation(int id, Date date_cons, String remarks, int rating, double price) {
+	public Consultation(int id, String remarks, int rating, double price) {
 		super();
 		this.id = id;
-		this.date_cons = date_cons;
 		this.remarks = remarks;
 		this.rating = rating;
 		this.price = price;
 	}
 
-	public Consultation( Date date_cons, String remarks, int rating, double price) {
-		this.date_cons = date_cons;
+	public Consultation( String remarks, int rating, double price) {
+
 		this.remarks = remarks;
 		this.rating = rating;
 		this.price = price;
@@ -67,12 +69,7 @@ public class Consultation implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public Date getDate_cons() {
-		return date_cons;
-	}
-	public void setDate_cons(Date date_cons) {
-		this.date_cons = date_cons;
-	}
+	
 	public String getRemarks() {
 		return remarks;
 	}
@@ -98,12 +95,7 @@ public class Consultation implements Serializable {
 	public void setAppointment(Appointment appointment) {
 		this.appointment = appointment;
 	}
-	public Report getReport() {
-		return report;
-	}
-	public void setReport(Report report) {
-		this.report = report;
-	}
+	
 
 	
 }

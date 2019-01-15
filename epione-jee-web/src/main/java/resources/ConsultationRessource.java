@@ -9,22 +9,35 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
 import entities.Consultation;
+import entities.Doctor;
 import entities.Reason;
+import entities.User;
 import interfaces.ConsultationServiceLocal;
+import interfaces.DoctorServiceLocal;
+import interfaces.UserServiceLocal;
 import services.ConsultationService;
 
 @Path("Consultation")
 public class ConsultationRessource {
 	@EJB
 	ConsultationServiceLocal consService;
+	
+	@EJB
+	UserServiceLocal userServ;
+	
+	@EJB
+	DoctorServiceLocal doctorServ;
 	
 	@POST
 	@Path("ConsultationAdding")
@@ -33,7 +46,7 @@ public class ConsultationRessource {
 	public Response addConsultation(Consultation c) {
 		if (c.getRating()<=5) {
 			consService.addConsultation(c);
-			return Response.status(Status.CREATED).entity("Consultation added").build();
+			return Response.status(Status.OK).entity("Consultation added").build();
 						}
 		else
 			return Response.status(Status.NOT_ACCEPTABLE).entity("Consultation cannot be added (Rating must be a number from 1 to 5)").build();
@@ -62,13 +75,17 @@ public class ConsultationRessource {
 	}
 	
 	@Path("getConsultationById")
-	@POST
+	@GET
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getConsultationById(@QueryParam(value = "idC") int idC) {
-		Consultation x=consService.getConsultationById(idC);
-		return Response.status(Status.OK).entity(x.getRating()).build();
-	}
+	public Response getConsultationById(@QueryParam(value = "id") int id) {
+		List<Consultation> consultations=consService.getConsultationById(id);
+		if(consultations.isEmpty()){
+			   return (Response.status(Response.Status.NOT_FOUND).entity("No consultations found in database").build());}
+		   else 
+			   return (Response.status(Response.Status.OK).entity(consultations).build());
+		}
+	
 	
 	@GET
 	@Path("SearchAllConsultations")
@@ -79,7 +96,7 @@ public class ConsultationRessource {
 	   if(consultations.isEmpty()){
 		   return (Response.status(Response.Status.NOT_FOUND).entity("No consultations found in database").build());}
 	   else 
-		   return (Response.status(Response.Status.FOUND).entity(consultations).build());
+		   return (Response.status(Response.Status.OK).entity(consultations).build());
 	}
 	
 	@GET
@@ -91,7 +108,7 @@ public class ConsultationRessource {
 	   if(consultations.isEmpty()){
 		   return (Response.status(Response.Status.NOT_FOUND).entity("No consultations with superior price have been found in database").build());}
 	   else 
-		   return (Response.status(Response.Status.FOUND).entity(consultations).build());
+		   return (Response.status(Response.Status.OK).entity(consultations).build());
 	}
 	
 	@GET
@@ -103,6 +120,32 @@ public class ConsultationRessource {
 	   if(consultations.isEmpty()){
 		   return (Response.status(Response.Status.NOT_FOUND).entity("No consultations with 5 out of 5 rating have been found in database").build());}
 	   else 
-		   return (Response.status(Response.Status.FOUND).entity(consultations).build());
+		   return (Response.status(Response.Status.OK).entity(consultations).build());
 	}
+	@GET
+	@Path("SearchForConsultationsByDoctor")
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getConsultationByDoctor(@QueryParam(value = "id") int id) {
+	   List<Consultation> consultations=consService.getDoctorConsultations(id);
+	   if(consultations.isEmpty()){
+		   return (Response.status(Response.Status.NOT_FOUND).entity("No consultations").build());}
+	   else 
+		   return (Response.status(Response.Status.OK).entity(consultations).build());
+	}
+	
+	 @Path("update")
+		@PUT
+		@PermitAll
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response updateConsultation(Doctor d, @Context SecurityContext securityContext) {
+	    	System.out.println("**********************************************");
+	    	User u=userServ.findUser(securityContext.getUserPrincipal().getName());
+	    	d.setId(u.getId());
+	    	System.out.println(d.getCity());
+	    	d=(doctorServ.getDoctorById(u.getId()));
+	    	doctorServ.update(d);
+			return Response.status(Status.OK).entity("Doctor profile updated successfully").build();
+		}
 }

@@ -18,11 +18,12 @@ public interface DoctorServiceLocal {
 	public List<Doctor> getDoctorByNameAndSpeciality(String name,int id);
 	public List<Doctor> getDoctorByNameAndSpecialitAndLocation(String name,int specialityID,String latitude,String longitude);
 	public List<Doctor> getDoctors();
-
+	
 	/**
 	 * Author : Yassine
 	 */
     public int create(Doctor doctor);
     Doctor findDoctor(String username);
-    void update(Doctor doctor);
+	public void update(Doctor d);
+  
 }

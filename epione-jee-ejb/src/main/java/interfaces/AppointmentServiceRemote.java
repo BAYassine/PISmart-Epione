@@ -26,6 +26,9 @@ public interface AppointmentServiceRemote {
 	Map<String, Long> appointmentPerYear(Doctor doctor,String since);
 	Long totalPatient(Doctor doctor);
 	boolean startEndAppointment(int id, boolean action, int uid);
+	public void addAppHH(Appointment app);
+	public List<Appointment> getAllAppointments(int id);
+
 
 	/**
 	 * Author : Oumayma
@@ -43,4 +46,10 @@ public interface AppointmentServiceRemote {
 	int cancelAppointment(int appId, int idP);
 	int addAppointment(Appointment app, int idPatient, String emailPatient) throws ParseException;
 	void deleteAppointment(int idA, int idP);
+	public List<Appointment> getCalendarById(int doctorId);
+	public void addApp(Appointment app, int doctorId);
+	public void deleteAppointment(int id);
+
+
+
 }

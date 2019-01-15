@@ -32,6 +32,8 @@ public class Doctor extends User implements Serializable {
     private String formeJuridique;
     private String adresseSocialSiege;
     private String socialReason;
+
+    private String special;
     @ElementCollection
     @CollectionTable(name ="skills")
 	@JsonBackReference
@@ -80,6 +82,7 @@ public class Doctor extends User implements Serializable {
         this.confirmed = u.confirmed;
     }
 
+    @XmlTransient
     public Speciality getSpeciality() {
         return speciality;
     }
@@ -257,5 +260,14 @@ public class Doctor extends User implements Serializable {
 	public void setReasons(Set<Reason> reasons) {
 		this.reasons = reasons;
 	}
+
+	public String getSpecial() {
+		return special;
+	}
+
+	public void setSpecial(String special) {
+		this.special = special;
+	}
+
 
 }

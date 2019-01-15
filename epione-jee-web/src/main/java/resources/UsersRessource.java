@@ -98,5 +98,14 @@ public class UsersRessource {
         userService.remove(u);
         return Response.status(200).entity("We're sorry to see you go").build();
     }
-
+    
+    @POST
+    @PermitAll
+    @Path("/check")
+    @Produces("application/json")
+    public Response check(@QueryParam("username")String username, @QueryParam("password")String password){
+       
+       User u= userService.check(username, password);
+        return Response.status(200).entity(u).build();
+    }
 }

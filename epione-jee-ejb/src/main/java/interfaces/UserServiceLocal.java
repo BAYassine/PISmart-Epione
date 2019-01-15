@@ -24,12 +24,15 @@ public interface UserServiceLocal {
      * Author : Yassine
      */
     long todayUsers();
-
     long registeredSince(String date);
-
     Map<String, Long> subscrtionsPerMonth();
-
+    Map<Date, Long> connectionsPerDay();
     List<User> latestRegistrations(int limit);
 
-    Map<Date, Long> connectionsPerDay();
+    /**
+     * Author : Fares
+     */
+	User check(String username, String password);
+	User getAllAppointments(String username, String password);
+
 }

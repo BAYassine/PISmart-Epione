@@ -30,6 +30,8 @@ public class Appointment implements Serializable {
     @OneToOne
     private Reason reason;
     private String message;
+    @JsonProperty("title")
+    private String sujet;
     private states state;
 
     @ManyToOne
@@ -82,18 +84,17 @@ public class Appointment implements Serializable {
         this.id = id;
     }
 
+	public String getMessage() {
+		return message;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Consultation getConsultation() {
-        return consultation;
-    }
+	public Consultation getConsultation() {
+		return consultation;
+	}
 
     public void setConsultation(Consultation consultation) {
         this.consultation = consultation;
@@ -139,6 +140,14 @@ public class Appointment implements Serializable {
         this.date_start = date_start;
     }
 
+    public String getSujet() {
+        return sujet;
+    }
+
+    public void setSujet(String sujet) {
+        this.sujet = sujet;
+    }
+
     public states getState() {
         return state;
     }
@@ -151,9 +160,9 @@ public class Appointment implements Serializable {
         return reason;
     }
 
-    public void setReason(Reason reason) {
-        this.reason = reason;
-    }
+	public void setReason(Reason reason) {
+		this.reason = reason;
+	}
 
     public Rating getRating() {
         return rating;
